@@ -2,7 +2,7 @@ import {searchProjectsV3} from './cloud-search.js';
 import { loadPublishedProjects } from './cloud-data.js'
 import { renderProfile, initProfile } from './profile.js'
 
-const CATS=['Games','DeFi','AI','Social','NFT','DAO','Developer Tools','Infrastructure','Other'],GENRES=['Casual','Strategy','Puzzle','Multiplayer','Adventure','Other'];
+const CATS=['Games','DeFi','AI','Social','NFT','DAO','Developer Tools','Infrastructure','Caffeine Apps','Other'],GENRES=['Casual','Strategy','Puzzle','Multiplayer','Adventure','Other'];
 // Published records only. Never initialize the live UI with fictitious projects.
 let P=[];
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

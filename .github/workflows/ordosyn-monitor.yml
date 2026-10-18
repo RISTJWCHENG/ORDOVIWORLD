@@ -73,6 +73,21 @@ jobs:
           test -n "$CLOUDFLARE_API_TOKEN" || { echo 'Missing Cloudflare API token'; exit 1; }
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'Missing Cloudflare Account ID'; exit 1; }
           npx --yes wrangler@4.151.1 r2 object put "ordoviworld/discovery/v5/caffeine-${{ github.run_id }}-${{ github.run_attempt }}.json" --remote --file=data/caffeine-candidates-v5.json --content-type=application/json
+      - name: Validate Caffeine Live Apps for V5.1 index
+        run: |
+          node --test worker/v5/caffeine.test.mjs
+          node crawler/export-caffeine-v51.mjs data/caffeine-candidates-v5.json data/caffeine-import-v51.json
+      - name: Upload eligible Caffeine Apps to existing R2 import route
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          count=$(node -p "require('./data/caffeine-import-v51.json').records.length")
+          if [ "$count" -eq 0 ]; then echo 'No eligible Caffeine apps'; exit 0; fi
+          test -n "$CLOUDFLARE_API_TOKEN" || exit 1
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || exit 1
+          npx --yes wrangler@4.151.1 r2 object put "ordoviworld/imports/v3/caffeine-v51-${{ github.run_id }}-${{ github.run_attempt }}.json" --remote --file=data/caffeine-import-v51.json --content-type=application/json
       - name: Save audit and import artifacts
         if: always()
         uses: actions/upload-artifact@v4
