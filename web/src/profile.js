@@ -1,0 +1,99 @@
+// Local prototype only. Production profiles require authenticated canister storage.
+import { currentPrincipal } from './auth.js'
+
+const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))
+const avatars = ['🪐','🦕','🌌','🚀','🧑‍🚀','🌿','🎮','💎']
+const defaults = { name:'', bio:'', role:'Explorer', website:'', github:'', avatar:'🪐', interests:[] }
+const roles = ['Explorer','Developer','Creator','Community Builder']
+const topics = ['DeFi','Games','AI','Infrastructure','SNS','NFTs','Developer Tools','Community']
+const storageKey = principal => `ordovician:profile:v1:${principal}`
+
+function load(principal) {
+  try {
+    const data = JSON.parse(localStorage.getItem(storageKey(principal)) || '{}')
+    if (!data || typeof data !== 'object' || Array.isArray(data)) return { ...defaults }
+    return { ...defaults, ...data, interests: Array.isArray(data.interests) ? data.interests.filter(x => topics.includes(x)) : [] }
+  } catch { return { ...defaults } }
+}
+
+export function renderProfile() {
+  const principal = currentPrincipal()
+  if (!principal) return `<div class="page profile-page"><div class="profile-intro"><span class="profile-eyebrow">YOUR IDENTITY ON ICP</span><h1>Make your mark in the ecosystem.</h1><p class="mute">Sign in with Internet Identity to create and personalize your Ordovician Search profile.</p><p class="note" style="margin-top:24px">Use the Login button in the top-right corner to get started.</p></div></div>`
+  const data = load(principal)
+  const avatar = avatars.includes(data.avatar) ? data.avatar : avatars[0]
+  const role = roles.includes(data.role) ? data.role : roles[0]
+  return `<div class="page profile-page">
+    <div class="profile-heading"><div><span class="profile-eyebrow">ORDOVICIAN IDENTITY</span><h1>My Profile</h1><p class="mute">A little about you and what you're building on ICP.</p></div><span class="profile-status">● Connected with Internet Identity</span></div>
+    <div class="profile-layout">
+      <aside class="profile-preview glass">
+        <div class="profile-banner"></div><div class="profile-avatar" id="profile-avatar-preview">${avatar}</div>
+        <div class="profile-preview-body"><h2 id="profile-name-preview">${escapeHTML(data.name.trim() || 'Unnamed explorer')}</h2><span class="profile-role" id="profile-role-preview">${escapeHTML(role)}</span><p id="profile-bio-preview" class="mute">${escapeHTML(data.bio.trim() || 'Your story starts here.')}</p><div class="profile-pid-heading">INTERNET IDENTITY PRINCIPAL</div><div class="profile-principal">${escapeHTML(principal)}</div><button class="btn" type="button" id="copy-principal">Copy Principal</button></div>
+      </aside>
+      <div class="profile-editor"><h2>Personal information</h2><p class="mute" style="margin-bottom:24px">Choose how you appear to the Ordovician community.</p>
+      <form id="profile-form" class="f" novalidate>
+        <div><label>Choose an avatar</label><div class="profile-avatars" role="group" aria-label="Choose avatar">${avatars.map(a=>`<button type="button" class="profile-avatar-option ${a===avatar?'selected':''}" aria-pressed="${a===avatar}" data-avatar="${a}">${a}</button>`).join('')}</div><input type="hidden" name="avatar" value="${avatar}"></div>
+        <div><label for="profile-name">Display name <span class="mute">(required)</span></label><input id="profile-name" name="name" maxlength="40" placeholder="e.g. Ordovician Explorer" value="${escapeHTML(data.name)}" required></div>
+        <div><label for="profile-role">I am a...</label><select id="profile-role" name="role">${roles.map(r=>`<option value="${r}" ${r===role?'selected':''}>${r}</option>`).join('')}</select></div>
+        <div><label for="profile-bio">Bio</label><textarea id="profile-bio" name="bio" rows="4" maxlength="280" placeholder="Tell the community what you love building or exploring...">${escapeHTML(data.bio)}</textarea><p class="profile-hint">Up to 280 characters</p></div>
+        <div><label for="profile-website">Website <span class="mute">(optional)</span></label><input id="profile-website" name="website" type="url" maxlength="200" placeholder="https://yourwebsite.com" value="${escapeHTML(data.website)}"></div>
+        <div><label for="profile-github">GitHub <span class="mute">(optional)</span></label><input id="profile-github" name="github" type="url" maxlength="200" placeholder="https://github.com/username" value="${escapeHTML(data.github)}"></div>
+        <div><label>Interests</label><div class="profile-interests">${topics.map(t=>`<label class="profile-interest"><input type="checkbox" name="interests" value="${t}" ${data.interests.includes(t)?'checked':''}><span>${t}</span></label>`).join('')}</div></div>
+        <div class="profile-form-actions"><button class="btn p" type="submit">Save Profile</button><span id="profile-feedback" role="status" aria-live="polite"></span></div>
+      </form><p class="profile-disclaimer">Local prototype: your profile is saved only in this browser, for this Principal. It is not yet stored on ICP and will not sync across devices. Do not store sensitive information.</p></div>
+    </div></div>`
+}
+
+const validOptionalURL = value => {
+  if (!value) return true
+  try { const url = new URL(value); return url.protocol === 'https:' && !!url.hostname && !url.username && !url.password } catch { return false }
+}
+
+export function initProfile() {
+  const app = document.getElementById('app')
+  app.addEventListener('click', async e => {
+    const avatarButton = e.target.closest('[data-avatar]')
+    if (avatarButton && e.target.closest('#profile-form')) {
+      const form = document.getElementById('profile-form')
+      form.elements.avatar.value = avatarButton.dataset.avatar
+      form.querySelectorAll('[data-avatar]').forEach(b => { b.classList.toggle('selected', b===avatarButton); b.setAttribute('aria-pressed', String(b===avatarButton)) })
+      document.getElementById('profile-avatar-preview').textContent = avatarButton.dataset.avatar
+    }
+    if (e.target.closest('#copy-principal')) {
+      const principal = currentPrincipal()
+      if (!principal) return
+      try { await navigator.clipboard.writeText(principal); document.getElementById('copy-principal').textContent = 'Copied!' }
+      catch { document.getElementById('copy-principal').textContent = 'Copy unavailable' }
+    }
+  })
+  app.addEventListener('input', e => {
+    if (!e.target.closest('#profile-form')) return
+    const form = document.getElementById('profile-form')
+    document.getElementById('profile-name-preview').textContent = form.elements.name.value.trim() || 'Unnamed explorer'
+    document.getElementById('profile-bio-preview').textContent = form.elements.bio.value.trim() || 'Your story starts here.'
+    document.getElementById('profile-role-preview').textContent = form.elements.role.value
+  })
+  app.addEventListener('change', e => {
+    if (e.target.name === 'role' && e.target.closest('#profile-form')) document.getElementById('profile-role-preview').textContent = e.target.value
+  })
+  app.addEventListener('submit', e => {
+    if (e.target.id !== 'profile-form') return
+    e.preventDefault()
+    const principal = currentPrincipal()
+    if (!principal) { window.dispatchEvent(new Event('ordovician:auth-changed')); return }
+    const data = new FormData(e.target)
+    const profile = {
+      name: String(data.get('name') || '').trim(), role: String(data.get('role') || ''),
+      bio: String(data.get('bio') || '').trim(), website: String(data.get('website') || '').trim(),
+      github: String(data.get('github') || '').trim(), avatar: String(data.get('avatar') || ''),
+      interests: data.getAll('interests').filter(t => topics.includes(t))
+    }
+    const feedback = document.getElementById('profile-feedback')
+    if (!profile.name || profile.name.length > 40) { feedback.textContent = 'Please enter a display name (1–40 characters).'; return }
+    if (profile.bio.length > 280 || !roles.includes(profile.role) || !avatars.includes(profile.avatar)) { feedback.textContent = 'Please check your profile fields.'; return }
+    if (!validOptionalURL(profile.website) || !validOptionalURL(profile.github)) { feedback.textContent = 'Links must be valid https:// URLs.'; return }
+    try { localStorage.setItem(storageKey(principal), JSON.stringify(profile)); feedback.textContent = '✓ Saved in this browser'; window.dispatchEvent(new Event('ordovician:profile-updated')) }
+    catch { feedback.textContent = 'Could not save. Check browser storage settings.' }
+  })
+}
+
+export function getProfileName(principal) { return principal ? load(principal).name.trim() : '' }

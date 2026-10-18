@@ -1,0 +1,4 @@
+{"data":[
+{"name":"CHAI","url":"https://yddti-oiaaa-aaaag-ay5sa-cai.icp0.io/","description":"CHAI is a collective of creatives building AIware in stealth on the Internet Computer.","root_canister_id":"xjngq-yaaaa-aaaaq-aabha-cai","ledger_canister_id":"vtrom-gqaaa-aaaaq-aabia-cai","swap_lifecycle":{"lifecycle":"LIFECYCLE_COMMITTED"}},
+{"name":"Catalyze","url":"https://catalyze.one","description":"Catalyze is a one-stop social-fi application for organising your Web3 experience","root_canister_id":"uly3p-iqaaa-aaaaq-aabma-cai","ledger_canister_id":"uf2wh-taaaa-aaaaq-aabna-cai","swap_lifecycle":{"lifecycle":"LIFECYCLE_COMMITTED"}},
+{"name":"CANI DAO","url":"https://canisafe.app","description":"aborted swap, must be filtered out","root_canister_id":"pnthx-iiaaa-aaaaq-aaeba-cai","swap_lifecycle":{"lifecycle":"LIFECYCLE_ABORTED"}}]}
