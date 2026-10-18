@@ -1,4 +1,4 @@
-﻿:root{--bg:#fff;--soft:#F7F8FA;--line:#E6E8EC;--ink:#0F1218;--mute:#667085;--accent:#2F6BFF;--tint:#EEF3FF}
+:root{--bg:#fff;--soft:#F7F8FA;--line:#E6E8EC;--ink:#0F1218;--mute:#667085;--accent:#2F6BFF;--tint:#EEF3FF}
 *{box-sizing:border-box}html{overflow-y:scroll;scrollbar-gutter:stable;overflow-anchor:none}body{margin:0;background:var(--bg);color:var(--ink);font:400 14.5px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}h1,h2,h3,p{margin:0}.stars{display:none}.glass{}
 .wrap{max-width:1200px;margin:0 auto;padding:0 32px}
@@ -130,3 +130,95 @@ select[name*="sort" i]:focus-visible {
 /* V4 cached project logos; maintain letter fallback if image is unavailable. */
 .logo{position:relative;overflow:hidden}.ordosyn-project-logo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;z-index:1}.ordosyn-logo-initial{position:relative;z-index:0}
 
+
+/* ORDOSYN_CARD_BUTTONS_BEGIN */
+.grid > .card {
+  position: relative;
+}
+
+.grid > .card .acts {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.grid > .card .acts a.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 34px;
+  padding: 0 15px;
+  border-radius: 999px !important;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: background .16s, border-color .16s, transform .16s;
+}
+
+.grid > .card .acts a.btn.p {
+  background: #edf3ff !important;
+  color: #245bc1 !important;
+  border: 1px solid #cddfff !important;
+  box-shadow: none !important;
+}
+
+.grid > .card .acts a.btn.p:hover {
+  background: #dce9ff !important;
+  border-color: #a9c5f9 !important;
+  transform: translateY(-1px);
+}
+
+.grid > .card .acts a.btn:not(.p) {
+  background: #fff !important;
+  color: #344054 !important;
+  border: 1px solid #dfe4eb !important;
+  box-shadow: none !important;
+}
+
+.grid > .card .acts a.btn:not(.p):hover {
+  background: #f7f9fc !important;
+  border-color: #bfcadd !important;
+}
+
+.grid > .card .row:first-child {
+  padding-right: 66px;
+}
+
+.ordosyn-heart-pill {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  min-width: 38px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #f5f6f8;
+  color: #667085;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.ordosyn-heart-pill:hover {
+  background: #fceff3;
+  color: #d83d72;
+}
+
+.ordosyn-heart-pill[aria-pressed="true"] {
+  background: #fff0f4;
+  color: #df4278;
+  border-color: #f7cedb;
+}
+
+.ordosyn-heart-pill:focus-visible {
+  outline: 2px solid #648bfa;
+  outline-offset: 2px;
+}
+/* ORDOSYN_CARD_BUTTONS_END */
