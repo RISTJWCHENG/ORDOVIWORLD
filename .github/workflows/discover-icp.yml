@@ -1,0 +1,32 @@
+name: ICP ecosystem discovery (review required)
+on:
+  schedule:
+    - cron: '23 5 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      # Does not publish or mutate the repository. Results are downloaded for human review.
+      - name: Discover projects
+        run: npm run crawl
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload review candidates
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: icp-review-candidates-${{ github.run_id }}
+          path: data/projects.json
+          if-no-files-found: warn
+          retention-days: 30
