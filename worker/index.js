@@ -1,3 +1,4 @@
+import {wrapAIQueueHandler} from './v6/classification.js';
 import {queueHandler} from './v3/ingest.js';
 import {handleSearch} from './v3/search.js';
 const ALLOWED_ORIGIN = 'https://ristjwcheng.github.io';
@@ -12,7 +13,7 @@ function assetKey(url) {
   return key;
 }
 export default {
-  queue:queueHandler,
+  queue:wrapAIQueueHandler(queueHandler),
   async fetch(request,env) {
     const url=new URL(request.url);
     if(request.method==='OPTIONS') return new Response(null,{status:204,headers:cors});
