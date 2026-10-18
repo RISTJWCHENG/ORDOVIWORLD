@@ -1,0 +1,120 @@
+name: Ordosyn Monitor
+run-name: Ordosyn Monitor 路 ${{ github.event_name }}
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '23 5 * * *'
+  workflow_dispatch:
+    inputs:
+      task:
+        description: Select a task to run
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - pages
+          - index
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ordosyn-monitor-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  index:
+    name: ICP discovery, audit and R2 sync
+    if: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && (inputs.task == 'all' || inputs.task == 'index')) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install and test
+        run: |
+          npm ci
+          npm test
+      - name: Discover public ICP candidates
+        run: |
+          mkdir -p data
+          npm run crawl
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Produce review report (not direct D1 sync)
+        run: node crawler/auto-index.mjs
+      - name: Build validated V3 R2 batch
+        run: node crawler/export-r2-v3.mjs data/projects.json data/import-v3.json
+      - name: Save audit and import artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ordosyn-index-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            data/projects.json
+            data/auto-index-report.json
+            data/auto-index.sql
+            data/import-v3.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Upload approved candidates to R2
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo 'Missing CLOUDFLARE_API_TOKEN'; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo 'Missing CLOUDFLARE_ACCOUNT_ID'; exit 1; }
+          test -s data/import-v3.json || { echo 'Missing import batch'; exit 1; }
+          npx --yes wrangler@4.151.1 r2 object put "ordoviworld/imports/v3/gh-${{ github.run_id }}-${{ github.run_attempt }}.json" --remote --file=data/import-v3.json --content-type=application/json
+
+  pages-build:
+    name: Build GitHub Pages
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && (inputs.task == 'all' || inputs.task == 'pages')) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install, test and build
+        run: |
+          npm ci
+          npm test
+          npm run build
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist
+
+  pages-deploy:
+    name: Deploy GitHub Pages
+    needs: pages-build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Publish site
+        id: deploy
+        uses: actions/deploy-pages@v4
