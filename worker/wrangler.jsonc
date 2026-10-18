@@ -1,0 +1,19 @@
+{
+    "name":  "ordoviworld-api",
+    "compatibility_date":  "2026-10-01",
+    "d1_databases":  [
+                         {
+                             "database_name":  "ordoviworld-db",
+                             "database_id":  "f3058ba6-04d2-49a5-b9e0-68b2eeb15273",
+                             "binding":  "DB"
+                         }
+                     ],
+    "workers_dev":  true,
+    "r2_buckets":  [
+                       {
+                           "binding":  "FILES",
+                           "bucket_name":  "ordoviworld"
+                       }
+                   ],
+    "main":  "index.js"
+}
