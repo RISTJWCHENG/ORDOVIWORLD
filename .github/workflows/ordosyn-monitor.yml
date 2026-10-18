@@ -1,5 +1,5 @@
 name: Ordosyn Monitor
-run-name: Ordosyn Monitor 路 ${{ github.event_name }}
+run-name: Ordosyn Monitor - ${{ github.event_name }}
 
 on:
   push:
