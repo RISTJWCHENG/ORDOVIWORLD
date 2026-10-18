@@ -127,3 +127,5 @@ select[name*="sort" i]:focus-visible {
 }
 
 /* ORDOSYN SORT PILL END */
+/* V4 cached project logos; maintain letter fallback if image is unavailable. */
+.logo{position:relative;overflow:hidden}.ordosyn-project-logo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;z-index:1}.ordosyn-logo-initial{position:relative;z-index:0}

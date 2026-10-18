@@ -26,7 +26,15 @@ export default {
       if(url.pathname==='/api/projects') {
         const limit=Math.min(100,Math.max(1,Number.parseInt(url.searchParams.get('limit')||'100',10)||100));
         const rows=await env.DB.prepare("SELECT id,slug,name,description,website_url,github_url,category,tags_json,logo_key,updated_at FROM project_index WHERE status='published' ORDER BY updated_at DESC, id LIMIT ?").bind(limit).all();
-        const records=(rows.results||[]).map(p=>({id:p.id,slug:p.slug,name:p.name,description:p.description,websiteUrl:p.website_url,githubUrl:p.github_url,categories:[p.category],tags:JSON.parse(p.tags_json||'[]'),logoKey:p.logo_key,status:'published',updatedAt:p.updated_at}));
+        const records=[];
+        for(const p of rows.results||[]){
+          const d=await env.DB.prepare('SELECT logo_url,logo_key,website_status,website_checked_at FROM search_project_details_v4 WHERE entity_id=?').bind(p.id).first();
+          const cans=await env.DB.prepare('SELECT canister_id AS canisterId,role FROM search_project_canisters_v4 WHERE entity_id=?').bind(p.id).all();
+          const sources=await env.DB.prepare('SELECT source_type AS sourceType,source_url AS sourceUrl,observed_at AS collectedAt FROM search_sources_v3 WHERE entity_id=?').bind(p.id).all();
+          const logoKey=d?.logo_key||p.logo_key||'';
+          const logoUrl=logoKey ? new URL('/api/assets/'+logoKey,url.origin).href : d?.logo_url||'';
+          records.push({id:p.id,slug:p.slug,name:p.name,description:p.description,websiteUrl:p.website_url,githubUrl:p.github_url,categories:[p.category],tags:JSON.parse(p.tags_json||'[]'),logoKey,logoUrl,canisters:cans.results||[],sources:sources.results||[],websiteStatus:d?.website_status||'unchecked',lastVerifiedAt:d?.website_checked_at||'',status:'published',updatedAt:p.updated_at});
+        }
         return json({records,count:records.length});
       }
       if(url.pathname.startsWith('/api/assets/')) {
