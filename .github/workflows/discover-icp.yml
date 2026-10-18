@@ -19,7 +19,7 @@ jobs:
       - run: npm test
       # Does not publish or mutate the repository. Results are downloaded for human review.
       - name: Discover projects
-        run: npm run crawl
+        run: mkdir -p data && npm run crawl
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload review candidates
