@@ -13,17 +13,20 @@ let lastError = ''
 
 const notify = () => window.dispatchEvent(new Event('ordovician:auth-changed'))
 
+const appsIcon = `<svg viewBox="0 0 24 24" width="19" height="19" fill="currentColor" aria-hidden="true"><circle cx="5" cy="5" r="1.65"/><circle cx="12" cy="5" r="1.65"/><circle cx="19" cy="5" r="1.65"/><circle cx="5" cy="12" r="1.65"/><circle cx="12" cy="12" r="1.65"/><circle cx="19" cy="12" r="1.65"/><circle cx="5" cy="19" r="1.65"/><circle cx="12" cy="19" r="1.65"/><circle cx="19" cy="19" r="1.65"/></svg>`
+const userIcon = `<svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 19c.5-3.3 3-5 6.5-5s6 1.7 6.5 5"/></svg>`
+
 function render() {
   const el = root()
   if (!el) return
+  const apps = `<a class="ow-top-icon ow-apps-btn" href="#/explore" aria-label="Explore applications" title="Explore applications">${appsIcon}</a>`
   if (principal) {
     const name = getProfileName(principal)
-    el.innerHTML = `<a class="btn" href="#/profile" title="My Profile">${name ? safeLabel(name) : 'My Profile'}</a><span class="pid" title="${safeLabel(principal)}">${short(principal)}</span><button class="btn" data-act="out">Log out</button>`
+    el.innerHTML = `<div class="ow-topbar-actions">${apps}<div class="ow-account-slot"><button type="button" class="ow-top-icon ow-avatar-btn" data-act="menu" aria-haspopup="true" aria-expanded="false" aria-label="Open profile menu" title="My Profile">${userIcon}</button><div class="ow-account-menu" hidden><div class="ow-account-heading"><strong>${name ? safeLabel(name) : 'My Profile'}</strong><small title="${safeLabel(principal)}">${safeLabel(short(principal))}</small></div><a href="#/profile" class="ow-menu-item">My Profile</a><button type="button" class="ow-menu-item ow-menu-logout" data-act="out">Log out</button></div></div></div>`
   } else {
-    el.innerHTML = `<button class="btn" data-act="in" ${busy ? 'disabled' : ''}>${busy ? 'Connecting…' : lastError ? 'Retry login' : 'Login'}</button>${lastError ? `<span class="auth-error" role="alert" title="${safeLabel(lastError)}">${safeLabel(lastError)}</span>` : ''}`
+    el.innerHTML = `<div class="ow-topbar-actions">${apps}<div class="ow-account-slot"><button type="button" class="ow-top-icon ow-avatar-btn" data-act="in" aria-label="${busy ? 'Connecting' : lastError ? 'Retry login' : 'Login'}" title="${busy ? 'Connecting' : lastError ? 'Retry login' : 'Login'}" ${busy ? 'disabled' : ''}>${userIcon}</button></div></div>${lastError ? `<span class="ow-auth-error" role="alert">${safeLabel(lastError)}</span>` : ''}`
   }
 }
-
 async function refreshIdentity() {
   const previous = principal
   try {
@@ -55,6 +58,14 @@ export async function initAuth() {
   window.addEventListener('ordovician:profile-updated', render)
   root()?.addEventListener('click', async event => {
     const action = event.target.closest('[data-act]')?.dataset.act
+    if (action === 'menu') {
+      const menu = root()?.querySelector('.ow-account-menu')
+      if (!menu) return
+      const isOpening = menu.hidden
+      menu.hidden = !isOpening
+      root()?.querySelector('[data-act="menu"]')?.setAttribute('aria-expanded', String(isOpening))
+      return
+    }
     if (!action || busy) return
     busy = true
     lastError = ''
@@ -84,4 +95,17 @@ export async function initAuth() {
   })
 }
 
+// Close the profile dropdown when clicking outside, navigating, or pressing Escape.
+function closeAccountMenu() {
+  const menu = root()?.querySelector('.ow-account-menu')
+  if (menu) menu.hidden = true
+  root()?.querySelector('[data-act="menu"]')?.setAttribute('aria-expanded', 'false')
+}
+document.addEventListener('click', event => {
+  if (!root()?.contains(event.target)) closeAccountMenu()
+})
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') closeAccountMenu()
+})
+window.addEventListener('hashchange', closeAccountMenu)
 export const currentPrincipal = () => principal
