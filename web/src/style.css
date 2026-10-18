@@ -222,3 +222,28 @@ select[name*="sort" i]:focus-visible {
   outline-offset: 2px;
 }
 /* ORDOSYN_CARD_BUTTONS_END */
+/* ORDOSYN_NAV_CLEAN_START */
+
+/* Default navigation buttons: transparent */
+.navrow a {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 9px;
+  transition: background-color .15s ease, color .15s ease;
+}
+
+/* Hover: subtle gray only */
+.navrow a:hover {
+  background: #f6f7f9 !important;
+  color: #101828 !important;
+}
+
+/* Selected page: subtle background */
+.navrow a.on,
+.navrow a[aria-current="page"] {
+  background: #f2f4f7 !important;
+  color: #101828 !important;
+}
+
+/* ORDOSYN_NAV_CLEAN_END */
