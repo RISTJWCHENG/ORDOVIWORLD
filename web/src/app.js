@@ -53,7 +53,7 @@ admin(){return`<div class="page"><h1>Admin (demo shell)</h1><p class="note">Demo
 const app=document.getElementById('app');
 const mast=document.getElementById('mast');
 (()=>{const C=['#2F6BFF','#E5484D','#E8920C','#12A594','#8E4EC6','#E93D82','#3E63DD','#30A46C','#F76B15','#0091FF','#D6409F','#5B5BD6','#E54D2E','#00A2C7','#46A758','#CE2C31'];let k=0;
-mast.innerHTML=`<h1><a href="#/" aria-label="Ordovician Search, home">${[...'Ordovician Search'].map(c=>c===' '?' ':`<span aria-hidden="true" style="color:${C[k++]}">${c}</span>`).join('')}</a></h1><p class="mute">Discover the next generation of apps, games, and decentralized experiences built on the Internet Computer.</p>${sbar()}${navRow()}`})();
+mast.innerHTML=`<h1><a href="#/" aria-label="Ordosyn, home">${[...'Ordosyn'].map(c=>c===' '?' ':`<span aria-hidden="true" style="color:${C[k++]}">${c}</span>`).join('')}</a></h1><p class="mute">Discover the next generation of apps, games, and decentralized experiences built on the Internet Computer.</p>${sbar()}${navRow()}`})();
 
 function route(){const h=location.hash.slice(1)||'/',path=h.split('?')[0],q=query(h),seg=path.split('/')[1]||'home';
 const mi=mast.querySelector('input');if(mi)mi.value=seg==='search'?(q.q||''):'';app.innerHTML=(seg==='app'?V.app(path.split('/')[2]):(V[seg]||(()=>'<p style="padding:80px 0;text-align:center">Nothing here. <a href="#/" style="text-decoration:underline">Back home</a></p>'))(q));
