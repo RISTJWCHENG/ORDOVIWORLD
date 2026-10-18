@@ -1,0 +1,2 @@
+# One public Caffeine Live App HTTPS URL per line. Do not include drafts or password-protected apps.
+# Example (replace this comment with a real URL): https://your-app.caffeine.xyz/
