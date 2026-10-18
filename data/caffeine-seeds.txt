@@ -1,2 +1,6 @@
-# One public Caffeine Live App HTTPS URL per line. Do not include drafts or password-protected apps.
-# Example (replace this comment with a real URL): https://your-app.caffeine.xyz/
+https://icpvibecoder-y0l.caffeine.xyz/
+https://cipher-run-h84.caffeine.xyz/
+https://ic-sol-dwb.caffeine.xyz/
+https://crypto-aquarium-02r.caffeine.xyz/
+https://yibnib-xg0.caffeine.xyz/
+https://multi-dex.caffeine.xyz/
