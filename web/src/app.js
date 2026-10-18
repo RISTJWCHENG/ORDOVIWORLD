@@ -1,3 +1,4 @@
+import {searchProjectsV3} from './cloud-search.js';
 import { loadPublishedProjects } from './cloud-data.js'
 import { renderProfile, initProfile } from './profile.js'
 
@@ -40,7 +41,7 @@ profile(){return renderProfile()},
 home(){const rec=[...P].sort((a,b)=>b.upd.localeCompare(a.upd)).slice(0,3);return`<div style="max-width:760px;margin:0 auto">${noteHTML()}</div>`+
 sec('Explore Categories',`<div class="chips">${CATS.map(c=>`<a class="btn" href="#/explore?cat=${encodeURIComponent(c)}">${c}</a>`).join('')}</div>`)+sec('Featured Projects',grid(P.filter(p=>p.idn!=='discovered').concat(P.slice(0,3)).slice(0,3)))+sec('Trending Projects','<p class="mute" style="font-size:14px;margin-bottom:12px">Demo ordering only. Real trending needs real usage data.</p>'+grid(P.slice(3,6)))+sec('Recently Discovered',grid(rec))+sec('Discover ICP Games',grid(P.filter(p=>p.genre).slice(0,3),1))+sec('Join the Ecosystem','<div class="glass card" style="flex-direction:row;align-items:center;flex-wrap:wrap"><p class="mute" style="flex:1">Building on ICP? Submit your project for review. Basic listings are free.</p><a class="btn p" href="#/submit">Submit Project</a></div>')},
 search(q){const pg=+q.page||1,sort=q.sort||'relevance',all=find({...q,sort}),sl=all.slice((pg-1)*6,pg*6),b=`/search?q=${encodeURIComponent(q.q||'')}&cat=${encodeURIComponent(q.cat||'')}&sort=${sort}`;
-return`<div class="page"><h1>Search</h1><div class="row" style="margin-top:20px;flex-wrap:wrap;gap:16px">${chips(CATS,q.cat,'cat')}<label style="margin-left:auto;display:flex;gap:8px;align-items:center;margin:0">Sort <select id="sort" style="width:auto"><option value="relevance">Relevance</option><option value="alpha"${sort==='alpha'?' selected':''}>A–Z</option><option value="updated"${sort==='updated'?' selected':''}>Recently updated</option></select></label></div><div style="margin-top:24px" aria-live="polite"><p class="mute" style="font-size:14px;margin-bottom:12px">${all.length} result${all.length===1?'':'s'}${q.q?` for “${esc(q.q)}”`:''}</p>${all.length?grid(sl)+pager(all.length,pg,6,b):'<p class="glass card mute" style="padding:40px;text-align:center">No projects match yet. Try a different keyword or clear the filters.</p>'}</div></div>`},
+return`<div class="page"><h1>Search</h1><div class="row" style="margin-top:20px;flex-wrap:wrap;gap:16px">${chips(CATS,q.cat,'cat')}<label style="margin-left:auto;display:flex;gap:8px;align-items:center;margin:0">Sort <select id="sort" style="width:auto"><option value="relevance">Relevance</option><option value="alpha"${sort==='alpha'?' selected':''}>A–Z</option><option value="updated"${sort==='updated'?' selected':''}>Recently updated</option></select></label></div><div style="margin-top:24px" aria-live="polite" id="remote-search-results"><p class="mute" style="font-size:14px;margin-bottom:12px">${all.length} result${all.length===1?'':'s'}${q.q?` for “${esc(q.q)}”`:''}</p>${all.length?grid(sl)+pager(all.length,pg,6,b):'<p class="glass card mute" style="padding:40px;text-align:center">No projects match yet. Try a different keyword or clear the filters.</p>'}</div></div>`},
 explore(q){const pg=+q.page||1,all=find({cat:q.cat,sort:'alpha'});return`<div class="page" id="cats"><h1>Explore</h1>${noteHTML()}${chips(CATS,q.cat,'cat')}<div style="margin-top:24px">${all.length?grid(all.slice((pg-1)*9,pg*9))+pager(all.length,pg,9,`/explore?cat=${encodeURIComponent(q.cat||'')}`):'<p class="glass card mute" style="padding:40px;text-align:center">No projects in this category yet.</p>'}</div></div>`},
 games(q){const l=find({cat:'Games',genre:q.genre,sort:'alpha'});return`<div class="page"><h1>ICP Games</h1>${noteHTML()}${chips(GENRES,q.genre,'genre')}<p class="mute" style="font-size:14px;margin:12px 0 24px">“Play Now” appears only when a verified launch URL exists. Games open in a new tab, not an iframe.</p>${l.length?grid(l,1):'<p class="glass card mute" style="padding:40px;text-align:center">No games in this genre yet.</p>'}</div>`},
 app(slug){const p=P.find(x=>x.slug===slug);if(!p)return'<p style="padding:80px 0;text-align:center">Project not found. <a href="#/explore" style="text-decoration:underline">Browse all projects</a></p>';const rel=P.filter(x=>x!==p&&x.cats.some(c=>p.cats.includes(c))).slice(0,3);
@@ -56,6 +57,7 @@ mast.innerHTML=`<h1><a href="#/" aria-label="Ordovician Search, home">${[...'Ord
 
 function route(){const h=location.hash.slice(1)||'/',path=h.split('?')[0],q=query(h),seg=path.split('/')[1]||'home';
 const mi=mast.querySelector('input');if(mi)mi.value=seg==='search'?(q.q||''):'';app.innerHTML=(seg==='app'?V.app(path.split('/')[2]):(V[seg]||(()=>'<p style="padding:80px 0;text-align:center">Nothing here. <a href="#/" style="text-decoration:underline">Back home</a></p>'))(q));
+if(seg==='search' && q.q?.trim()) void remoteSearch(q,location.hash);
 document.title=seg==='home'?'Ordovician Search — Explore the Internet Computer Universe':'Ordovician Search · '+seg;window.scrollTo({top:0,left:0,behavior:'instant'});
 document.querySelectorAll('.navrow a').forEach(a=>a.classList.toggle('on',a.getAttribute('href').split('?')[0]==='#/'+seg))}
 app.addEventListener('click',e=>{const a=e.target.closest('[data-k]');if(!a)return;e.preventDefault();const q=query(location.hash.slice(1)),path=location.hash.slice(1).split('?')[0]||'/';q[a.dataset.k]=a.dataset.v;delete q.page;location.hash=path+'?'+Object.entries(q).filter(([,v])=>v).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')});
@@ -71,6 +73,19 @@ r.hidden=false;r.textContent='This standalone demo has no backend, so nothing wa
 addEventListener('hashchange',route);
 addEventListener('ordovician:auth-changed', () => { if (location.hash.startsWith('#/profile')) route() });
 initProfile();
+async function remoteSearch(q,startedHash){
+ try {
+  const page=Math.max(1,Number(q.page)||1);
+  const result=await searchProjectsV3(q.q||'',q.cat||'',page,6);
+  if(!result||location.hash!==startedHash)return;
+  const el=document.getElementById('remote-search-results');if(!el)return;
+  const items=result.records.map(fromRecord);
+  for(const p of items)if(!P.some(x=>x.slug===p.slug))P.push(p);
+  const base=`/search?q=${encodeURIComponent(q.q||'')}&cat=${encodeURIComponent(q.cat||'')}&sort=${encodeURIComponent(q.sort||'relevance')}`;
+  el.innerHTML=`<p class="mute" style="font-size:14px;margin-bottom:12px">${Number(result.count)||0} indexed result(s) for 鈥?{esc(q.q||'')}鈥?/p>` +
+   (items.length?grid(items)+pager(result.count,page,6,base):'<p class="glass card mute" style="padding:40px;text-align:center">No matching indexed projects yet.</p>');
+ } catch(err){console.warn('Remote search unavailable; using the local catalog.',err)}
+}
 // Real data: only records you approved (web/public/projects.json). Falls back to labeled demo data when none exist.
 const fromRecord=r=>({name:String(r.name||'').slice(0,80),desc:String(r.description||''),cats:r.categories&&r.categories.length?r.categories.filter(c=>CATS.includes(c)):['Other'],tags:(r.tags||[]).slice(0,5).map(String),slug:String(r.slug||'').replace(/[^a-z0-9-]/g,''),url:safe(r.websiteUrl)?r.websiteUrl:'',play:'',gh:safe(r.githubUrl)?r.githubUrl:'',genre:'',idn:['claimed','verified'].includes(r.identity)?r.identity:'discovered',ver:r.lastVerifiedAt||'',upd:String(r.updatedAt||'').slice(0,10),demo:false,cans:(r.canisters||[]).map(c=>({id:String(c.canisterId),role:String(c.role)})),srcs:(r.sources||[]).map(x=>({t:String(x.sourceType),u:x.sourceUrl,at:String(x.collectedAt)}))});
 loadPublishedProjects().then(r=>r.ok?r.json():null).then(j=>{const l=((j&&j.records)||[]).filter(r=>r.status==='published'&&r.slug).map(fromRecord);if(l.length)P=l}).catch(()=>{}).finally(route);

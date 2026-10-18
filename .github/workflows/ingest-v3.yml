@@ -1,0 +1,41 @@
+name: ICP V3 crawl to R2
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 5 * * *'
+permissions:
+  contents: read
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Crawl public ICP sources
+        run: mkdir -p data && npm run crawl
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Convert to strict R2 import batch
+        run: node crawler/export-r2-v3.mjs data/projects.json data/import-v3.json
+      - name: Upload candidate batch for visibility
+        uses: actions/upload-artifact@v4
+        with:
+          name: v3-batch-${{ github.run_id }}
+          path: data/import-v3.json
+          retention-days: 14
+      - name: Upload to R2 (only when Cloudflare secrets configured)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo 'Cloudflare GitHub secrets not set. Artifact generated; R2 upload skipped.'
+            exit 0
+          fi
+          npx --yes wrangler@4.151.1 r2 object put "ordoviworld/imports/v3/gh-${{ github.run_id }}-${{ github.run_attempt }}.json" --remote --file=data/import-v3.json --content-type=application/json

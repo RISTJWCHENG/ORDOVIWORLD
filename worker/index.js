@@ -1,3 +1,5 @@
+import {queueHandler} from './v3/ingest.js';
+import {handleSearch} from './v3/search.js';
 const ALLOWED_ORIGIN = 'https://ristjwcheng.github.io';
 const allowed = new Set(['GET', 'HEAD', 'OPTIONS']);
 const cors = {'access-control-allow-origin': ALLOWED_ORIGIN, 'vary':'Origin', 'access-control-allow-methods':'GET, HEAD, OPTIONS', 'access-control-allow-headers':'Content-Type', 'x-content-type-options':'nosniff'};
@@ -10,6 +12,7 @@ function assetKey(url) {
   return key;
 }
 export default {
+  queue:queueHandler,
   async fetch(request,env) {
     const url=new URL(request.url);
     if(request.method==='OPTIONS') return new Response(null,{status:204,headers:cors});
@@ -19,6 +22,7 @@ export default {
         const result=await env.DB.prepare('SELECT 1 AS ok').first();
         return json({ok:result?.ok===1,service:'ordoviworld-api',storage:'D1 + R2',version:1});
       }
+      if(url.pathname==='/api/search') return handleSearch(request,env);
       if(url.pathname==='/api/projects') {
         const limit=Math.min(100,Math.max(1,Number.parseInt(url.searchParams.get('limit')||'100',10)||100));
         const rows=await env.DB.prepare("SELECT id,slug,name,description,website_url,github_url,category,tags_json,logo_key,updated_at FROM project_index WHERE status='published' ORDER BY updated_at DESC, id LIMIT ?").bind(limit).all();

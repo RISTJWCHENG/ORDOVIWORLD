@@ -15,5 +15,16 @@
                            "bucket_name":  "ordoviworld"
                        }
                    ],
-    "main":  "index.js"
+    "main":  "index.js",
+    "queues":  {
+                   "consumers":  [
+                                     {
+                                         "queue":  "ordoviworld-ingest-v3",
+                                         "max_batch_size":  2,
+                                         "max_batch_timeout":  10,
+                                         "max_retries":  3,
+                                         "dead_letter_queue":  "ordoviworld-ingest-dlq-v3"
+                                     }
+                                 ]
+               }
 }
