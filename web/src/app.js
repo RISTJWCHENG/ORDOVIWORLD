@@ -47,7 +47,14 @@ const mi=mast.querySelector('input');if(mi)mi.value=seg==='search'?(q.q||''):'';
 if(seg==='search') void remoteSearch(q,location.hash);
 if(seg==='games') void remoteGames(location.hash);
 document.title=seg==='home'?'Ordovician Search — Explore the Internet Computer Universe':'Ordovician Search · '+seg;window.scrollTo({top:0,left:0,behavior:'instant'});
-document.querySelectorAll('.navrow a').forEach(a=>a.classList.toggle('on',a.getAttribute('href').split('?')[0]==='#/'+seg))}
+document.querySelectorAll('.navrow a').forEach(a=>{
+  const target=a.getAttribute('href');
+  const current=location.hash||'#/explore';
+  const active=current===target||current.startsWith(target+'&page=');
+  a.classList.toggle('on',active);
+  if(active){a.setAttribute('aria-current','page')}
+  else{a.removeAttribute('aria-current')}
+})}
 app.addEventListener('click',e=>{const a=e.target.closest('[data-k]');if(!a)return;e.preventDefault();const q=query(location.hash.slice(1)),path=location.hash.slice(1).split('?')[0]||'/';q[a.dataset.k]=a.dataset.v;delete q.page;location.hash=path+'?'+Object.entries(q).filter(([,v])=>v).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')});
 app.addEventListener('change',e=>{if(e.target.id!=='sort')return;const q=query(location.hash.slice(1));q.sort=e.target.value;delete q.page;location.hash='/search?'+Object.entries(q).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')});
 document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;
