@@ -60,7 +60,7 @@ document.title=seg==='home'?'Ordovician Search — Explore the Internet Computer
 document.querySelectorAll('.navrow a').forEach(a=>a.classList.toggle('on',a.getAttribute('href').split('?')[0]==='#/'+seg))}
 app.addEventListener('click',e=>{const a=e.target.closest('[data-k]');if(!a)return;e.preventDefault();const q=query(location.hash.slice(1)),path=location.hash.slice(1).split('?')[0]||'/';q[a.dataset.k]=a.dataset.v;delete q.page;location.hash=path+'?'+Object.entries(q).filter(([,v])=>v).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')});
 app.addEventListener('change',e=>{if(e.target.id!=='sort')return;const q=query(location.hash.slice(1));q.sort=e.target.value;delete q.page;location.hash='/search?'+Object.entries(q).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')});
-app.addEventListener('submit',e=>{e.preventDefault();const f=e.target;
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;
 if(f.id==='sf'){location.hash='/search?q='+encodeURIComponent(f.q.value.trim());return}
 if(f.id==='sub'){const d=Object.fromEntries(new FormData(f)),x={};if(d.company)return;
 if(d.name.trim().length<2)x.name='Enter the project name.';if(!safe(d.website))x.website='Enter a full https:// URL.';if(d.description.trim().length<20)x.description='Describe the project in at least 20 characters.';
