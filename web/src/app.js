@@ -57,7 +57,7 @@ mast.innerHTML=`<h1><a href="#/" aria-label="Ordovician Search, home">${[...'Ord
 
 function route(){const h=location.hash.slice(1)||'/',path=h.split('?')[0],q=query(h),seg=path.split('/')[1]||'home';
 const mi=mast.querySelector('input');if(mi)mi.value=seg==='search'?(q.q||''):'';app.innerHTML=(seg==='app'?V.app(path.split('/')[2]):(V[seg]||(()=>'<p style="padding:80px 0;text-align:center">Nothing here. <a href="#/" style="text-decoration:underline">Back home</a></p>'))(q));
-if(seg==='search' && q.q?.trim()) void remoteSearch(q,location.hash);
+if(seg==='search') void remoteSearch(q,location.hash);
 document.title=seg==='home'?'Ordovician Search — Explore the Internet Computer Universe':'Ordovician Search · '+seg;window.scrollTo({top:0,left:0,behavior:'instant'});
 document.querySelectorAll('.navrow a').forEach(a=>a.classList.toggle('on',a.getAttribute('href').split('?')[0]==='#/'+seg))}
 app.addEventListener('click',e=>{const a=e.target.closest('[data-k]');if(!a)return;e.preventDefault();const q=query(location.hash.slice(1)),path=location.hash.slice(1).split('?')[0]||'/';q[a.dataset.k]=a.dataset.v;delete q.page;location.hash=path+'?'+Object.entries(q).filter(([,v])=>v).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')});
@@ -73,18 +73,37 @@ r.hidden=false;r.textContent='This standalone demo has no backend, so nothing wa
 addEventListener('hashchange',route);
 addEventListener('ordovician:auth-changed', () => { if (location.hash.startsWith('#/profile')) route() });
 initProfile();
-async function remoteSearch(q,startedHash){
- try {
-  const page=Math.max(1,Number(q.page)||1);
-  const result=await searchProjectsV3(q.q||'',q.cat||'',page,6);
-  if(!result||location.hash!==startedHash)return;
-  const el=document.getElementById('remote-search-results');if(!el)return;
-  const items=result.records.map(fromRecord);
-  for(const p of items)if(!P.some(x=>x.slug===p.slug))P.push(p);
-  const base=`/search?q=${encodeURIComponent(q.q||'')}&cat=${encodeURIComponent(q.cat||'')}&sort=${encodeURIComponent(q.sort||'relevance')}`;
-  el.innerHTML=`<p class="mute" style="font-size:14px;margin-bottom:12px">${Number(result.count)||0} indexed result(s) for 鈥?{esc(q.q||'')}鈥?/p>` +
-   (items.length?grid(items)+pager(result.count,page,6,base):'<p class="glass card mute" style="padding:40px;text-align:center">No matching indexed projects yet.</p>');
- } catch(err){console.warn('Remote search unavailable; using the local catalog.',err)}
+async function remoteSearch(q, startedHash) {
+  const term = String(q.q || '').trim();
+  const page = Math.max(1, Math.floor(Number(q.page) || 1));
+  try {
+    const result = await searchProjectsV3(term, q.cat || '', page, 6);
+    if (!result || location.hash !== startedHash) return;
+    const target = document.getElementById('remote-search-results');
+    if (!target) return;
+    const items = (Array.isArray(result.records) ? result.records : []).map(fromRecord);
+    for (const p of items) {
+      if (!P.some(existing => existing.slug === p.slug)) P.push(p);
+    }
+    const total = Math.max(0, Number(result.count) || 0);
+    const base = `/search?q=${encodeURIComponent(term)}&cat=${encodeURIComponent(q.cat || '')}&sort=${encodeURIComponent(q.sort || 'relevance')}`;
+
+    // Keep user input OUT of HTML strings to prevent mojibake, broken templates and injection.
+    target.replaceChildren();
+    const summary = document.createElement('p');
+    summary.className = 'mute';
+    summary.style.cssText = 'font-size:14px;margin-bottom:12px';
+    summary.textContent = `${total} indexed result${total === 1 ? '' : 's'}${term ? ` for "${term}"` : ''}`;
+    target.appendChild(summary);
+
+    const content = document.createElement('div');
+    content.innerHTML = items.length
+      ? grid(items) + pager(total, page, 6, base)
+      : '<p class="glass card mute" style="padding:40px;text-align:center">No matching indexed projects yet. Check the spelling or try a shorter keyword.</p>';
+    target.appendChild(content);
+  } catch (err) {
+    console.warn('Remote search unavailable; using the local catalog.', err);
+  }
 }
 // Real data: only records you approved (web/public/projects.json). Falls back to labeled demo data when none exist.
 const fromRecord=r=>({name:String(r.name||'').slice(0,80),desc:String(r.description||''),cats:r.categories&&r.categories.length?r.categories.filter(c=>CATS.includes(c)):['Other'],tags:(r.tags||[]).slice(0,5).map(String),slug:String(r.slug||'').replace(/[^a-z0-9-]/g,''),url:safe(r.websiteUrl)?r.websiteUrl:'',play:'',gh:safe(r.githubUrl)?r.githubUrl:'',genre:'',idn:['claimed','verified'].includes(r.identity)?r.identity:'discovered',ver:r.lastVerifiedAt||'',upd:String(r.updatedAt||'').slice(0,10),demo:false,cans:(r.canisters||[]).map(c=>({id:String(c.canisterId),role:String(c.role)})),srcs:(r.sources||[]).map(x=>({t:String(x.sourceType),u:x.sourceUrl,at:String(x.collectedAt)}))});
