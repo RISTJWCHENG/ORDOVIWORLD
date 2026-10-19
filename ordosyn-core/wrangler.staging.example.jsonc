@@ -1,0 +1,8 @@
+{
+  "name": "ordosyn-core-staging",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "d1_databases": [{"binding":"DB","database_name":"ordosyn-core-staging-db","database_id":"REPLACE_WITH_NEW_STAGING_DATABASE_ID"}],
+  "r2_buckets": [{"binding":"FILES","bucket_name":"ordosyn-core-staging-files"}]
+}
