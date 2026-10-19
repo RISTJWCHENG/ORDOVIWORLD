@@ -18,7 +18,7 @@ function load(principal) {
 
 export function renderProfile() {
   const principal = currentPrincipal()
-  if (!principal) return `<div class="page profile-page"><div class="profile-intro"><span class="profile-eyebrow">YOUR IDENTITY ON ICP</span><h1>Make your mark in the ecosystem.</h1><p class="mute">Sign in with Internet Identity to create and personalize your Ordovician Search profile.</p><p class="note" style="margin-top:24px">Use the Login button in the top-right corner to get started.</p></div></div>`
+  if (!principal) return `<div class="page profile-page"><div class="profile-intro"><span class="profile-eyebrow">YOUR IDENTITY ON ICP</span><h1>Make your mark in the ecosystem.</h1><p class="mute">Sign in with Internet Identity to create and personalize your Ordosyn profile.</p><p class="note" style="margin-top:24px">Use the Login button in the top-right corner to get started.</p></div></div>`
   const data = load(principal)
   const avatar = avatars.includes(data.avatar) ? data.avatar : avatars[0]
   const role = roles.includes(data.role) ? data.role : roles[0]

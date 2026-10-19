@@ -1,4 +1,4 @@
-// Internet Identity authentication for Ordovician Search.
+// Internet Identity authentication for Ordosyn.
 // A Principal is obtained from an Identity, NOT directly from AuthClient.
 import { AuthClient } from '@icp-sdk/auth/client'
 import { getProfileName } from './profile.js'
