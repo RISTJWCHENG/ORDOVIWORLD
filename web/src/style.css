@@ -374,3 +374,39 @@ select[name*="sort" i]:focus-visible {
 .ordosyn-profile-clean .ow-menu-logout:hover{color:#b74d59;background:#fff2f3}
 .ordosyn-profile-clean .ow-menu-logout:hover svg{color:#b74d59}
 /* ORDOSYN_PROFILE_CLEAN_END */
+
+/* ORDOSYN_PROFILE_STATUS_ICON_START */
+.ordosyn-profile-check {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  color: #25a77d !important;
+  font-size: 0 !important;
+  overflow: hidden;
+}
+
+.ordosyn-profile-check svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+}
+
+.ordosyn-profile-heading {
+  align-items: center;
+}
+
+.ordosyn-profile-identity {
+  min-width: 0;
+}
+
+.ordosyn-profile-identity strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* ORDOSYN_PROFILE_STATUS_ICON_END */
