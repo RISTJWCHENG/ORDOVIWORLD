@@ -14,3 +14,41 @@ test('validates real quoted evidence',()=>{assert.equal(validateSuggestion(sampl
 test('model suggestion stored without altering publication status',async()=>{const d=db();const r=await aiRequest(request(),env(d),undefined,model);assert.equal(r.status,200);const result=await r.json();assert.equal(result.reviewRequired,true);assert.equal(result.projectStatusUnchanged,true);assert.match(result.id,/^ai_[a-f0-9]{32}$/);assert.equal(d.state.insert,1);assert.equal(d.state.sql.filter(s=>/UPDATE projects|INSERT INTO review_events/i.test(s)).length,0);});
 test('unverifiable model quote is not persisted',async()=>{const d=db();const fake=async()=>({ok:true,json:async()=>({candidates:[{content:{parts:[{text:JSON.stringify({...sample,evidenceQuotes:['Hallucinated information']})}]}}]})});assert.equal((await aiRequest(request(),env(d),undefined,fake)).status,422);assert.equal(d.state.insert,0);});
 test('GET suggestions requires review token',async()=>{const d=db();const req=new Request('https://example.workers.dev/internal/ai/suggestions?projectId='+projectId,{headers:{authorization:'Bearer secret'}});const r=await aiRequest(req,env(d));assert.equal(r.status,200);assert.deepEqual((await r.json()).records,[]);});
+
+
+test('upstream failures return safe diagnostic codes',async()=>{
+ const cases=[
+  [400,'MODEL_BAD_REQUEST'],
+  [403,'MODEL_AUTH_ERROR'],
+  [404,'MODEL_NOT_FOUND'],
+  [429,'MODEL_RATE_LIMITED'],
+  [503,'MODEL_UPSTREAM_ERROR']
+ ];
+ for(const [status,code] of cases){
+  const d=db();
+  const fake=async()=>({ok:false,status});
+  const response=await aiRequest(request(),env(d),undefined,fake);
+  assert.equal(response.status,502);
+  const body=await response.json();
+  assert.equal(body.code,code);
+  assert.equal(body.upstreamStatus,status);
+  assert.equal(d.state.insert,0);
+  assert.equal(JSON.stringify(body).includes('test'),false);
+ }
+});
+
+test('model timeout and network failures are classified',async()=>{
+ for(const [name,code] of [
+  ['TimeoutError','MODEL_TIMEOUT'],
+  ['TypeError','MODEL_NETWORK_ERROR']
+ ]){
+  const d=db();
+  const fake=async()=>{const e=new Error('private upstream detail');e.name=name;throw e;};
+  const response=await aiRequest(request(),env(d),undefined,fake);
+  assert.equal(response.status,502);
+  const body=await response.json();
+  assert.equal(body.code,code);
+  assert.equal(JSON.stringify(body).includes('private upstream detail'),false);
+  assert.equal(d.state.insert,0);
+ }
+});
