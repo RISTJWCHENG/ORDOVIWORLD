@@ -321,3 +321,39 @@ select[name*="sort" i]:focus-visible {
 }
 
 /* ORDOSYN_WIDE_LAYOUT_END */
+
+/* ORDOSYN_NAV_PILL_START */
+
+/* Default: transparent navigation links */
+.navrow a {
+  border-radius: 999px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 7px 15px !important;
+  border: none !important;
+  transition: background-color .16s ease, color .16s ease;
+}
+
+/* Selected: light gray oval pill */
+.navrow a.on,
+.navrow a[aria-current="page"] {
+  border-radius: 999px !important;
+  background-color: #f0f2f5 !important;
+  color: #101828 !important;
+}
+
+/* Hover: slightly lighter oval background */
+.navrow a:hover:not(.on):not([aria-current="page"]) {
+  border-radius: 999px !important;
+  background-color: #f7f8fa !important;
+  color: #101828 !important;
+}
+
+/* Keyboard focus */
+.navrow a:focus-visible {
+  border-radius: 999px !important;
+  outline: 2px solid #a5bafa !important;
+  outline-offset: 2px;
+}
+
+/* ORDOSYN_NAV_PILL_END */
