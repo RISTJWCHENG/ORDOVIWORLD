@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {aiRequest,validateSuggestion} from '../worker/ai.js';
+const projectId='proj_'+'a'.repeat(32);
+const excerpt='DecideAI builds useful AI applications on the Internet Computer with transparent governance and user ownership. '.repeat(3);
+const sample={category:'AI',summary:'DecideAI builds AI applications on Internet Computer for community participants.',tags:['AI','ICP'],confidence:0.87,evidenceQuotes:['DecideAI builds useful AI applications on the Internet Computer']};
+const request=(id=projectId,token='secret')=>new Request('https://example.workers.dev/internal/ai/suggest',{method:'POST',headers:{authorization:`Bearer ${token}`},body:JSON.stringify({projectId:id})});
+function db(){const state={insert:0,sql:[]};return {state,prepare(sql){state.sql.push(sql);return {bind(){return {first:async()=>sql.startsWith('SELECT id,name')?{id:projectId,name:'DecideAI DAO',websiteUrl:'https://decideai.xyz',description:'ICP AI',status:'published'}:{id:'page_a',bodyText:excerpt,contentHash:'a'.repeat(64)},run:async()=>{state.insert++;return {success:true}},all:async()=>({results:[]})}}}}};}
+const env=db=>({DB:db,REVIEW_TOKEN:'secret',GEMINI_API_KEY:'test',GEMINI_MODEL:'gemini-2.5-flash'});
+const model=async(url,opts)=>{assert.match(url,/generativelanguage.googleapis.com/);assert.equal(opts.headers['x-goog-api-key'],'test');return {ok:true,json:async()=>({candidates:[{content:{parts:[{text:JSON.stringify(sample)}]}}]})};};
+test('authorization and no automatic edits',async()=>{const d=db();assert.equal((await aiRequest(request(projectId,'bad'),env(d),undefined,model)).status,401);assert.equal(d.state.sql.length,0);});
+test('rejects forged project IDs',async()=>{const d=db();assert.equal((await aiRequest(request('not-real'),env(d),undefined,model)).status,400);});
+test('validates real quoted evidence',()=>{assert.equal(validateSuggestion(sample,excerpt).category,'AI');assert.throws(()=>validateSuggestion({...sample,evidenceQuotes:['Invented fake evidence not found']},excerpt));});
+test('model suggestion stored without altering publication status',async()=>{const d=db();const r=await aiRequest(request(),env(d),undefined,model);assert.equal(r.status,200);const result=await r.json();assert.equal(result.reviewRequired,true);assert.equal(result.projectStatusUnchanged,true);assert.match(result.id,/^ai_[a-f0-9]{32}$/);assert.equal(d.state.insert,1);assert.equal(d.state.sql.filter(s=>/UPDATE projects|INSERT INTO review_events/i.test(s)).length,0);});
+test('unverifiable model quote is not persisted',async()=>{const d=db();const fake=async()=>({ok:true,json:async()=>({candidates:[{content:{parts:[{text:JSON.stringify({...sample,evidenceQuotes:['Hallucinated information']})}]}}]})});assert.equal((await aiRequest(request(),env(d),undefined,fake)).status,422);assert.equal(d.state.insert,0);});
+test('GET suggestions requires review token',async()=>{const d=db();const req=new Request('https://example.workers.dev/internal/ai/suggestions?projectId='+projectId,{headers:{authorization:'Bearer secret'}});const r=await aiRequest(req,env(d));assert.equal(r.status,200);assert.deepEqual((await r.json()).records,[]);});

@@ -1,3 +1,4 @@
+import {aiRequest} from './ai.js';
 import {reviewRequest} from './review.js';
 import {enqueueIngest, consumeIngest} from './ingest.js';
 import {searchProjects, searchPages} from './search.js';
@@ -16,6 +17,7 @@ export default {
     if(request.method==='OPTIONS')return new Response(null,{status:204,headers:cors});
     if(url.pathname==='/internal/ingest'&&request.method==='POST')return enqueueIngest(request,env);
     if(url.pathname==='/internal/review'||url.pathname==='/internal/review/decision')return reviewRequest(request,env,url);
+    if(url.pathname==='/internal/ai/suggest'||url.pathname==='/internal/ai/suggestions')return aiRequest(request,env,url);
     if(!['GET','HEAD'].includes(request.method))return json({error:'Method not allowed'},405);
     try{
       if(url.pathname==='/api/health') {const check=await env.DB.prepare('SELECT 1 AS ok').first();return json({ok:check?.ok===1,service:'ordosyn-core',version:'1.0'});}
