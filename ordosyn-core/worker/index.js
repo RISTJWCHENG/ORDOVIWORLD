@@ -1,3 +1,5 @@
+import {reviewRequest} from './review.js';
+import {enqueueIngest, consumeIngest} from './ingest.js';
 import {searchProjects, searchPages} from './search.js';
 const origin = 'https://ristjwcheng.github.io';
 const cors = {'access-control-allow-origin':origin,'access-control-allow-methods':'GET, HEAD, OPTIONS','access-control-allow-headers':'Content-Type','vary':'Origin','x-content-type-options':'nosniff'};
@@ -13,6 +15,7 @@ export default {
     const url=new URL(request.url);
     if(request.method==='OPTIONS')return new Response(null,{status:204,headers:cors});
     if(url.pathname==='/internal/ingest'&&request.method==='POST')return enqueueIngest(request,env);
+    if(url.pathname==='/internal/review'||url.pathname==='/internal/review/decision')return reviewRequest(request,env,url);
     if(!['GET','HEAD'].includes(request.method))return json({error:'Method not allowed'},405);
     try{
       if(url.pathname==='/api/health') {const check=await env.DB.prepare('SELECT 1 AS ok').first();return json({ok:check?.ok===1,service:'ordosyn-core',version:'1.0'});}
