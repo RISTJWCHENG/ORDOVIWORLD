@@ -42,7 +42,18 @@ export async function reviewRequest(request,env,url=new URL(request.url)){
  ];
  try{
   const result=await env.DB.batch(statements);
-  if((result?.[0]?.meta?.changes??0)!==1||(result?.[1]?.meta?.changes??0)!==1)return respond({error:'Concurrent review; retry with new request ID'},409);
+  if((result?.[0]?.meta?.changes??0)!==1||(result?.[1]?.meta?.changes??0)!==1){
+   const finalProject=await env.DB.prepare('SELECT id,status,category FROM projects WHERE id=?').bind(projectId).first();
+   const finalAudit=await env.DB.prepare('SELECT project_id,from_status,to_status,category FROM review_events WHERE id=?').bind(requestId).first();
+   if(finalProject?.status!==decision||
+      finalProject?.category!==nextCategory||
+      finalAudit?.project_id!==projectId||
+      finalAudit?.from_status!==old||
+      finalAudit?.to_status!==decision||
+      finalAudit?.category!==nextCategory){
+     return respond({error:'Review transition could not be verified'},409);
+   }
+}
  }catch(error){console.error('Core review transaction failed',String(error?.message||error));return respond({error:'Review transaction failed'},500)}
  return respond({accepted:true,requestId,projectId,status:decision});
 }

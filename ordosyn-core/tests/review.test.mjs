@@ -26,3 +26,38 @@ test('pending list is authenticated',async()=>{
  const r=await reviewRequest(new Request('https://example.workers.dev/internal/review',{headers:{authorization:'Bearer secret'}}),{REVIEW_TOKEN:'secret',DB:db()});
  assert.equal(r.status,200);assert.deepEqual((await r.json()).records,[]);
 });
+
+
+test('D1 metadata mismatch checks committed review state',async()=>{
+ const projectId='proj_'+'a'.repeat(32);
+ const requestId='review_'+'c'.repeat(32);
+ let applied=false;
+ const fakeDB={
+   prepare(sql){
+     return {
+       bind(){
+         return {
+           async first(){
+             if(sql.startsWith('SELECT id,status,category')){
+               return {id:projectId,status:applied?'published':'pending',category:applied?'AI':'Other'};
+             }
+             if(sql.startsWith('SELECT project_id,from_status,to_status,category')){
+               return applied?{project_id:projectId,from_status:'pending',to_status:'published',category:'AI'}:null;
+             }
+             if(sql.startsWith('SELECT project_id,from_status'))return null;
+             return {sourceCount:1,readablePages:1};
+           }
+         };
+       }
+     };
+   },
+   async batch(){
+     applied=true;
+     return [{meta:{changes:0}},{meta:{changes:0}}];
+   }
+ };
+ const body={requestId,projectId,decision:'published',category:'AI',reason:'Verified real project source and indexed body'};
+ const response=await reviewRequest(request(body),{DB:fakeDB,REVIEW_TOKEN:'secret'});
+ assert.equal(response.status,200);
+ assert.equal((await response.json()).status,'published');
+});
