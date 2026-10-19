@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {reviewRequest} from '../worker/review.js';
-const id='project_'+'a'.repeat(32), reqId='review_'+'b'.repeat(32);
+const id='proj_f7bc41aa2bee171ae3e284c612bb6774', reqId='review_'+'b'.repeat(32);
 const url='https://example.workers.dev/internal/review/decision';
 const payload={requestId:reqId,projectId:id,decision:'published',reason:'Reviewed source evidence and content',category:'DAO'};
 const request=(body=payload,token='secret')=>new Request(url,{method:'POST',headers:{authorization:`Bearer ${token}`},body:JSON.stringify(body)});

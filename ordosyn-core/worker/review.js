@@ -3,7 +3,7 @@ const respond=(body,status=200)=>new Response(JSON.stringify(body),{status,heade
 const statuses=new Set(['pending','published','hidden']);
 const categories=new Set(['DeFi','Social','Gaming','DAO','AI','Infrastructure','Developer Tools','NFT','Other']);
 const allowed={pending:new Set(['published','hidden']),published:new Set(['hidden']),hidden:new Set(['pending'])};
-const validId=id=>typeof id==='string'&&/^project_[a-f0-9]{32,40}$/.test(id);
+const validId=id=>typeof id==='string'&&/^proj_[a-f0-9]{32}$/.test(id);
 const validRequestId=id=>typeof id==='string'&&/^review_[a-f0-9]{32}$/.test(id);
 export async function reviewRequest(request,env,url=new URL(request.url)){
  if(!env.REVIEW_TOKEN||!env.DB)return respond({error:'Review unavailable'},503);
