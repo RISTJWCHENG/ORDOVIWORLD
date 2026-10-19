@@ -31,3 +31,64 @@ test('malformed upstream JSON rejected without storage',async()=>{const d=db();c
 test('incomplete Responses output rejected',async()=>{const d=db();const r=await aiRequest(request(),env(d),undefined,async()=>({ok:true,json:async()=>({status:'incomplete',output:[]})}));assert.equal(r.status,422);assert.equal((await r.json()).code,'MODEL_INCOMPLETE');assert.equal(d.state.insert,0);});
 test('upstream failures return safe error categories',async()=>{for(const [status,code] of [[400,'MODEL_BAD_REQUEST'],[401,'MODEL_AUTH_ERROR'],[403,'MODEL_AUTH_ERROR'],[404,'MODEL_NOT_FOUND'],[429,'MODEL_RATE_LIMITED'],[503,'MODEL_UPSTREAM_ERROR']]){const d=db();const r=await aiRequest(request(),env(d),undefined,async()=>({ok:false,status}));assert.equal(r.status,502);const body=await r.json();assert.equal(body.code,code);assert.equal(body.upstreamStatus,status);assert.equal(d.state.insert,0);assert.equal(JSON.stringify(body).includes('fake-test-key'),false);}});
 test('timeout and network errors do not leak upstream detail',async()=>{for(const [name,code] of [['TimeoutError','MODEL_TIMEOUT'],['TypeError','MODEL_NETWORK_ERROR']]){const d=db();const fetcher=async()=>{const e=new Error('private upstream detail');e.name=name;throw e;};const r=await aiRequest(request(),env(d),undefined,fetcher);assert.equal(r.status,502);const body=await r.json();assert.equal(body.code,code);assert.equal(JSON.stringify(body).includes('private upstream detail'),false);assert.equal(d.state.insert,0);}});
+
+test('nano incomplete output gives safe reason',async()=>{
+  const d=db();
+  const response=await aiRequest(
+    request(),env(d),undefined,
+    async()=>({
+      ok:true,status:200,
+      json:async()=>({
+        status:'incomplete',
+        incomplete_details:{reason:'max_output_tokens'},
+        output:[]
+      })
+    })
+  );
+  assert.equal(response.status,422);
+  const body=await response.json();
+  assert.equal(body.code,'MODEL_INCOMPLETE');
+  assert.equal(body.incompleteReason,'max_output_tokens');
+  assert.equal(d.state.insert,0);
+});
+
+test('nano incomplete reason never leaks arbitrary upstream text',async()=>{
+  const d=db();
+  const response=await aiRequest(
+    request(),env(d),undefined,
+    async()=>({
+      ok:true,status:200,
+      json:async()=>({
+        status:'incomplete',
+        incomplete_details:{reason:'private sensitive upstream message'},
+        output:[]
+      })
+    })
+  );
+  const body=await response.json();
+  assert.equal(body.incompleteReason,'unknown');
+  assert.equal(
+    JSON.stringify(body).includes('private sensitive upstream message'),
+    false
+  );
+  assert.equal(d.state.insert,0);
+});
+
+test('nano classification requests minimal reasoning and bounded output',async()=>{
+  const d=db();
+  const checkingModel=async(url,options)=>{
+    const body=JSON.parse(options.body);
+    assert.equal(body.model,'gpt-5-nano');
+    assert.equal(body.reasoning.effort,'minimal');
+    assert.equal(body.max_output_tokens,3000);
+    assert.equal(body.store,false);
+    return result(sample);
+  };
+  const response=await aiRequest(request(),env(d),undefined,checkingModel);
+  assert.equal(response.status,200);
+  assert.equal(d.state.insert,1);
+  assert.equal(
+    d.state.sql.filter(s=>/UPDATE projects|INSERT INTO review_events/i.test(s)).length,
+    0
+  );
+});
