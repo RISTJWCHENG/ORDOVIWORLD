@@ -357,3 +357,20 @@ select[name*="sort" i]:focus-visible {
 }
 
 /* ORDOSYN_NAV_PILL_END */
+
+/* ORDOSYN_PROFILE_CLEAN_START */
+.ow-account-menu.ordosyn-profile-clean{width:270px;max-width:calc(100vw - 24px);padding:12px;border-radius:19px;border:1px solid #e5eaf1;background:#fff;box-shadow:0 16px 40px rgba(21,34,54,.12)}
+.ordosyn-profile-heading{display:flex;align-items:center;gap:12px;padding:6px 5px 15px;border-bottom:1px solid #edf0f4}
+.ordosyn-profile-avatar{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#f2f5f9;color:#718096}
+.ordosyn-profile-avatar svg{width:23px;height:23px}
+.ordosyn-profile-identity{display:flex;flex-direction:column;min-width:0;flex:1}
+.ordosyn-profile-identity strong{font-size:14px;font-weight:650;line-height:1.35;color:#273348;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ordosyn-profile-identity small{font-size:11px;color:#8993a3;margin-top:4px}
+.ordosyn-profile-check{color:#23ad87;font-size:15px}
+.ordosyn-profile-actions{display:flex;flex-direction:column;gap:4px;padding-top:9px}
+.ordosyn-profile-clean .ow-menu-item{display:flex;align-items:center;gap:11px;min-height:42px;padding:10px 12px;border:0;border-radius:11px;background:transparent;text-align:left;color:#344054;font:500 13px Inter,system-ui,sans-serif;cursor:pointer}
+.ordosyn-profile-clean .ow-menu-item svg{width:18px;height:18px;flex:none;color:#79879b}
+.ordosyn-profile-clean .ow-menu-item:hover{background:#f4f6fa}
+.ordosyn-profile-clean .ow-menu-logout:hover{color:#b74d59;background:#fff2f3}
+.ordosyn-profile-clean .ow-menu-logout:hover svg{color:#b74d59}
+/* ORDOSYN_PROFILE_CLEAN_END */
