@@ -1,3 +1,4 @@
+import {pathToFileURL} from 'node:url';
 import {createHash} from 'node:crypto';
 import {readFile,writeFile,mkdir} from 'node:fs/promises';
 import {dirname,resolve} from 'node:path';
@@ -69,4 +70,4 @@ async function main(){
  console.log(`Prepared: ${results.length}; skipped: ${errors.length}; ${output}`);
  if(args.includes('--strict')&&errors.length)process.exitCode=1;
 }
-if(import.meta.url===`file://${process.argv[1]?.replaceAll('\\','/')}`)main().catch(e=>{console.error(e);process.exitCode=1});
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) main().catch(e=>{console.error(e);process.exitCode=1});
