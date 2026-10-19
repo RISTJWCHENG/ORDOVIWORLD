@@ -4,7 +4,7 @@ import {candidate} from '../discovery/model.mjs';
 import {extract,robotsAllowed,makeEvent} from '../crawl/prepare.mjs';
 import {applyIngest,enqueueIngest} from '../worker/ingest.js';
 const c=candidate({name:'Demo App',websiteUrl:'https://demo.example/',sourceType:'sns',sourceUrl:'https://registry.example/list',observedAt:'2026-10-19T00:00:00Z',evidence:['root canister']});
-const html='<html><head><title>Example &amp; Demo</title><meta name="description" content="Hello"></head><body><main>A <strong>useful</strong> site</main><script>secret()</script></body></html>';
+const html='<html><head><title>Example &amp; Demo</title><meta name="description" content="Hello"></head><body><main>A <strong>useful</strong> site with a detailed description of an Internet Computer application. This example explains the project purpose, its features, and information for visitors.</main><script>secret()</script></body></html>';
 test('text extraction excludes scripts and preserves title',()=>{const p=extract(html);assert.equal(p.title,'Example & Demo');assert.match(p.bodyText,/useful/);assert.doesNotMatch(p.bodyText,/secret/)});
 test('robots rules: most specific allow beats disallow',()=>{assert.equal(robotsAllowed('User-agent: *\nDisallow: /private\nAllow: /private/ok','/private/ok'),true);assert.equal(robotsAllowed('User-agent: *\nDisallow: /private','/private/no'),false)});
 test('stable event, IDs and hash',()=>{const a=makeEvent(c,html,'https://demo.example/');const b=makeEvent(c,html,'https://demo.example/');assert.equal(a.eventId,b.eventId);assert.equal(a.page.contentHash.length,64)});

@@ -45,7 +45,7 @@ async function checkRobots(url){
 export function makeEvent(candidate,html,finalUrl){
  if(!candidate?.candidateId||!candidate?.sources?.length||candidate.status!=='candidate')throw Error('Unverified candidate structure');
  const url=normalizeUrl(finalUrl);const page=extract(html);
- if(!page.title&&!page.bodyText)throw Error('No extractable content');
+ if(page.bodyText.length<80)throw Error('Insufficient readable body text (minimum 80 characters)');
  const projectId='proj_'+hash(candidate.candidateId).slice(0,32);
  const pageId='page_'+hash(projectId+'\nhomepage').slice(0,32);
  const contentHash=hash(JSON.stringify({title:page.title,description:page.description,bodyText:page.bodyText}));
