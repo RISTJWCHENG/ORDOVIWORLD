@@ -37,7 +37,7 @@ export async function searchProjects(db,url) {
 }
 export async function searchPages(db,url) {
   const p = params(url);
-  const parts = ["p.index_status = 'indexed'"];
+  const parts = ["p.index_status = 'indexed'", "EXISTS (SELECT 1 FROM projects pr WHERE pr.id = p.project_id AND pr.status = 'published')"];
   const binds = [];
   if (p.source) {parts.push("EXISTS (SELECT 1 FROM sources s WHERE s.project_id = p.project_id AND lower(s.source_type) = lower(?))");binds.push(p.source);}
   if (p.q) {const match=matchQuery(p.q);if(!match)return {records:[],count:0,page:p.page,limit:p.limit};parts.push('p.rowid IN (SELECT rowid FROM page_fts WHERE page_fts MATCH ?)');binds.push(match);}
