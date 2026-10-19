@@ -1,54 +1,72 @@
-﻿// Load live index from Worker so Explore / Categories / Games and Search
-// all read the same source of truth.
 export async function loadPublishedProjects() {
   const base = import.meta.env.BASE_URL;
 
   try {
-    const cfgResponse = await fetch(base + 'api-config.json', { cache: 'no-store' });
+    const configResponse = await fetch(
+      base + "api-config.json",
+      { cache: "no-store" }
+    );
 
-    if (cfgResponse.ok) {
-      const cfg = await cfgResponse.json();
-      const apiBaseUrl =
-        typeof cfg.apiBaseUrl === 'string'
-          ? cfg.apiBaseUrl.replace(/\/$/, '')
-          : '';
+    if (!configResponse.ok) {
+      throw new Error("API config unavailable");
+    }
 
-      if (/^https:\/\/[a-z0-9.-]+\.workers\.dev$/i.test(apiBaseUrl)) {
-        // Prefer the live search index because it already contains the newest
-        // published records, including category data such as "Caffeine Apps".
-        const liveSearch = await fetch(
-          apiBaseUrl + '/api/search?page=1&limit=500',
-          { cache: 'no-store' }
-        );
+    const config = await configResponse.json();
+    const api = String(config.apiBaseUrl || "").replace(/\/$/, "");
 
-        if (liveSearch.ok) {
-          const searchData = await liveSearch.json();
-          if (Array.isArray(searchData.records)) {
-            return { records: searchData.records };
-          }
-        }
+    if (!/^https:\/\/[a-z0-9.-]+\.workers\.dev$/i.test(api)) {
+      throw new Error("Invalid Worker API URL");
+    }
 
-        // Fallback to /api/projects if present
-        const res = await fetch(apiBaseUrl + '/api/projects', {
-          cache: 'no-store'
-        });
+    const records = [];
+    const seen = new Set();
+    const limit = 30;
+    const maxPages = 100;
+    let expectedCount = null;
 
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data.records)) {
-            return data;
-          }
+    for (let page = 1; page <= maxPages; page++) {
+      const url = new URL(api + "/api/search");
+      url.searchParams.set("page", String(page));
+      url.searchParams.set("limit", String(limit));
+
+      const response = await fetch(url, { cache: "no-store" });
+
+      if (!response.ok) {
+        throw new Error("Search API HTTP " + response.status);
+      }
+
+      const data = await response.json();
+
+      if (!Array.isArray(data.records)) {
+        throw new Error("Invalid search API response");
+      }
+
+      if (expectedCount === null) {
+        expectedCount = Number(data.count);
+        if (!Number.isSafeInteger(expectedCount) ||
+            expectedCount < 0) {
+          throw new Error("Invalid total record count");
         }
       }
-    }
-  } catch (error) {
-    console.warn('Cloudflare API not available, using static catalog', error);
-  }
 
-  try {
-    const local = await fetch(base + 'projects.json', { cache: 'no-cache' });
-    return local.ok ? local.json() : { records: [] };
-  } catch {
-    return { records: [] };
+      for (const record of data.records) {
+        if (!record.id || seen.has(record.id)) continue;
+        seen.add(record.id);
+        records.push(record);
+      }
+
+      if (records.length >= expectedCount) {
+        return { records, count: expectedCount };
+      }
+
+      if (data.records.length < limit) {
+        throw new Error("Search pagination ended early");
+      }
+    }
+
+    throw new Error("Search pagination safety limit reached");
+  } catch (error) {
+    console.error("Failed to load complete live catalog:", error);
+    return { records: [], loadError: true };
   }
 }
