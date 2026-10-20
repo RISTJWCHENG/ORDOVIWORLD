@@ -35,7 +35,7 @@ const ordosynSectionItems=(key)=>{
  return [];
 };
 const ordosynSectionWindow=(key)=>{
- const items=ordosynSectionItems(key),pages=Math.max(1,Math.ceil(items.length/3));
+ const items=ordosynSectionItems(key),pages=Math.max(1,Math.ceil(items.length/4));
  const page=Math.max(0,Math.min(ordosynSectionPages[key]||0,pages-1));
  ordosynSectionPages[key]=page;
  return {items,page,pages};
@@ -50,7 +50,7 @@ const ordosynPagedSection=(key,title)=>{
  <span data-ordosyn-section-count="${key}" class="mute" style="font-size:12px;white-space:nowrap">${page+1} / ${pages}</span>
  <button type="button" class="btn" data-ordosyn-section-next="${key}" aria-label="Next ${title} projects" ${page>=pages-1?'disabled':''} style="min-width:36px;padding:6px 10px">›</button>
  </div></div>
- <div data-ordosyn-section-grid="${key}">${items.length?grid(items.slice(page*3,page*3+3)):'<p class="mute">No projects in this section yet.</p>'}</div>
+ <div data-ordosyn-section-grid="${key}">${items.length?grid(items.slice(page*4,page*4+4)):'<p class="mute">No projects in this section yet.</p>'}</div>
  </section>`;
 };
 const V={
@@ -114,7 +114,7 @@ app.addEventListener('click',e=>{
  const section=button.closest('[data-ordosyn-section]');
  if(!section)return;
  const target=section.querySelector('[data-ordosyn-section-grid]');
- target.innerHTML=grid(items.slice(upcoming*3,upcoming*3+3));
+ target.innerHTML=grid(items.slice(upcoming*4,upcoming*4+4));
  section.querySelector('[data-ordosyn-section-count]').textContent=`${upcoming+1} / ${pages}`;
  section.querySelector('[data-ordosyn-section-prev]').disabled=upcoming===0;
  section.querySelector('[data-ordosyn-section-next]').disabled=upcoming>=pages-1;

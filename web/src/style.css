@@ -707,3 +707,54 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_HEADER_BASELINE_FIX_V1_END */
+/* ORDOSYN_EXPLORE_FOUR_COLUMNS_V1
+   Align Explore content to the primary navigation's left edge.
+   Each section paginates four real records; the last page can be incomplete.
+   This override beats the injected 3-column card enhancement CSS. */
+@media (min-width: 1360px) {
+  #app.wrap {
+    box-sizing: border-box !important;
+    width: calc(100% - 364px) !important;
+    max-width: none !important;
+    margin-left: 332px !important;
+    margin-right: 32px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  #app.wrap .ordosyn-section .grid,
+  #app.wrap .grid:has(> .ordosyn-project-card) {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    align-items: stretch !important;
+  }
+}
+@media (min-width: 1200px) and (max-width: 1359px) {
+  #app.wrap {
+    box-sizing: border-box !important;
+    width: calc(100% - 364px) !important;
+    max-width: none !important;
+    margin-left: 332px !important;
+    margin-right: 32px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  #app.wrap .ordosyn-section .grid,
+  #app.wrap .grid:has(> .ordosyn-project-card) {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+@media (min-width: 1024px) and (max-width: 1199px) {
+  #app.wrap {
+    box-sizing: border-box !important;
+    width: calc(100% - 336px) !important;
+    max-width: none !important;
+    margin-left: 320px !important;
+    margin-right: 16px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  #app.wrap .ordosyn-section .grid,
+  #app.wrap .grid:has(> .ordosyn-project-card) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+/* ORDOSYN_EXPLORE_FOUR_COLUMNS_V1_END */
