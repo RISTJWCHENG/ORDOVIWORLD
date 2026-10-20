@@ -3,64 +3,67 @@
   const css = document.createElement('style');
   css.textContent = `
     .grid:has(> .ordosyn-project-card) {
-      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+      display: grid !important;
+      grid-template-columns: repeat(3,minmax(0,1fr)) !important;
       align-items: stretch !important;
       gap: 16px;
     }
     .grid > .ordosyn-project-card {
-      min-width: 0;
-      width: 100%;
-      height: 100% !important;
-      min-height: 242px;
+      box-sizing: border-box !important;
+      width: 100% !important;
+      min-width: 0 !important;
+      height: 248px !important;
+      min-height: 248px !important;
+      max-height: 248px !important;
       align-self: stretch !important;
-      display: flex;
-      flex-direction: column;
+      display: flex !important;
+      flex-direction: column !important;
       gap: 10px;
-      padding: 16px;
+      padding: 16px !important;
       border-radius: 16px;
+      overflow: hidden;
     }
     .grid > .ordosyn-project-card > p.ordosyn-description-clamped {
       display: -webkit-box !important;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      overflow: hidden;
-      line-height: 1.55;
-      height: 3.1em;
-      min-height: 3.1em;
-      max-height: 3.1em;
-      margin: 0;
+      -webkit-box-orient: vertical !important;
+      -webkit-line-clamp: 2 !important;
+      line-clamp: 2;
+      overflow: hidden !important;
+      line-height: 1.55 !important;
+      height: 3.1em !important;
+      min-height: 3.1em !important;
+      max-height: 3.1em !important;
+      flex: 0 0 3.1em !important;
+      margin: 0 !important;
+    }
+    .grid > .ordosyn-project-card > .ordosyn-card-more-slot {
+      height: 20px !important;
+      min-height: 20px !important;
+      flex: 0 0 20px !important;
     }
     .grid > .ordosyn-project-card .acts {
       margin-top: auto !important;
-      padding-top: 8px;
+      padding-top: 4px !important;
+      flex-shrink: 0;
     }
-    .ordosyn-card-more-slot { height: 21px; flex: 0 0 21px; }
-    .ordosyn-card-toggle {
-      display: inline-flex; align-items: center; gap: 4px;
-      border: 0; padding: 0; background: transparent;
-      color: #3269d7; font: 500 12px Inter,system-ui,sans-serif;
-      cursor: pointer;
+    .ordosyn-card-toggle { border:0; background:transparent; padding:0; color:#3269d7;
+      font:500 12px Inter,system-ui,sans-serif; cursor:pointer; }
+    .ordosyn-card-toggle[hidden] { display:none !important; }
+    .ordosyn-card-toggle:hover { text-decoration:underline; }
+    .ordosyn-card-toggle:focus-visible { outline:2px solid #3269d7; outline-offset:3px; }
+    .ordosyn-description-dialog { box-sizing:border-box; width:min(540px,calc(100vw - 32px));
+      max-height:75vh; overflow:auto; border:1px solid #e1e5ed; border-radius:16px;
+      padding:24px; background:#fff; color:#18202e; box-shadow:0 20px 70px #10182835; }
+    .ordosyn-description-dialog::backdrop { background:#10182882; }
+    .ordosyn-description-dialog h2 { margin:0 40px 16px 0; font-size:18px; }
+    .ordosyn-description-dialog p { white-space:pre-wrap; overflow-wrap:anywhere; line-height:1.65; }
+    .ordosyn-description-close { position:absolute; top:14px; right:16px; border:0;
+      padding:5px 9px; border-radius:8px; background:#f1f3f7; font-size:18px; cursor:pointer; }
+    @media (max-width:1050px) {
+      .grid:has(> .ordosyn-project-card) { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
     }
-    .ordosyn-card-toggle[hidden] { display: none !important; }
-    .ordosyn-card-toggle:hover { text-decoration: underline; color: #1749ae; }
-    .ordosyn-card-toggle:focus-visible { outline: 2px solid #3269d7; outline-offset: 3px; }
-    .ordosyn-description-dialog {
-      border: 1px solid #e1e5ed; border-radius: 16px;
-      padding: 24px; width: min(540px, calc(100vw - 32px));
-      max-height: min(75vh, 620px); overflow: auto;
-      background: #fff; color: #18202e; box-shadow: 0 20px 70px #10182835;
-    }
-    .ordosyn-description-dialog::backdrop { background: #10182882; }
-    .ordosyn-description-dialog h2 { margin: 0 40px 16px 0; font-size: 18px; }
-    .ordosyn-description-dialog p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; }
-    .ordosyn-description-close { position: absolute; top: 14px; right: 16px;
-      border: 0; border-radius: 8px; padding: 5px 9px; background: #f1f3f7;
-      font-size: 18px; cursor: pointer; }
-    @media (max-width: 1050px) {
-      .grid:has(> .ordosyn-project-card) { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-    }
-    @media (max-width: 640px) {
-      .grid:has(> .ordosyn-project-card) { grid-template-columns: minmax(0, 1fr) !important; }
+    @media (max-width:640px) {
+      .grid:has(> .ordosyn-project-card) { grid-template-columns:minmax(0,1fr) !important; }
     }
   `;
   document.head.appendChild(css);
@@ -68,32 +71,57 @@
   const dialog = document.createElement('dialog');
   dialog.className = 'ordosyn-description-dialog';
   dialog.innerHTML = '<button type="button" class="ordosyn-description-close" aria-label="Close description">×</button><h2></h2><p></p>';
-  const close = dialog.querySelector('button');
-  close.addEventListener('click', () => dialog.close());
+  dialog.querySelector('button').addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
-  const attachDialog = () => { if (!dialog.isConnected && document.body) document.body.appendChild(dialog); };
+  function attachDialog() { if (!dialog.isConnected && document.body) document.body.appendChild(dialog); }
+
+  // Measure the unclamped paragraph, not its scrollHeight under line-clamp.
+  // Some browsers report scrollHeight larger than clientHeight even for short text.
+  function hasOverflow(desc) {
+    const width = desc.getBoundingClientRect().width;
+    if (width <= 0) return false;
+    const computed = getComputedStyle(desc);
+    const clone = desc.cloneNode(true);
+    clone.className = 'ordosyn-measure-clone';
+    Object.assign(clone.style, {
+      position: 'fixed', left: '-10000px', top: '0', visibility: 'hidden',
+      pointerEvents: 'none', boxSizing: 'border-box', width: `${width}px`,
+      height: 'auto', minHeight: '0', maxHeight: 'none', overflow: 'visible',
+      display: 'block', whiteSpace: 'normal',
+      font: computed.font, letterSpacing: computed.letterSpacing,
+      lineHeight: computed.lineHeight, overflowWrap: computed.overflowWrap,
+      wordBreak: computed.wordBreak, padding: '0', margin: '0'
+    });
+    clone.style.setProperty('-webkit-line-clamp', 'unset', 'important');
+    clone.style.setProperty('line-clamp', 'unset', 'important');
+    document.body.appendChild(clone);
+    try {
+      const lineHeight = parseFloat(computed.lineHeight) || parseFloat(computed.fontSize) * 1.55;
+      return clone.getBoundingClientRect().height > lineHeight * 2 + 2;
+    } finally { clone.remove(); }
+  }
 
   function measure(card) {
     const desc = card.querySelector(':scope > p.ordosyn-description-clamped');
-    const button = card.querySelector('.ordosyn-card-toggle');
-    if (!desc || !button) return;
-    // The clamped paragraph is always exactly two lines high.
-    button.hidden = desc.scrollHeight <= desc.clientHeight + 2;
+    const button = card.querySelector(':scope > .ordosyn-card-more-slot > .ordosyn-card-toggle');
+    if (desc && button) button.hidden = !hasOverflow(desc);
   }
 
   function enhance(card) {
-    if (card.dataset.ordosynExpandable === '2') return;
-    if (!card.querySelector(':scope > .acts')) return;
     const desc = card.querySelector(':scope > p.mute');
-    if (!desc) return;
-    card.dataset.ordosynExpandable = '2';
+    if (!desc || !card.querySelector(':scope > .acts')) return;
+    if (card.dataset.ordosynExpandable === '3') return;
+    card.dataset.ordosynExpandable = '3';
     card.classList.add('ordosyn-project-card');
+    desc.classList.remove('is-expanded');
     desc.classList.add('ordosyn-description-clamped');
+    // Remove stale buttons from the older expandable-card implementation.
+    card.querySelectorAll(':scope > .ordosyn-card-toggle, :scope > .ordosyn-card-more-slot').forEach(el => el.remove());
     const slot = document.createElement('div');
     slot.className = 'ordosyn-card-more-slot';
     const button = document.createElement('button');
-    button.className = 'ordosyn-card-toggle';
     button.type = 'button';
+    button.className = 'ordosyn-card-toggle';
     button.textContent = 'Read more ⌄';
     button.hidden = true;
     const heading = card.querySelector('h3')?.textContent?.trim() || 'Project description';
@@ -120,12 +148,15 @@
     requestAnimationFrame(() => { pending = false; scan(); });
   }
   function start() {
-    attachDialog();
-    scan();
-    new MutationObserver(queue).observe(document.body, {childList: true, subtree: true});
-    window.addEventListener('resize', queue, {passive: true});
+    attachDialog(); scan();
+    new MutationObserver(records => {
+      if (records.every(record => [...record.addedNodes, ...record.removedNodes].every(node =>
+        node.nodeType === 1 && node.classList.contains('ordosyn-measure-clone')))) return;
+      queue();
+    }).observe(document.body, {childList:true,subtree:true});
+    window.addEventListener('resize', queue, {passive:true});
     document.fonts?.ready.then(queue).catch(() => {});
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once: true});
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, {once:true});
   else start();
 })();
