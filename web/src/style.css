@@ -377,68 +377,76 @@ select[name*="sort" i]:focus-visible {
 /* ORDOSYN_PROFILE_REPAIRED_END */
 
 /* ORDOSYN_LEFT_BRAND_SEARCH_START
-   Dedicated 260px left rail for the store name and the existing search form.
-   Primary navigation and route/search behaviour are preserved. */
+   Brand at the upper-left corner; search directly below.
+   The actual page content remains centered at its original 1200px width.
+   No changes to navigation routes, search behavior, grids, or cards. */
 @media (min-width: 1024px) {
   #mast.mast {
-    display: grid;
-    grid-template-columns: 260px minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    column-gap: 24px;
-    row-gap: 12px;
-    align-items: start;
-    padding-top: 30px;
-    padding-bottom: 14px;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 54px 32px 22px;
+    min-height: 128px;
+    gap: 0;
   }
   #mast.mast > h1.ordosyn-store-title {
-    grid-column: 1;
-    grid-row: 1;
-    font-size: 21px;
-    line-height: 1.3;
-    letter-spacing: -0.02em;
-    font-weight: 650;
+    position: absolute;
+    top: 13px;
+    left: 24px;
+    z-index: 35;
+    width: 260px;
     max-width: 260px;
+    font-size: 19px;
+    font-weight: 650;
+    line-height: 1.28;
+    letter-spacing: -0.02em;
+    text-align: left;
   }
   #mast.mast > p.mute { display: none; }
   #mast.mast > .sbar {
-    grid-column: 1;
-    grid-row: 2;
-    width: 100%;
-    min-width: 0;
+    position: absolute;
+    top: 76px;
+    left: 24px;
+    z-index: 20;
+    width: 260px;
     max-width: 260px;
-    height: 44px;
+    height: 43px;
     margin: 0;
     padding-left: 12px;
   }
   #mast.mast > .sbar input { font-size: 13px; }
   #mast.mast > .navrow {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    justify-self: start;
+    display: flex;
+    position: static;
+    justify-content: center;
     align-self: center;
-    justify-content: flex-start;
+    justify-self: auto;
     margin: 0;
     min-width: 0;
   }
   #app.wrap {
-    padding-left: calc(32px + 284px);
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 32px;
+    padding-right: 32px;
   }
 }
 @media (max-width: 1023px) {
   #mast.mast {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
     text-align: left;
     gap: 12px;
     padding-top: 28px;
   }
-  #mast.mast > h1.ordosyn-store-title { font-size: 25px; line-height: 1.25; }
+  #mast.mast > h1.ordosyn-store-title { font-size: 23px; line-height: 1.25; }
   #mast.mast > p.mute { display: none; }
-  #mast.mast > .sbar {
-    margin: 0;
-    width: 100%;
-    max-width: 460px;
-  }
+  #mast.mast > .sbar { margin: 0; width: 100%; max-width: 460px; }
   #mast.mast > .navrow { justify-content: flex-start; margin: 0; }
 }
 /* ORDOSYN_LEFT_BRAND_SEARCH_END */
