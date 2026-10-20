@@ -647,3 +647,52 @@ select[name*="sort" i]:focus-visible {
   display: none;
 }
 /* ORDOSYN_NAV_AT_DIVIDER_V1_END */
+
+/* ORDOSYN_TOP_NAV_UNDERLINE_ACTIVE_V1: flat active nav, no oval background */
+#mast.mast .navrow a,
+.navrow a {
+  position: relative;
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #667085 !important;
+  transition: color .16s ease !important;
+}
+#mast.mast .navrow a.on,
+#mast.mast .navrow a[aria-current="page"],
+.navrow a.on,
+.navrow a[aria-current="page"] {
+  background: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #101828 !important;
+  font-weight: 650 !important;
+}
+#mast.mast .navrow a.on::after,
+#mast.mast .navrow a[aria-current="page"]::after,
+.navrow a.on::after,
+.navrow a[aria-current="page"]::after {
+  content: '';
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: #2563eb;
+  pointer-events: none;
+}
+#mast.mast .navrow a:hover,
+.navrow a:hover,
+.navrow a:hover:not(.on):not([aria-current="page"]) {
+  background: transparent !important;
+  border-radius: 0 !important;
+  color: #101828 !important;
+}
+#mast.mast .navrow a:focus-visible,
+.navrow a:focus-visible {
+  outline: 2px solid #2563eb !important;
+  outline-offset: 3px;
+  border-radius: 4px !important;
+}
+/* ORDOSYN_TOP_NAV_UNDERLINE_ACTIVE_V1_END */
