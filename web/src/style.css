@@ -511,3 +511,44 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_STORE_MESSAGES_END */
+
+/* ORDOSYN_BRAND_DIVIDER_START */
+@media (min-width: 1024px) {
+
+  /* Larger, single-line brand aligned with the search width */
+  #mast.mast > h1.ordosyn-store-title {
+    width: 260px;
+    max-width: 260px;
+    box-sizing: border-box;
+    font-size: 17px;
+    font-weight: 650;
+    letter-spacing: -0.055em;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  /* Subtle vertical divider between sidebar and content */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 308px;
+    width: 1px;
+    background: #e5e7eb;
+    pointer-events: none;
+    z-index: 20;
+  }
+
+}
+
+/* No divider on tablets and mobile */
+@media (max-width: 1023px) {
+  #mast.mast > h1.ordosyn-store-title {
+    white-space: nowrap;
+    max-width: 100%;
+  }
+}
+
+/* ORDOSYN_BRAND_DIVIDER_END */
