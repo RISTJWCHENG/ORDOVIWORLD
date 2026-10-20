@@ -377,9 +377,8 @@ select[name*="sort" i]:focus-visible {
 /* ORDOSYN_PROFILE_REPAIRED_END */
 
 /* ORDOSYN_LEFT_BRAND_SEARCH_START
-   Brand at the upper-left corner; search directly below.
-   The actual page content remains centered at its original 1200px width.
-   No changes to navigation routes, search behavior, grids, or cards. */
+   Fixed compact brand/search in upper-left; original centered content untouched.
+   Mobile masthead remains sticky rather than covering the full viewport. */
 @media (min-width: 1024px) {
   #mast.mast {
     display: flex;
@@ -392,37 +391,46 @@ select[name*="sort" i]:focus-visible {
     gap: 0;
   }
   #mast.mast > h1.ordosyn-store-title {
-    position: absolute;
-    top: 13px;
+    position: fixed;
+    top: 18px;
     left: 24px;
-    z-index: 35;
-    width: 260px;
-    max-width: 260px;
-    font-size: 19px;
+    z-index: 110;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100vw - 48px);
+    margin: 0;
+    font-size: 14px;
     font-weight: 650;
-    line-height: 1.28;
-    letter-spacing: -0.02em;
+    line-height: 1.25;
+    letter-spacing: -0.035em;
+    white-space: nowrap;
     text-align: left;
   }
   #mast.mast > p.mute { display: none; }
   #mast.mast > .sbar {
-    position: absolute;
-    top: 76px;
+    position: fixed;
+    top: 48px;
     left: 24px;
-    z-index: 20;
+    z-index: 110;
+    box-sizing: border-box;
     width: 260px;
-    max-width: 260px;
-    height: 43px;
+    max-width: calc(100vw - 48px);
+    height: 36px;
+    min-height: 36px;
     margin: 0;
-    padding-left: 12px;
+    padding-left: 10px;
+    background: #fff;
   }
-  #mast.mast > .sbar input { font-size: 13px; }
+  #mast.mast > .sbar input {
+    min-width: 0;
+    font-size: 12px;
+    height: 100%;
+  }
   #mast.mast > .navrow {
     display: flex;
     position: static;
     justify-content: center;
     align-self: center;
-    justify-self: auto;
     margin: 0;
     min-width: 0;
   }
@@ -437,16 +445,36 @@ select[name*="sort" i]:focus-visible {
 }
 @media (max-width: 1023px) {
   #mast.mast {
+    position: sticky;
+    top: 0;
+    z-index: 110;
+    background: #fff;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
-    gap: 12px;
-    padding-top: 28px;
+    gap: 8px;
+    padding-top: 12px;
+    padding-bottom: 12px;
   }
-  #mast.mast > h1.ordosyn-store-title { font-size: 23px; line-height: 1.25; }
+  #mast.mast > h1.ordosyn-store-title {
+    font-size: clamp(11px, 3vw, 14px);
+    line-height: 1.25;
+    letter-spacing: -0.035em;
+    white-space: nowrap;
+    margin: 0;
+  }
   #mast.mast > p.mute { display: none; }
-  #mast.mast > .sbar { margin: 0; width: 100%; max-width: 460px; }
+  #mast.mast > .sbar {
+    box-sizing: border-box;
+    margin: 0;
+    width: 100%;
+    max-width: 260px;
+    height: 36px;
+    min-height: 36px;
+    padding-left: 10px;
+  }
+  #mast.mast > .sbar input { font-size: 12px; }
   #mast.mast > .navrow { justify-content: flex-start; margin: 0; }
 }
 /* ORDOSYN_LEFT_BRAND_SEARCH_END */
