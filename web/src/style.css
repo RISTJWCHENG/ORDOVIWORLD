@@ -478,3 +478,36 @@ select[name*="sort" i]:focus-visible {
   #mast.mast > .navrow { justify-content: flex-start; margin: 0; }
 }
 /* ORDOSYN_LEFT_BRAND_SEARCH_END */
+/* ORDOSYN_STORE_MESSAGES_START: brand descriptions follow the compact search. */
+#mast.mast > .ordosyn-store-intro,
+#mast.mast > .ordosyn-store-notice {
+  box-sizing: border-box;
+  width: 260px;
+  max-width: calc(100vw - 48px);
+  margin: 0;
+  color: #667085;
+  font-size: 11px;
+  line-height: 1.45;
+  text-align: left;
+  overflow-wrap: break-word;
+}
+#mast.mast > .ordosyn-store-intro { color: #475467; }
+@media (min-width: 1024px) {
+  #mast.mast > .ordosyn-store-intro,
+  #mast.mast > .ordosyn-store-notice {
+    position: fixed;
+    left: 24px;
+    z-index: 109;
+  }
+  #mast.mast > .ordosyn-store-intro { top: 96px; }
+  #mast.mast > .ordosyn-store-notice { top: 176px; }
+}
+@media (max-width: 1023px) {
+  #mast.mast > .ordosyn-store-intro,
+  #mast.mast > .ordosyn-store-notice {
+    position: static;
+    width: min(100%, 460px);
+    max-width: 100%;
+  }
+}
+/* ORDOSYN_STORE_MESSAGES_END */

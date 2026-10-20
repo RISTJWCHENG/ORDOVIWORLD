@@ -17,7 +17,7 @@ const chips=(items,cur,key,extra='')=>`<div class="chips" role="group" aria-labe
 const sbar=(v='')=>`<form class="sbar" role="search" id="sf"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input name="q" value="${esc(v)}" aria-label="Search projects" aria-keyshortcuts="/" placeholder="Explore the Internet Computer Universe." autocomplete="off"><kbd aria-hidden="true">/</kbd></form>`;
 const NAV=[['/explore','Explore'],['/explore?source=sns','SNS'],['/explore?cat=Caffeine%20Apps','Caffeine Apps'],['/search?sort=updated','Newly Indexed'],['/submit','Submit Project']];
 const navRow=()=>`<nav class="navrow" aria-label="Main">${NAV.map(([h,t])=>`<a href="#${h}">${t}</a>`).join('')}</nav>`;
-const noteHTML=()=>'<p class="note">Projects are indexed from public sources. Listing does not imply security verification or endorsement.</p>';
+const noteHTML=()=>'';
 const sec=(t,h)=>`<section><h2>${t}</h2>${h}</section>`;
 function query(h){const q={};(h.split('?')[1]||'').split('&').filter(Boolean).forEach(s=>{const[k,v]=s.split('=');q[k]=decodeURIComponent(v||'')});return q}
 function find(o){const t=(o.q||'').toLowerCase().split(/\s+/).filter(Boolean);let r=P.filter(p=>(!o.cat||p.cats.includes(o.cat))&&(!o.source||[...(p.srcs||[]),...(p.sources||[])].some(x=>String(x.sourceType||x.t||x.type||'').toLowerCase()==='sns'))&&(!o.genre||p.genre===o.genre)).map(p=>{let s=0;for(const w of t){const h=x=>x.toLowerCase().includes(w);let m=0;if(p.name.toLowerCase()===w)m+=10;else if(h(p.name))m+=6;if(p.cats.some(h)||p.tags.some(h))m+=4;if(h(p.desc))m+=2;if(!m){s=0;break}s+=m}return{p,s:t.length?s:1}}).filter(x=>x.s>0);
@@ -75,7 +75,7 @@ admin(){return`<div class="page"><h1>Admin</h1><p class="note">Administrative mo
 const app=document.getElementById('app');
 const mast=document.getElementById('mast');
 (()=>{const C=['#2F6BFF','#E5484D','#E8920C','#12A594','#8E4EC6','#E93D82','#3E63DD','#30A46C','#F76B15','#0091FF','#D6409F','#5B5BD6','#E54D2E','#00A2C7','#46A758','#CE2C31'];let k=0;
-mast.innerHTML=`<h1 class="ordosyn-store-title"><a href="#/" aria-label="Internet Computer Network Store, home">Internet Computer Network Store</a></h1><p class="mute">Discover apps, games and projects on the Internet Computer.</p>${sbar()}${navRow()}`})();
+mast.innerHTML=`<h1 class="ordosyn-store-title"><a href="#/" aria-label="Internet Computer Network Store, home">Internet Computer Network Store</a></h1>${sbar()}<p class="ordosyn-store-intro">Discover the next generation of apps, games, and decentralized experiences built on the Internet Computer.</p><p class="ordosyn-store-notice">Projects are indexed from public sources. Listing does not imply security verification or endorsement.</p>${navRow()}`})();
 
 function route(){const h=location.hash.slice(1)||'/',path=h.split('?')[0],q=query(h),seg=path.split('/')[1]||'home';
 const mi=mast.querySelector('input');if(mi)mi.value=seg==='search'?(q.q||''):'';app.innerHTML=(seg==='app'?V.app(path.split('/')[2]):(V[seg]||(()=>'<p style="padding:80px 0;text-align:center">Nothing here. <a href="#/" style="text-decoration:underline">Back home</a></p>'))(q));
