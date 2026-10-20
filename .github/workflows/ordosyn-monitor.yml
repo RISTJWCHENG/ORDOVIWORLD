@@ -75,10 +75,9 @@ jobs:
     permissions:
       contents: read
     steps:
-      - name: Checkout verified Cloud v1 code
+      - name: Checkout main Cloud v1 code
         uses: actions/checkout@v4
         with:
-          ref: a9c2a655fc2f02b3258104874cd1c27a036d9807
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
