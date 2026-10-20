@@ -7,6 +7,12 @@ on:
   schedule:
     - cron: '17 3 * * *'
   workflow_dispatch:
+    inputs:
+      run_daily_index:
+        description: 'Run real daily index now (Staging D1/R2)'
+        type: boolean
+        required: false
+        default: false
 
 permissions:
   contents: read
@@ -68,7 +74,7 @@ jobs:
 
   native-daily-staging:
     name: Daily Cloud v1 Staging Index
-    if: github.event_name == 'schedule' && github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.run_daily_index))
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment: ordosyn-staging
@@ -99,7 +105,7 @@ jobs:
           test -n "$ORDOSYN_NATIVE_INGEST_TOKEN"
           node ordosyn-core/cloud-v1/native-submit-cli.mjs --in "$RUNNER_TEMP/ordosyn-classified.json"
   pages-build:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'schedule'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'schedule' && !(github.event_name == 'workflow_dispatch' && inputs.run_daily_index)
     name: Build GitHub Pages
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -124,7 +130,7 @@ jobs:
           path: dist
 
   pages-deploy:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'schedule'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'schedule' && !(github.event_name == 'workflow_dispatch' && inputs.run_daily_index)
     name: Deploy GitHub Pages
     needs: pages-build
     runs-on: ubuntu-24.04
