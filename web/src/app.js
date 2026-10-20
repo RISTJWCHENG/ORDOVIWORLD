@@ -23,10 +23,45 @@ function query(h){const q={};(h.split('?')[1]||'').split('&').filter(Boolean).fo
 function find(o){const t=(o.q||'').toLowerCase().split(/\s+/).filter(Boolean);let r=P.filter(p=>(!o.cat||p.cats.includes(o.cat))&&(!o.source||[...(p.srcs||[]),...(p.sources||[])].some(x=>String(x.sourceType||x.t||x.type||'').toLowerCase()==='sns'))&&(!o.genre||p.genre===o.genre)).map(p=>{let s=0;for(const w of t){const h=x=>x.toLowerCase().includes(w);let m=0;if(p.name.toLowerCase()===w)m+=10;else if(h(p.name))m+=6;if(p.cats.some(h)||p.tags.some(h))m+=4;if(h(p.desc))m+=2;if(!m){s=0;break}s+=m}return{p,s:t.length?s:1}}).filter(x=>x.s>0);
 const S=o.sort;r.sort(S==='alpha'?(a,b)=>a.p.name.localeCompare(b.p.name):S==='updated'?(a,b)=>b.p.upd.localeCompare(a.p.upd):(a,b)=>b.s-a.s||a.p.name.localeCompare(b.p.name));return r.map(x=>x.p)}
 function pager(n,pg,size,base){const pages=Math.ceil(n/size);if(pages<2)return'';return`<nav class="pg" aria-label="Pagination"><a class="btn ${pg<=1?'off':''}" href="#${base}&page=${pg-1}">‹ Prev</a>Page ${pg} of ${pages}<a class="btn ${pg>=pages?'off':''}" href="#${base}&page=${pg+1}">Next ›</a></nav>`}
+const ordosynSectionPages=Object.create(null);
+const ordosynSectionItems=(key)=>{
+ if(key==='featured'){
+  const priority=P.filter(p=>p.idn!=='discovered').concat(P.slice(0,3));
+  const seen=new Set();return priority.filter(p=>{const id=p.slug||p.name;if(seen.has(id))return false;seen.add(id);return true});
+ }
+ if(key==='more')return P.slice(3);
+ if(key==='recent')return [...P].sort((a,b)=>b.upd.localeCompare(a.upd));
+ if(key==='games')return P.filter(p=>p.cats.includes('Games'));
+ return [];
+};
+const ordosynSectionWindow=(key)=>{
+ const items=ordosynSectionItems(key),pages=Math.max(1,Math.ceil(items.length/3));
+ const page=Math.max(0,Math.min(ordosynSectionPages[key]||0,pages-1));
+ ordosynSectionPages[key]=page;
+ return {items,page,pages};
+};
+const ordosynPagedSection=(key,title)=>{
+ const {items,page,pages}=ordosynSectionWindow(key);
+ return `<section class="ordosyn-section" data-ordosyn-section="${key}">
+ <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px">
+ <h2 style="margin:0">${title}</h2>
+ <div style="display:flex;align-items:center;gap:8px" role="group" aria-label="${title} pages">
+ <button type="button" class="btn" data-ordosyn-section-prev="${key}" aria-label="Previous ${title} projects" ${page===0?'disabled':''} style="min-width:36px;padding:6px 10px">‹</button>
+ <span data-ordosyn-section-count="${key}" class="mute" style="font-size:12px;white-space:nowrap">${page+1} / ${pages}</span>
+ <button type="button" class="btn" data-ordosyn-section-next="${key}" aria-label="Next ${title} projects" ${page>=pages-1?'disabled':''} style="min-width:36px;padding:6px 10px">›</button>
+ </div></div>
+ <div data-ordosyn-section-grid="${key}">${items.length?grid(items.slice(page*3,page*3+3)):'<p class="mute">No projects in this section yet.</p>'}</div>
+ </section>`;
+};
 const V={
 profile(){return renderProfile()},
-home(){const rec=[...P].sort((a,b)=>b.upd.localeCompare(a.upd)).slice(0,3);return`<div style="max-width:760px;margin:0 auto">${noteHTML()}</div>`+
-sec('Explore Categories',`<div class="chips">${CATS.map(c=>`<a class="btn" href="#/explore?cat=${encodeURIComponent(c)}">${c}</a>`).join('')}</div>`)+sec('Featured Projects',grid(P.filter(p=>p.idn!=='discovered').concat(P.slice(0,3)).slice(0,3)))+sec('More Projects',grid(P.slice(3,6)))+sec('Recently Discovered',grid(rec))+sec('Discover ICP Games',grid(P.filter(p=>p.cats.includes('Games')).slice(0,3)))+sec('Join the Ecosystem','<div class="glass card" style="flex-direction:row;align-items:center;flex-wrap:wrap"><p class="mute" style="flex:1">Building on ICP? Submit your project for review. Basic listings are free.</p><a class="btn p" href="#/submit">Submit Project</a></div>')},
+home(){return`<div style="max-width:760px;margin:0 auto">${noteHTML()}</div>`+
+sec('Explore Categories',`<div class="chips"><a class="btn on" href="#/explore" aria-current="page">All</a>${CATS.map(c=>`<a class="btn" href="#/explore?cat=${encodeURIComponent(c)}">${esc(c)}</a>`).join('')}</div>`)+
+ordosynPagedSection('featured','Featured Projects')+
+ordosynPagedSection('more','More Projects')+
+ordosynPagedSection('recent','Recently Discovered')+
+ordosynPagedSection('games','Discover ICP Games')+
+sec('Join the Ecosystem','<div class="glass card" style="flex-direction:row;align-items:center;flex-wrap:wrap"><p class="mute" style="flex:1">Building on ICP? Submit your project for review. Basic listings are free.</p><a class="btn p" href="#/submit">Submit Project</a></div>')},
 search(q){const pg=+q.page||1,sort=q.sort||'relevance',all=find({...q,sort}),sl=all.slice((pg-1)*6,pg*6),b=`/search?q=${encodeURIComponent(q.q||'')}&cat=${encodeURIComponent(q.cat||'')}&sort=${sort}`;
 return`<div class="page"><h1>${!q.q && q.sort==="updated"?"Newly Indexed":"Search"}</h1><div class="row" style="margin-top:20px;flex-wrap:wrap;gap:16px">${chips(CATS,q.cat,'cat')}<label style="margin-left:auto;display:flex;gap:8px;align-items:center;margin:0">Sort <select id="sort" style="width:auto"><option value="relevance">Relevance</option><option value="alpha"${sort==='alpha'?' selected':''}>A–Z</option><option value="updated"${sort==='updated'?' selected':''}>Recently updated</option></select></label></div><div style="margin-top:24px" aria-live="polite" id="remote-search-results"><p class="mute" style="font-size:14px;margin-bottom:12px">${all.length} result${all.length===1?'':'s'}${q.q?` for “${esc(q.q)}”`:''}</p>${all.length?grid(sl)+pager(all.length,pg,6,b):'<p class="glass card mute" style="padding:40px;text-align:center">No projects match yet. Try a different keyword or clear the filters.</p>'}</div></div>`},
 explore(q){if(!q.cat&&!q.source){return '<div class="page ordosyn-explore-sections">'+V.home()+'</div>';}const pg=+q.page||1,all=find({cat:q.cat,source:q.source,sort:'alpha'});return`<div class="page" id="cats"><h1>${q.source==="sns"?"SNS":q.cat==="Caffeine Apps"?"Caffeine Apps":"Explore"}</h1>${noteHTML()}${chips(CATS,q.cat,'cat')}<div style="margin-top:24px">${all.length?grid(all.slice((pg-1)*9,pg*9))+pager(all.length,pg,9,`/explore?cat=${encodeURIComponent(q.cat||'')}&source=${encodeURIComponent(q.source||'')}`):'<p class="glass card mute" style="padding:40px;text-align:center">No projects in this category yet.</p>'}</div></div>`},
@@ -65,6 +100,25 @@ document.querySelectorAll('.navrow a').forEach(a=>{
   if(active){a.setAttribute('aria-current','page')}
   else{a.removeAttribute('aria-current')}
 })}
+app.addEventListener('click',e=>{
+ const next=e.target.closest('[data-ordosyn-section-next]');
+ const prev=e.target.closest('[data-ordosyn-section-prev]');
+ const button=next||prev;
+ if(!button||button.disabled)return;
+ e.preventDefault();
+ const key=next?next.dataset.ordosynSectionNext:prev.dataset.ordosynSectionPrev;
+ const {items,page,pages}=ordosynSectionWindow(key);
+ const upcoming=Math.max(0,Math.min(page+(next?1:-1),pages-1));
+ if(upcoming===page)return;
+ ordosynSectionPages[key]=upcoming;
+ const section=button.closest('[data-ordosyn-section]');
+ if(!section)return;
+ const target=section.querySelector('[data-ordosyn-section-grid]');
+ target.innerHTML=grid(items.slice(upcoming*3,upcoming*3+3));
+ section.querySelector('[data-ordosyn-section-count]').textContent=`${upcoming+1} / ${pages}`;
+ section.querySelector('[data-ordosyn-section-prev]').disabled=upcoming===0;
+ section.querySelector('[data-ordosyn-section-next]').disabled=upcoming>=pages-1;
+});
 app.addEventListener('click',e=>{const a=e.target.closest('[data-k]');if(!a)return;e.preventDefault();const q=query(location.hash.slice(1)),path=location.hash.slice(1).split('?')[0]||'/';q[a.dataset.k]=a.dataset.v;delete q.page;location.hash=path+'?'+Object.entries(q).filter(([,v])=>v).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')});
 app.addEventListener('change',e=>{if(e.target.id!=='sort')return;const q=query(location.hash.slice(1));q.sort=e.target.value;delete q.page;location.hash='/search?'+Object.entries(q).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')});
 document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;
