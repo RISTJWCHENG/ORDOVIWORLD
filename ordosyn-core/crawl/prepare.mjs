@@ -59,7 +59,12 @@ async function main(){
  const max=Math.min(32,Math.max(1,Number.parseInt(get('--max','5'),10)||5));
  const source=JSON.parse(await readFile(input,'utf8'));if(source.schema!=='ordosyn.discovery.v1'||!Array.isArray(source.candidates))throw Error('Unknown discovery input');
  const results=[],errors=[];
- for(const item of source.candidates.slice(0,max)){
+ const scanRaw=get('--scan',String(max));
+const scanMax=Number(scanRaw);
+if(!Number.isInteger(scanMax)||scanMax<max||scanMax>100)
+ throw Error('--scan must be an integer between --max and 100');
+for(const item of source.candidates.slice(0,scanMax)){
+ if(results.length>=max)break;
   try{publicHttps(item.websiteUrl);if(!await checkRobots(item.websiteUrl))throw Error('Disallowed by robots.txt');
    const res=await checkedFetch(item.websiteUrl,{maxBytes:500000,timeoutMs:12000});
    if(new URL(res.url).origin!==new URL(item.websiteUrl).origin)throw Error('Cross-origin redirect needs review');

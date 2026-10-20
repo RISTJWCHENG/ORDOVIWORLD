@@ -97,7 +97,7 @@ jobs:
           GPT_API_KEY_ORDOSYNSEARCH: ${{ secrets.GPT_API_KEY_ORDOSYNSEARCH }}
         run: |
           test -n "$GPT_API_KEY_ORDOSYNSEARCH"
-          node ordosyn-core/cloud-v1/native-stage1.mjs --sources github --max 3 --scan 12 --out "$RUNNER_TEMP/ordosyn-classified.json"
+          node ordosyn-core/cloud-v1/native-stage1.mjs --sources github --max 3 --scan 40 --out "$RUNNER_TEMP/ordosyn-classified.json"
       - name: Persist verified artifacts to isolated Staging D1/R2
         env:
           ORDOSYN_NATIVE_INGEST_TOKEN: ${{ secrets.ORDOSYN_NATIVE_INGEST_TOKEN }}
