@@ -50,7 +50,17 @@ document.title=seg==='home'?'Ordosyn — Explore the Internet Computer Universe'
 document.querySelectorAll('.navrow a').forEach(a=>{
   const target=a.getAttribute('href');
   const current=location.hash||'#/explore';
-  const active=current===target||current.startsWith(target+'&page=');
+  const routePath=current.slice(1).split('?')[0];
+  const routeQuery=query(current.slice(1));
+  const active=target==='#/explore'
+    ? routePath==='/explore' && !routeQuery.source && routeQuery.cat!=='Caffeine Apps'
+    : target==='#/explore?source=sns'
+      ? routePath==='/explore' && routeQuery.source==='sns'
+      : target==='#/explore?cat=Caffeine%20Apps'
+        ? routePath==='/explore' && routeQuery.cat==='Caffeine Apps' && !routeQuery.source
+        : target==='#/search?sort=updated'
+          ? routePath==='/search' && routeQuery.sort==='updated'
+          : routePath==='/submit';
   a.classList.toggle('on',active);
   if(active){a.setAttribute('aria-current','page')}
   else{a.removeAttribute('aria-current')}
