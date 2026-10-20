@@ -599,3 +599,51 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_QUICK_EXPLORE_ORDER_END */
+/* ORDOSYN_NAV_AT_DIVIDER_V1: primary navigation aligns to divider; center content untouched. */
+@media (min-width: 1200px) {
+  #mast.mast > .navrow {
+    display: flex;
+    position: fixed;
+    top: 76px;
+    left: 332px;
+    right: auto;
+    z-index: 108;
+    width: max-content;
+    max-width: calc(100vw - 356px);
+    margin: 0;
+    padding: 0;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    text-align: left;
+    transform: none;
+  }
+}
+@media (min-width: 1024px) and (max-width: 1199px) {
+  #mast.mast > .navrow {
+    position: fixed;
+    top: 76px;
+    left: 320px;
+    right: 16px;
+    z-index: 108;
+    justify-content: flex-start;
+    margin: 0;
+    flex-wrap: wrap;
+    transform: none;
+  }
+}
+@media (max-width: 1023px) {
+  #mast.mast > .navrow {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    justify-content: flex-start;
+    margin: 12px 0 0;
+    transform: none;
+  }
+}
+/* Hide an old centered-only duplication if a legacy render injects it. */
+#app.wrap > div[style*="max-width:760px"] > p.note {
+  display: none;
+}
+/* ORDOSYN_NAV_AT_DIVIDER_V1_END */
