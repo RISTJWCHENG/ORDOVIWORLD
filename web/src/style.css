@@ -696,3 +696,14 @@ select[name*="sort" i]:focus-visible {
   border-radius: 4px !important;
 }
 /* ORDOSYN_TOP_NAV_UNDERLINE_ACTIVE_V1_END */
+
+/* ORDOSYN_HEADER_BASELINE_FIX_V1 */
+@media (min-width: 1024px) {
+  #mast.mast > h1.ordosyn-store-title {
+    top: 28px !important;
+    margin: 0 !important;
+    line-height: 1.25 !important;
+    white-space: nowrap !important;
+  }
+}
+/* ORDOSYN_HEADER_BASELINE_FIX_V1_END */
