@@ -552,3 +552,50 @@ select[name*="sort" i]:focus-visible {
 }
 
 /* ORDOSYN_BRAND_DIVIDER_END */
+/* ORDOSYN_QUICK_EXPLORE_ORDER_START: introduction above compact search. */
+@media (min-width: 1024px) {
+  #mast.mast > .ordosyn-store-intro {
+    position: fixed;
+    top: 69px;
+    left: 24px;
+    z-index: 109;
+    width: 260px;
+    max-width: calc(100vw - 48px);
+  }
+  #mast.mast > .sbar {
+    top: 133px;
+    left: 24px;
+    height: 36px;
+    min-height: 36px;
+    background-color: #f2f4f7;
+    border-color: #e4e7ec;
+  }
+  #mast.mast > .ordosyn-store-notice {
+    top: 187px;
+    left: 24px;
+  }
+}
+#mast.mast > .sbar {
+  background-color: #f2f4f7;
+  border-color: #e4e7ec;
+}
+#mast.mast > .sbar input {
+  background: transparent;
+  color: #344054;
+}
+#mast.mast > .sbar input::placeholder {
+  color: #667085;
+  opacity: 1;
+}
+#mast.mast > .sbar:focus-within {
+  background-color: #fff;
+  border-color: #98a2b3;
+}
+@media (max-width: 1023px) {
+  #mast.mast > .ordosyn-store-intro,
+  #mast.mast > .sbar,
+  #mast.mast > .ordosyn-store-notice {
+    position: static;
+  }
+}
+/* ORDOSYN_QUICK_EXPLORE_ORDER_END */
