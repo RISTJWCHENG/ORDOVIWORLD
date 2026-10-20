@@ -399,17 +399,17 @@ select[name*="sort" i]:focus-visible {
     width: max-content;
     max-width: calc(100vw - 48px);
     margin: 0;
-    font-size: 14px;
+    font-size: 15.5px;
     font-weight: 650;
     line-height: 1.25;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.045em;
     white-space: nowrap;
     text-align: left;
   }
   #mast.mast > p.mute { display: none; }
   #mast.mast > .sbar {
     position: fixed;
-    top: 48px;
+    top: 60px;
     left: 24px;
     z-index: 110;
     box-sizing: border-box;
@@ -460,7 +460,7 @@ select[name*="sort" i]:focus-visible {
   #mast.mast > h1.ordosyn-store-title {
     font-size: clamp(11px, 3vw, 14px);
     line-height: 1.25;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.045em;
     white-space: nowrap;
     margin: 0;
   }
@@ -499,8 +499,8 @@ select[name*="sort" i]:focus-visible {
     left: 24px;
     z-index: 109;
   }
-  #mast.mast > .ordosyn-store-intro { top: 96px; }
-  #mast.mast > .ordosyn-store-notice { top: 176px; }
+  #mast.mast > .ordosyn-store-intro { top: 108px; }
+  #mast.mast > .ordosyn-store-notice { top: 188px; }
 }
 @media (max-width: 1023px) {
   #mast.mast > .ordosyn-store-intro,
