@@ -604,7 +604,7 @@ select[name*="sort" i]:focus-visible {
   #mast.mast > .navrow {
     display: flex;
     position: fixed;
-    top: 76px;
+    top: 20px;
     left: 332px;
     right: auto;
     z-index: 108;
@@ -622,7 +622,7 @@ select[name*="sort" i]:focus-visible {
 @media (min-width: 1024px) and (max-width: 1199px) {
   #mast.mast > .navrow {
     position: fixed;
-    top: 76px;
+    top: 20px;
     left: 320px;
     right: 16px;
     z-index: 108;
