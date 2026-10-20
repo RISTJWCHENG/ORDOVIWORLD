@@ -4,6 +4,8 @@ run-name: Ordosyn Monitor - ${{ github.event_name }} - ${{ github.ref_name }}
 on:
   push:
     branches: [main, core17-staging-safe]
+  schedule:
+    - cron: '17 3 * * *'
   workflow_dispatch:
 
 permissions:
@@ -64,8 +66,41 @@ jobs:
           if-no-files-found: ignore
           retention-days: 3
 
+  native-daily-staging:
+    name: Daily Cloud v1 Staging Index
+    if: github.event_name == 'schedule' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: ordosyn-staging
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout verified Cloud v1 code
+        uses: actions/checkout@v4
+        with:
+          ref: a9c2a655fc2f02b3258104874cd1c27a036d9807
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify native Cloud v1
+        run: |
+          node --test ordosyn-core/cloud-v1/*.test.mjs
+      - name: Discover, crawl and classify real projects
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GPT_API_KEY_ORDOSYNSEARCH: ${{ secrets.GPT_API_KEY_ORDOSYNSEARCH }}
+        run: |
+          test -n "$GPT_API_KEY_ORDOSYNSEARCH"
+          node ordosyn-core/cloud-v1/native-stage1.mjs --sources github --max 3 --scan 12 --out "$RUNNER_TEMP/ordosyn-classified.json"
+      - name: Persist verified artifacts to isolated Staging D1/R2
+        env:
+          ORDOSYN_NATIVE_INGEST_TOKEN: ${{ secrets.ORDOSYN_NATIVE_INGEST_TOKEN }}
+        run: |
+          test -n "$ORDOSYN_NATIVE_INGEST_TOKEN"
+          node ordosyn-core/cloud-v1/native-submit-cli.mjs --in "$RUNNER_TEMP/ordosyn-classified.json"
   pages-build:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'schedule'
     name: Build GitHub Pages
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -90,7 +125,7 @@ jobs:
           path: dist
 
   pages-deploy:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && github.event_name != 'schedule'
     name: Deploy GitHub Pages
     needs: pages-build
     runs-on: ubuntu-24.04
