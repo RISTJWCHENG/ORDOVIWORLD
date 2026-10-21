@@ -206,6 +206,15 @@
         /favou?rite|wishlist|save/i.test(b.getAttribute('aria-label') || '')
       );
       if (favorite) favorite.remove();
+            // ORDOSYN_REMOVE_HEADER_CIRCLE_V3
+      // The original card header has one favorite button.
+      // Remove that node, not just the heart icon or styling.
+      const headerButtons = Array.from(
+        header.querySelectorAll('button')
+      );
+      if (headerButtons.length === 1) {
+        headerButtons[0].remove();
+      }
       const heading = header.querySelector('h3');
       linkDetail(heading, details);
       const logo = header.querySelector('img, svg, .logo');
