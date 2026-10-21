@@ -874,3 +874,20 @@ select[name*="sort" i]:focus-visible {
   letter-spacing: normal !important;
 }
 /* ORDOSYN_PAGE_HEADING_UNIFORM_V1_END */
+
+/* ORDOSYN_PROJECT_DETAIL_TOP_GAP_V1
+   Keep the detail-page gradient cover close to the navigation.
+   Do not change Explore or other page layouts.
+*/
+@media (min-width: 1024px) {
+  #app.wrap > .page:has(> .cover) {
+    padding-top: 12px !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  #app.wrap > .page:has(> .cover) {
+    padding-top: 12px !important;
+  }
+}
+/* ORDOSYN_PROJECT_DETAIL_TOP_GAP_V1_END */
