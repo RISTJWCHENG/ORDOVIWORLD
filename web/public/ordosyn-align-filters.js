@@ -1,91 +1,110 @@
+/* ORDOSYN_ALIGN_FIVE_PAGES_V1 */
 (() => {
   'use strict';
 
   let pending = false;
-  let current = null;
-  let original = '';
+  let activePage = null;
+  let savedMargin = '';
+  let savedPriority = '';
 
-  function getTarget() {
-    const explore = document.querySelector(
-      '#app .ordosyn-explore-sections > section:first-of-type .chips'
-    );
-
-    const filtered = document.querySelector(
-      '#app #cats > .chips'
-    );
-
-    return {
-      chips: explore || filtered,
-      section: explore
-        ? explore.closest('section')
-        : filtered
-          ? filtered.closest('#cats')
-          : null
-    };
+  function restore() {
+    if (activePage && activePage.isConnected) {
+      if (savedMargin) {
+        activePage.style.setProperty(
+          'margin-top',
+          savedMargin,
+          savedPriority
+        );
+      } else {
+        activePage.style.removeProperty('margin-top');
+      }
+    }
   }
 
   function align() {
     pending = false;
 
-    const search = document.getElementById('sf');
-    const { chips, section } = getTarget();
+    restore();
 
-    if (current && current !== section && current.isConnected) {
-      current.style.marginTop = original;
-    }
+    const search = document.getElementById('sf');
+    const app = document.getElementById('app');
+    const page = app && app.querySelector('.page');
+
+    activePage = null;
 
     if (
       !search ||
-      !chips ||
-      !section ||
-      window.innerWidth < 1024 ||
-      window.scrollY > 12
+      !page ||
+      window.innerWidth < 1024
     ) {
-      if (current && current.isConnected) {
-        current.style.marginTop = original;
-      }
-      current = null;
       return;
     }
 
-    if (current !== section) {
-      current = section;
-      original = section.style.marginTop;
+    const hash = window.location.hash || '#/explore';
+    const route = hash.slice(1).split('?')[0] || '/explore';
+
+    let target = null;
+    let desiredOffset = 0;
+
+    if (route === '/explore') {
+      target = page.querySelector('.chips');
+    } else if (
+      route === '/search' &&
+      new URLSearchParams(
+        hash.includes('?') ? hash.split('?').slice(1).join('?') : ''
+      ).get('sort') === 'updated'
+    ) {
+      target = page.querySelector('.chips');
+    } else if (route === '/submit') {
+      target = page.querySelector('h1');
+      desiredOffset = -54;
     }
 
-    // Measure the original layout before applying the offset.
-    section.style.marginTop = original;
+    if (!target) {
+      return;
+    }
 
-    const delta = Math.round(
-      search.getBoundingClientRect().top -
-      chips.getBoundingClientRect().top
+    activePage = page;
+    savedMargin = page.style.getPropertyValue('margin-top');
+    savedPriority = page.style.getPropertyPriority('margin-top');
+
+    const desiredTop =
+      search.getBoundingClientRect().top + desiredOffset;
+    const actualTop = target.getBoundingClientRect().top;
+    const delta = Math.round(desiredTop - actualTop);
+
+    if (Math.abs(delta) <= 1) {
+      return;
+    }
+
+    const baseMargin = getComputedStyle(page).marginTop;
+
+    page.style.setProperty(
+      'margin-top',
+      `calc(${baseMargin} + ${delta}px)`,
+      'important'
     );
-
-    if (Math.abs(delta) > 1) {
-      const base = getComputedStyle(section).marginTop;
-      section.style.setProperty(
-        'margin-top',
-        `calc(${base} + ${delta}px)`,
-        'important'
-      );
-    }
   }
 
   function schedule() {
-    if (!pending) {
-      pending = true;
-      requestAnimationFrame(align);
-    }
+    if (pending) return;
+
+    pending = true;
+    requestAnimationFrame(align);
   }
 
-  new MutationObserver(schedule).observe(
-    document.documentElement,
-    { childList: true, subtree: true }
-  );
+  const app = document.getElementById('app');
+
+  if (app) {
+    new MutationObserver(schedule).observe(app, {
+      childList: true,
+      subtree: true
+    });
+  }
 
   window.addEventListener('load', schedule);
-  window.addEventListener('hashchange', schedule);
   window.addEventListener('resize', schedule);
+  window.addEventListener('hashchange', schedule);
 
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(schedule);
