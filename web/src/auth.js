@@ -114,3 +114,5 @@ document.addEventListener('keydown', event => {
 })
 window.addEventListener('hashchange', closeAccountMenu)
 export const currentPrincipal = () => principal
+
+window.ordosynCurrentPrincipal = () => principal
