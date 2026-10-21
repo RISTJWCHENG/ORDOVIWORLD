@@ -281,9 +281,8 @@
 
   function scan() {
     queued = false;
-    document.querySelectorAll(
-      '.grid > .ordosyn-project-card'
-    ).forEach(improve);
+    /* ORDOSYN_CARD_INIT_FIX_V2 */
+document.querySelectorAll('.grid > .card').forEach(improve);
   }
 
   function schedule() {
@@ -314,6 +313,7 @@
       subtree: true,
       attributes: true,
       attributeFilter: [
+        'class',
         'data-vote-up-count',
         'data-vote-down-count'
       ]
