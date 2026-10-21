@@ -68,6 +68,43 @@
     }
     #app .grid:has(> .card.ordosyn-clean-card) {align-items:stretch !important;}
   `;
+  /* ORDOSYN_CARD_PRECISION_V5 */
+  style.textContent += `
+    #app .grid > .card.ordosyn-clean-card {
+      row-gap: 0 !important;
+      justify-content: flex-start !important;
+    }
+
+    #app .grid > .card.ordosyn-clean-card > p {
+      margin-bottom: 0 !important;
+    }
+
+    #app .grid > .card.ordosyn-clean-card
+      > .ordosyn-vote-panel {
+      margin-top: 8px !important;
+      padding-top: 8px !important;
+      border-top: 1px solid #e5e7eb !important;
+      gap: 8px !important;
+    }
+
+    #app .grid > .card.ordosyn-clean-card
+      > .ordosyn-website-top {
+      right: 15px !important;
+      top: 15px !important;
+      border: none !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      min-height: 0 !important;
+      text-decoration: none !important;
+    }
+
+    #app .grid > .card.ordosyn-clean-card
+      > .ordosyn-website-top:hover {
+      text-decoration: none !important;
+    }
+  `;
   document.head.appendChild(style);
 
   function linkDetail(element, details) {
@@ -109,7 +146,7 @@
         /^[\s\u2661\u2665]*$/.test(b.textContent) ||
         /favou?rite|wishlist|save/i.test(b.getAttribute('aria-label') || '')
       );
-      if (favorite) favorite.classList.add('ordosyn-hidden-fav');
+      if (favorite) favorite.remove();
       const heading = header.querySelector('h3');
       linkDetail(heading, details);
       const logo = header.querySelector('img, svg, .logo');
