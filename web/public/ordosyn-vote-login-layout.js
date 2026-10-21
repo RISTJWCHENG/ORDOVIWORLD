@@ -186,6 +186,8 @@
     close.focus();
   }
 
+  // ORDOSYN_NO_DOM_REORDER_LOOP_V1
+  // Move controls only when their order is incorrect.
   function enhance(card) {
     const row = card.querySelector(".ordosyn-vote-buttons");
     if (!row) return;
@@ -210,12 +212,20 @@
       }
     }
 
-    if (row.firstElementChild !== down) row.appendChild(down);
-    row.appendChild(up);
+    if (row.firstElementChild !== down) {
+      row.insertBefore(down, row.firstElementChild);
+    }
+    if (up.parentElement !== row ||
+        up.previousElementSibling !== down) {
+      row.insertBefore(up, down.nextSibling);
+    }
 
     if (save) {
       save.classList.add("ordosyn-vote-save");
-      row.appendChild(save);
+      if (save.parentElement !== row ||
+          row.lastElementChild !== save) {
+        row.appendChild(save);
+      }
     }
   }
 
