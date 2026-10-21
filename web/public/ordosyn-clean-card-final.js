@@ -224,6 +224,14 @@
         button.remove();
       }
 
+            // ORDOSYN_DELETE_HEADER_FAVORITE_V1
+      // Delete the obsolete favorite controls from the DOM.
+      // The external Website link is outside this header.
+      for (const oldButton of Array.from(
+        header.querySelectorAll('button')
+      )) {
+        oldButton.remove();
+      }
       const heading = header.querySelector('h3');
       linkDetail(heading, details);
       const logo = header.querySelector('img, svg, .logo');
