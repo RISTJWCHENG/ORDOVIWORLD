@@ -864,3 +864,13 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_BRAND_PNG_LOGO_V1_END */
+/* ORDOSYN_PAGE_HEADING_UNIFORM_V1: equal title typography across the five routes. */
+#app .ordosyn-explore-sections > section:first-of-type > h2,
+#app .page#cats > h1,
+#app .page > h1 {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  letter-spacing: normal !important;
+}
+/* ORDOSYN_PAGE_HEADING_UNIFORM_V1_END */
