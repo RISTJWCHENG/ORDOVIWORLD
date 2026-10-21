@@ -951,3 +951,20 @@ select[name*="sort" i]:focus-visible {
   text-decoration: none !important;
 }
 /* ORDOSYN_REMOVE_RESIDUAL_HEADER_CIRCLE_V1_END */
+
+/* ORDOSYN_STATIC_HEADINGS_NO_FLICKER_V2 */
+#app.wrap > .page.ordosyn-explore-sections > section:first-of-type > h2,
+#app.wrap > .page#cats > h1,
+#app.wrap > .page > h1 {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  line-height: 26px !important;
+  letter-spacing: normal !important;
+  text-align: left !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  translate: none !important;
+}
+/* ORDOSYN_STATIC_HEADINGS_NO_FLICKER_V2_END */
