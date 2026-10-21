@@ -819,3 +819,15 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_UNIFIED_TOP_SPACING_V1_END */
+
+/* ORDOSYN_MATCH_FILTER_TOP_V1 */
+@media (min-width: 1024px) {
+  /*
+   * Match filtered Explore pages to the categorized Explore
+   * landing page without shifting the header or sidebar.
+   */
+  #app.wrap > .page#cats.ordosyn-explore-sections {
+    padding-top: 84px !important;
+  }
+}
+/* ORDOSYN_MATCH_FILTER_TOP_V1_END */
