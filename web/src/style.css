@@ -790,3 +790,32 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_EXPLORE_SECTION_RHYTHM_V1_END */
+
+/* ORDOSYN_UNIFIED_TOP_SPACING_V1
+   Use the same compact top spacing on desktop routes.
+   Keep the existing fixed sidebar and content width. */
+@media (min-width: 1024px) {
+  #mast.mast {
+    box-sizing: border-box !important;
+    min-height: 64px !important;
+    height: 64px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  #app.wrap {
+    padding-top: 0 !important;
+  }
+
+  #app.wrap > .page {
+    padding-top: 40px !important;
+    margin-top: 0 !important;
+  }
+
+  #app.wrap > .page.ordosyn-explore-sections,
+  #app.wrap > .page#cats {
+    padding-top: 40px !important;
+    margin-top: 0 !important;
+  }
+}
+/* ORDOSYN_UNIFIED_TOP_SPACING_V1_END */
