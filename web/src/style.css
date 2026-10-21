@@ -927,3 +927,27 @@ select[name*="sort" i]:focus-visible {
   align-items: stretch !important;
 }
 /* ORDOSYN_VOTE_SPACING_SYMMETRY_V1_END */
+
+/* ORDOSYN_REMOVE_RESIDUAL_HEADER_CIRCLE_V1
+   Hide the obsolete favorite control in the card header.
+   Keep the independent Website link visible.
+*/
+#app .grid > .card.ordosyn-clean-card > .row:first-child button,
+#app .grid > .card.ordosyn-clean-card > .row:first-child .ordosyn-hidden-fav {
+  display: none !important;
+}
+
+#app .grid > .card.ordosyn-clean-card > .ordosyn-website-top {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+
+#app .grid > .card.ordosyn-clean-card > .ordosyn-website-top:hover {
+  background: transparent !important;
+  text-decoration: none !important;
+}
+/* ORDOSYN_REMOVE_RESIDUAL_HEADER_CIRCLE_V1_END */
