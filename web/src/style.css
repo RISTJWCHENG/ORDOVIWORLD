@@ -831,3 +831,36 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_MATCH_FILTER_TOP_V1_END */
+
+/* ORDOSYN_BRAND_PNG_LOGO_V1 */
+#mast.mast > h1.ordosyn-store-title {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: max-content !important;
+  max-width: 305px !important;
+  white-space: nowrap !important;
+  font-size: clamp(12px, 1vw, 16px) !important;
+  line-height: 1.25 !important;
+  box-sizing: border-box !important;
+}
+
+#mast.mast > h1.ordosyn-store-title::before {
+  content: "" !important;
+  display: block !important;
+  width: 26px !important;
+  height: 26px !important;
+  flex: 0 0 26px !important;
+  background-image: url("../public/Internet-Computer-Network-Store-logo.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+@media (max-width: 1023px) {
+  #mast.mast > h1.ordosyn-store-title {
+    max-width: 100% !important;
+  }
+}
+/* ORDOSYN_BRAND_PNG_LOGO_V1_END */
