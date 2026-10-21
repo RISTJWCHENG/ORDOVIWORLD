@@ -52,9 +52,13 @@
     #app .grid > .card.ordosyn-clean-card > .row:first-child {
       padding-right:96px !important;
     }
-    #app .grid > .card.ordosyn-clean-card > .ordosyn-vote-panel {
-      margin-top:10px !important;
-      padding-top:10px !important;
+        /* ORDOSYN_DIVIDER_GAP_SAFE_V4 */
+    #app .grid > .card.ordosyn-clean-card > p {
+      margin-bottom:0 !important;
+    }
+#app .grid > .card.ordosyn-clean-card > .ordosyn-vote-panel {
+      margin-top:8px !important;
+      padding-top:8px !important;
       border-top:1px solid #e5e7eb !important;
       gap:8px !important;
       flex:0 0 auto !important;
