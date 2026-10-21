@@ -773,3 +773,20 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_NAV_TEXT_ALIGN_V1_END */
+/* ORDOSYN_EXPLORE_SECTION_RHYTHM_V1
+   Keep the current nav-to-content gap; tighten only the vertical space
+   between top-level Explore sections. Do not shift the grid horizontally. */
+@media (min-width: 1024px) {
+  #app.wrap > section {
+    margin-bottom: 0 !important;
+  }
+  #app.wrap > section + section {
+    margin-top: 32px !important;
+  }
+}
+@media (max-width: 1023px) {
+  #app.wrap > section + section {
+    margin-top: 28px !important;
+  }
+}
+/* ORDOSYN_EXPLORE_SECTION_RHYTHM_V1_END */
