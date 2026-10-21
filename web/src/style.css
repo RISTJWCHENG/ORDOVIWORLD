@@ -891,3 +891,39 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_PROJECT_DETAIL_TOP_GAP_V1_END */
+
+/* ORDOSYN_VOTE_SPACING_SYMMETRY_V1
+   Keep equal spacing above and below the vote divider.
+   Do not push the vote divider to the card bottom.
+*/
+#app .grid > .ordosyn-project-card.ordosyn-vote-layout {
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  align-self: stretch !important;
+}
+
+#app .grid > .ordosyn-project-card.ordosyn-vote-layout
+  > p.ordosyn-description-clamped {
+  margin-bottom: 0 !important;
+}
+
+#app .grid > .ordosyn-project-card.ordosyn-vote-layout
+  > .ordosyn-vote-panel {
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid #e5e7eb !important;
+  flex: 0 0 auto !important;
+  gap: 8px !important;
+}
+
+/* Avoid displaying a second divider if one already exists. */
+#app .ordosyn-vote-layout .ordosyn-vote-divider {
+  display: none !important;
+}
+
+/* Equal-height grid cards without forcing a large blank vote gap. */
+#app .grid:has(> .ordosyn-project-card.ordosyn-vote-layout) {
+  align-items: stretch !important;
+}
+/* ORDOSYN_VOTE_SPACING_SYMMETRY_V1_END */
