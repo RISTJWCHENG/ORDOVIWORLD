@@ -105,6 +105,65 @@
       text-decoration: none !important;
     }
   `;
+  /* ORDOSYN_WEBSITE_CIRCLE_FIX_V2 */
+  style.textContent += `
+    #app .grid > .card.ordosyn-clean-card
+      > .row:first-child button {
+      display: none !important;
+    }
+
+    #app .grid > .card.ordosyn-clean-card
+      .ordosyn-hidden-fav {
+      display: none !important;
+    }
+
+    #app .grid > .card.ordosyn-clean-card
+      > .ordosyn-website-top {
+      display: inline-flex !important;
+      position: absolute !important;
+      top: 15px !important;
+      right: 15px !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+      width: auto !important;
+      height: auto !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      background-image: none !important;
+      box-shadow: none !important;
+      text-decoration: none !important;
+      color: #3466be !important;
+      z-index: 5 !important;
+    }
+
+    #app .grid > .card.ordosyn-clean-card
+      > .ordosyn-website-top::before,
+    #app .grid > .card.ordosyn-clean-card
+      > .ordosyn-website-top::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    #app .grid > .card.ordosyn-clean-card
+      > .ordosyn-website-top:hover {
+      color: #754cc9 !important;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      text-decoration: none !important;
+    }
+
+    #app .grid > .card.ordosyn-clean-card
+      > .ordosyn-website-top:focus-visible {
+      outline: 2px solid #6e63d8 !important;
+      outline-offset: 3px !important;
+    }
+  `;
   document.head.appendChild(style);
 
   function linkDetail(element, details) {
