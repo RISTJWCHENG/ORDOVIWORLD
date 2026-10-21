@@ -122,7 +122,7 @@
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'ordosyn-card-toggle';
-    button.textContent = 'Read more ⌄';
+    button.textContent = 'Read more';
     button.hidden = true;
     const heading = card.querySelector('h3')?.textContent?.trim() || 'Project description';
     button.setAttribute('aria-label', `Read full description for ${heading}`);
