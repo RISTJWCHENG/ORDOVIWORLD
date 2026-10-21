@@ -1107,3 +1107,42 @@ select[name*="sort" i]:focus-visible {
 }
 
 /* ORDOSYN_SUBMIT_GAP_22_CORRECTED_V2_END */
+
+/* ORDOSYN_EXPLORE_TOP_STATIC_V2
+   Explore landing page only.
+   Restore normal top placement without JavaScript movement.
+*/
+@media (min-width: 1024px) {
+  #app.wrap > .page.ordosyn-explore-sections {
+    margin-top: 0 !important;
+    padding-top: 20px !important;
+    min-height: 0 !important;
+  }
+
+  #app.wrap > .page.ordosyn-explore-sections
+    > section:first-of-type {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    min-height: 0 !important;
+    transform: none !important;
+  }
+
+  #app.wrap > .page.ordosyn-explore-sections
+    > section:first-of-type > h2 {
+    margin-top: 0 !important;
+    margin-bottom: 22px !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    line-height: 26px !important;
+    transform: none !important;
+  }
+
+  #app.wrap > .page.ordosyn-explore-sections
+    > section:first-of-type > h2 + .chips {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+}
+/* ORDOSYN_EXPLORE_TOP_STATIC_V2_END */
