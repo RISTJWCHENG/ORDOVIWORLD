@@ -1,6 +1,7 @@
 // Internet Identity authentication for Ordosyn.
 // A Principal is obtained from an Identity, NOT directly from AuthClient.
 import { AuthClient } from '@icp-sdk/auth/client'
+import { initFavorites } from './favorites.js'
 import { getProfileName } from './profile.js'
 
 const safeLabel = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
@@ -48,6 +49,7 @@ async function refreshIdentity() {
 }
 
 export async function initAuth() {
+  initFavorites(() => principal)
   try {
     client = new AuthClient()
     client.subscribe(() => { void refreshIdentity() })
