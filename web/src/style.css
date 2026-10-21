@@ -1146,3 +1146,26 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_EXPLORE_TOP_STATIC_V2_END */
+
+/* ORDOSYN_EXPLORE_SEARCH_ROW_ALIGN_V1
+   Align Explore filter row vertically with sidebar Quick Explore.
+   Desktop only. Static CSS, no observers or transforms.
+*/
+@media (min-width: 1024px) {
+  #app.wrap > .page.ordosyn-explore-sections
+    > section:first-of-type {
+    margin-top: -60px !important;
+  }
+
+  /* Keep the Explore heading-to-category gap consistent. */
+  #app.wrap > .page.ordosyn-explore-sections
+    > section:first-of-type > h2 {
+    margin-bottom: 22px !important;
+  }
+
+  #app.wrap > .page.ordosyn-explore-sections
+    > section:first-of-type > h2 + .chips {
+    margin-top: 0 !important;
+  }
+}
+/* ORDOSYN_EXPLORE_SEARCH_ROW_ALIGN_V1_END */
