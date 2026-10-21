@@ -215,6 +215,15 @@
       if (headerButtons.length === 1) {
         headerButtons[0].remove();
       }
+            // ORDOSYN_REMOVE_RESIDUAL_FAVORITE_NODE_V1
+      // Card header buttons are obsolete favorite controls.
+      // Website is a separate anchor outside the header.
+      for (const button of Array.from(
+        header.querySelectorAll('button')
+      )) {
+        button.remove();
+      }
+
       const heading = header.querySelector('h3');
       linkDetail(heading, details);
       const logo = header.querySelector('img, svg, .logo');
