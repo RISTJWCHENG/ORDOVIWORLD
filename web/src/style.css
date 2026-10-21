@@ -758,3 +758,18 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_EXPLORE_FOUR_COLUMNS_V1_END */
+
+/* ORDOSYN_NAV_TEXT_ALIGN_V1
+   Nav links have 15px horizontal padding.
+   Offset the nav container, not the content grid. */
+@media (min-width: 1200px) {
+  #mast.mast > .navrow {
+    left: 317px !important;
+  }
+}
+@media (min-width: 1024px) and (max-width: 1199px) {
+  #mast.mast > .navrow {
+    left: 305px !important;
+  }
+}
+/* ORDOSYN_NAV_TEXT_ALIGN_V1_END */
