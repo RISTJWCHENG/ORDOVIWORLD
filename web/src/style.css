@@ -1002,3 +1002,54 @@ select[name*="sort" i]:focus-visible {
 }
 
 /* ORDOSYN_TITLE_NEXT_ROW_22PX_V1_END */
+
+/* ORDOSYN_STATIC_TITLE_GAP_22_V1
+   Static heading spacing; no observers or transforms.
+*/
+
+/* Consistent title typography */
+#app.wrap > .page.ordosyn-explore-sections
+  > section:first-of-type > h2,
+#app.wrap > .page#cats > h1,
+#app.wrap > .page > h1 {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  line-height: 26px !important;
+  letter-spacing: normal !important;
+}
+
+/* Explore landing: title to category row */
+#app.wrap > .page.ordosyn-explore-sections
+  > section:first-of-type > h2 {
+  margin-bottom: 22px !important;
+}
+#app.wrap > .page.ordosyn-explore-sections
+  > section:first-of-type > h2 + .chips {
+  margin-top: 0 !important;
+}
+
+/* SNS / Caffeine Apps: title to category row */
+#app.wrap > .page#cats > h1 {
+  margin-bottom: 22px !important;
+}
+#app.wrap > .page#cats > h1 + .chips {
+  margin-top: 0 !important;
+}
+
+/* Newly Indexed: title to filters */
+#app.wrap > .page > h1:has(+ .row) {
+  margin-bottom: 22px !important;
+}
+#app.wrap > .page > h1 + .row {
+  margin-top: 0 !important;
+}
+
+/* Submit Project: title to explanatory text */
+#app.wrap > .page > h1:has(+ p.mute) {
+  margin-bottom: 22px !important;
+}
+#app.wrap > .page > h1 + p.mute {
+  margin-top: 0 !important;
+}
+
+/* ORDOSYN_STATIC_TITLE_GAP_22_V1_END */
