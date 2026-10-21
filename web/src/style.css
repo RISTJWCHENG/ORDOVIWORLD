@@ -1169,3 +1169,25 @@ select[name*="sort" i]:focus-visible {
   }
 }
 /* ORDOSYN_EXPLORE_SEARCH_ROW_ALIGN_V1_END */
+
+/* ORDOSYN_FOUR_PAGES_UP_60_V1
+   Move SNS, Caffeine Apps, Newly Indexed and Submit Project
+   up by the same nominal amount as the Explore adjustment.
+
+   Desktop only. No JavaScript, transforms, or observers.
+*/
+@media (min-width: 1024px) {
+
+  /* SNS and Caffeine Apps */
+  #app .page#cats,
+
+  /* Newly Indexed: contains the sort control */
+  #app .page:has(#sort),
+
+  /* Submit Project: contains the submission form */
+  #app .page:has(#sub) {
+    margin-top: -60px !important;
+  }
+
+}
+/* ORDOSYN_FOUR_PAGES_UP_60_V1_END */
