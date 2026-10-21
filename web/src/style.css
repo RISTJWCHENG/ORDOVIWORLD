@@ -1053,3 +1053,37 @@ select[name*="sort" i]:focus-visible {
 }
 
 /* ORDOSYN_STATIC_TITLE_GAP_22_V1_END */
+
+/* ORDOSYN_EXACT_NEXT_ROW_GAP_22_V2
+   Only Newly Indexed and Submit Project.
+   No transforms, observers, or page movement.
+*/
+
+/* Newly Indexed: heading to filter-button row */
+#app.wrap > .page:has(> .row #sort) > h1 {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+#app.wrap > .page:has(> .row #sort) > h1 + .row {
+  margin-top: 22px !important;
+  padding-top: 0 !important;
+}
+
+#app.wrap > .page:has(> .row #sort)
+  > h1 + .row .chips {
+  margin-top: 0 !important;
+}
+
+/* Submit Project: heading to explanatory paragraph */
+#app.wrap > .page:has(> form#sub) > h1 {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+#app.wrap > .page:has(> form#sub) > h1 + p {
+  margin-top: 22px !important;
+  padding-top: 0 !important;
+}
+
+/* ORDOSYN_EXACT_NEXT_ROW_GAP_22_V2_END */
