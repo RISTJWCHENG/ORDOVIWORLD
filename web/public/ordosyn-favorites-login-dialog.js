@@ -12,7 +12,7 @@
         width: min(440px, calc(100vw - 32px)) !important;
         border-radius: 20px !important;
         background: #ffffff !important;
-        border: 1px solid #d1d5db !important;
+        border: 1px solid #0f1f3d !important;
         box-shadow: 0 18px 60px rgba(15, 23, 42, 0.18) !important;
         padding: 28px 24px 24px !important;
         box-sizing: border-box !important;
@@ -57,11 +57,12 @@
       }
 
       .ordosyn-fav-login-actions button {
-        min-width: 270px !important;
-        min-height: 46px !important;
-        border-radius: 12px !important;
-        border: 1px solid #d1d5db !important;
-        background: #111827 !important;
+        min-width: 300px !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        border-radius: 999px !important;
+        border: 1px solid #0f1f3d !important;
+        background: #0f1f3d !important;
         color: #ffffff !important;
         font-size: 15px !important;
         font-weight: 600 !important;
@@ -146,11 +147,11 @@
     if (!copyEl) {
       copyEl = document.createElement('p');
       copyEl.textContent =
-        'Please sign in with Internet Identity to save this app to My Favorites.';
+        'Please sign in with Internet Identity to save it.';
       dialog.insertBefore(copyEl, continueBtn);
     } else {
       copyEl.textContent =
-        'Please sign in with Internet Identity to save this app to My Favorites.';
+        'Please sign in with Internet Identity to save it.';
     }
 
     copyEl.className = 'ordosyn-fav-login-copy';
