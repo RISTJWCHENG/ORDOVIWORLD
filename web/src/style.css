@@ -1362,3 +1362,26 @@ body:has(#app > .page:has(#sub)) #mast {
     padding-bottom: 30px !important;
   }
 }
+/* ORDOWORLD_SNS_PAGER_FULL_WIDTH_CENTER_V4 */
+/* Center the entire pager below the SNS card grid, not within its own narrow width. */
+.page nav.sns-number-pager {
+  box-sizing: border-box !important;
+  display: flex !important;
+  position: static !important;
+  float: none !important;
+  clear: both !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 24px 0 0 !important;
+  padding: 0 !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+  grid-column: 1 / -1 !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  text-align: center !important;
+}
