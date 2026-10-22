@@ -7,72 +7,78 @@
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
+      /* ORDOSYN_SAVE_MATCH_VOTE_DIALOG_V1 */
+
       .ordosyn-fav-login-dialog {
         position: relative !important;
-        width: min(440px, calc(100vw - 32px)) !important;
-        border-radius: 20px !important;
-        background: #ffffff !important;
-        border: 1px solid #0f1f3d !important;
-        box-shadow: 0 18px 60px rgba(15, 23, 42, 0.18) !important;
-        padding: 28px 24px 24px !important;
+        width: min(390px, calc(100vw - 32px)) !important;
+        max-width: 100% !important;
         box-sizing: border-box !important;
+        background: #ffffff !important;
+        border: 2px solid #d1d5db !important;
+        border-radius: 20px !important;
+        box-shadow: 0 14px 45px rgba(15,23,42,.16) !important;
+        padding: 46px 24px 24px !important;
+      }
+
+      .ordosyn-fav-login-copy {
+        color: #6b7280 !important;
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+        text-align: center !important;
+        margin: 0 0 22px !important;
+        padding: 0 !important;
+      }
+
+      .ordosyn-fav-login-actions {
+        display: block !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        align-self: stretch !important;
+      }
+
+      .ordosyn-fav-login-dialog
+      .ordosyn-fav-login-actions button {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        box-sizing: border-box !important;
+        padding: 0 12px !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 999px !important;
+        background: #243653 !important;
+        color: #ffffff !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
       }
 
       .ordosyn-fav-login-close {
         position: absolute !important;
-        top: 12px !important;
+        top: 10px !important;
         right: 12px !important;
-        width: 34px !important;
-        height: 34px !important;
-        border: 0 !important;
+        width: 32px !important;
+        height: 32px !important;
+        border: none !important;
+        border-radius: 50% !important;
         background: transparent !important;
         color: #6b7280 !important;
-        font-size: 24px !important;
-        line-height: 1 !important;
         cursor: pointer !important;
-        border-radius: 999px !important;
+        font-size: 23px !important;
+        line-height: 1 !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        transition: background-color 160ms ease, color 160ms ease !important;
       }
 
       .ordosyn-fav-login-close:hover {
         background: #f3f4f6 !important;
-        color: #111827 !important;
-      }
-
-      .ordosyn-fav-login-copy {
-        margin: 8px 0 0 0 !important;
-        text-align: center !important;
-        color: #6b7280 !important;
-        font-size: 16px !important;
-        line-height: 1.65 !important;
-      }
-
-      .ordosyn-fav-login-actions {
-        display: flex !important;
-        justify-content: center !important;
-        margin-top: 22px !important;
-      }
-
-      .ordosyn-fav-login-actions button {
-        min-width: 300px !important;
-        height: 40px !important;
-        min-height: 40px !important;
-        border-radius: 999px !important;
-        border: 1px solid #0f1f3d !important;
-        background: #0f1f3d !important;
-        color: #ffffff !important;
-        font-size: 15px !important;
-        font-weight: 600 !important;
-        cursor: pointer !important;
-        transition: opacity 160ms ease, transform 160ms ease !important;
-      }
-
-      .ordosyn-fav-login-actions button:hover {
-        opacity: 0.92 !important;
-        transform: translateY(-1px) !important;
       }
     `;
     document.head.appendChild(style);
