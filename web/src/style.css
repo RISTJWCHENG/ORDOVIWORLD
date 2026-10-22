@@ -1054,12 +1054,12 @@ select[name*="sort" i]:focus-visible {
 
 /* ORDOSYN_STATIC_TITLE_GAP_22_V1_END */
 
-/* ORDOWORLD_FIVE_PAGE_STATIC_LAYOUT_V1
-   One static layout for five directory pages.
-   No negative margins, transforms or DOM observers.
+/* ORDOWORLD_FIVE_PAGE_SEARCH_ALIGNMENT_V2
+   Desktop layout adjustment based on five screenshots.
+   Static CSS only; no observers or scroll handlers.
 */
 
-/* Directory pages only: do not reserve the old mast space. */
+/* Hide the obsolete mast only on these directory pages. */
 body:has(#app > .page.ordosyn-explore-sections) #mast,
 body:has(#app > .page#cats) #mast,
 body:has(#app > .page:has(#sort)) #mast,
@@ -1069,18 +1069,36 @@ body:has(#app > .page:has(#sub)) #mast {
 
 @media (min-width: 1024px) {
 
-  /* Top-level content starts below the navigation bar. */
-  #app.wrap > .page.ordosyn-explore-sections,
-  #app.wrap > .page#cats,
-  #app.wrap > .page:has(#sort),
-  #app.wrap > .page:has(#sub) {
-    margin-top: 0 !important;
+  /* Explore: raise its content area by approximately 60px. */
+  #app.wrap > .page.ordosyn-explore-sections {
+    margin-top: -60px !important;
     padding-top: 24px !important;
     min-height: 0 !important;
     align-content: start !important;
   }
 
-  /* Explore's first section must not add 64px. */
+  /*
+   * SNS and Caffeine Apps:
+   * Both routes use the categories page container.
+   * They require approximately 60px more correction.
+   */
+  #app.wrap > .page#cats {
+    margin-top: -120px !important;
+    padding-top: 24px !important;
+    min-height: 0 !important;
+    align-content: start !important;
+  }
+
+  /* Newly Indexed and Submit Project. */
+  #app.wrap > .page:has(#sort),
+  #app.wrap > .page:has(#sub) {
+    margin-top: -60px !important;
+    padding-top: 24px !important;
+    min-height: 0 !important;
+    align-content: start !important;
+  }
+
+  /* Prevent the first Explore section from adding extra space. */
   #app.wrap > .page.ordosyn-explore-sections
     > section:first-of-type {
     margin-top: 0 !important;
@@ -1088,7 +1106,7 @@ body:has(#app > .page:has(#sub)) #mast {
     min-height: 0 !important;
   }
 
-  /* Unified directory heading typography. */
+  /* One typography rule for the five page headings. */
   #app.wrap > .page.ordosyn-explore-sections
     > section:first-of-type > h2,
   #app.wrap > .page#cats > h1,
@@ -1104,7 +1122,7 @@ body:has(#app > .page:has(#sub)) #mast {
     padding-bottom: 0 !important;
   }
 
-  /* Reset the top margin of the next content row. */
+  /* Ensure the next row does not add another top margin. */
   #app.wrap > .page.ordosyn-explore-sections
     > section:first-of-type > h2 + *,
   #app.wrap > .page#cats > h1 + *,
@@ -1115,4 +1133,4 @@ body:has(#app > .page:has(#sub)) #mast {
   }
 }
 
-/* ORDOWORLD_FIVE_PAGE_STATIC_LAYOUT_V1_END */
+/* ORDOWORLD_FIVE_PAGE_SEARCH_ALIGNMENT_V2_END */
