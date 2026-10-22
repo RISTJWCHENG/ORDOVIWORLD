@@ -81,9 +81,10 @@
     .ordosyn-vote-login-continue {
       display: block !important;
       width: 100% !important;
-      min-height: 44px !important;
+      height: 40px !important;
+      min-height: 40px !important;
       border: none !important;
-      border-radius: 11px !important;
+      border-radius: 999px !important;
       background: #243653 !important;
       color: #fff !important;
       font-size: 14px !important;
@@ -240,7 +241,7 @@
       event.preventDefault();
       event.stopImmediatePropagation();
       showPrompt(
-        "Please sign in with Internet Identity to vote for this app.",
+        "Please sign in with Internet Identity to vote.",
         true
       );
       return;
