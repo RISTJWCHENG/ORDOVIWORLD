@@ -1054,140 +1054,65 @@ select[name*="sort" i]:focus-visible {
 
 /* ORDOSYN_STATIC_TITLE_GAP_22_V1_END */
 
-/* ORDOSYN_EXACT_NEXT_ROW_GAP_22_V2
-   Only Newly Indexed and Submit Project.
-   No transforms, observers, or page movement.
+/* ORDOWORLD_FIVE_PAGE_STATIC_LAYOUT_V1
+   One static layout for five directory pages.
+   No negative margins, transforms or DOM observers.
 */
 
-/* Newly Indexed: heading to filter-button row */
-#app.wrap > .page:has(> .row #sort) > h1 {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
+/* Directory pages only: do not reserve the old mast space. */
+body:has(#app > .page.ordosyn-explore-sections) #mast,
+body:has(#app > .page#cats) #mast,
+body:has(#app > .page:has(#sort)) #mast,
+body:has(#app > .page:has(#sub)) #mast {
+  display: none !important;
 }
 
-#app.wrap > .page:has(> .row #sort) > h1 + .row {
-  margin-top: 22px !important;
-  padding-top: 0 !important;
-}
-
-#app.wrap > .page:has(> .row #sort)
-  > h1 + .row .chips {
-  margin-top: 0 !important;
-}
-
-/* Submit Project: heading to explanatory paragraph */
-#app.wrap > .page:has(> form#sub) > h1 {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-#app.wrap > .page:has(> form#sub) > h1 + p {
-  margin-top: 22px !important;
-  padding-top: 0 !important;
-}
-
-/* ORDOSYN_EXACT_NEXT_ROW_GAP_22_V2_END */
-
-/* ORDOSYN_SUBMIT_GAP_22_CORRECTED_V2
-   Submit Project title to description.
-   Static CSS only.
-*/
-
-#app.wrap > .page:has(> h1 + p.mute) > h1 {
-  font-size: 20px !important;
-  font-weight: 600 !important;
-  line-height: 26px !important;
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
-#app.wrap > .page:has(> h1 + p.mute) > h1 + p.mute {
-  margin-top: 22px !important;
-  padding-top: 0 !important;
-}
-
-/* ORDOSYN_SUBMIT_GAP_22_CORRECTED_V2_END */
-
-/* ORDOSYN_EXPLORE_TOP_STATIC_V2
-   Explore landing page only.
-   Restore normal top placement without JavaScript movement.
-*/
 @media (min-width: 1024px) {
-  #app.wrap > .page.ordosyn-explore-sections {
+
+  /* Top-level content starts below the navigation bar. */
+  #app.wrap > .page.ordosyn-explore-sections,
+  #app.wrap > .page#cats,
+  #app.wrap > .page:has(#sort),
+  #app.wrap > .page:has(#sub) {
     margin-top: 0 !important;
-    padding-top: 20px !important;
+    padding-top: 24px !important;
     min-height: 0 !important;
+    align-content: start !important;
   }
 
+  /* Explore's first section must not add 64px. */
   #app.wrap > .page.ordosyn-explore-sections
     > section:first-of-type {
     margin-top: 0 !important;
     padding-top: 0 !important;
     min-height: 0 !important;
-    transform: none !important;
   }
 
+  /* Unified directory heading typography. */
   #app.wrap > .page.ordosyn-explore-sections
-    > section:first-of-type > h2 {
+    > section:first-of-type > h2,
+  #app.wrap > .page#cats > h1,
+  #app.wrap > .page:has(#sort) > h1,
+  #app.wrap > .page:has(#sub) > h1 {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+    line-height: 26px !important;
+    letter-spacing: normal !important;
     margin-top: 0 !important;
     margin-bottom: 22px !important;
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    font-size: 20px !important;
-    font-weight: 600 !important;
-    line-height: 26px !important;
-    transform: none !important;
   }
 
+  /* Reset the top margin of the next content row. */
   #app.wrap > .page.ordosyn-explore-sections
-    > section:first-of-type > h2 + .chips {
+    > section:first-of-type > h2 + *,
+  #app.wrap > .page#cats > h1 + *,
+  #app.wrap > .page:has(#sort) > h1 + *,
+  #app.wrap > .page:has(#sub) > h1 + * {
     margin-top: 0 !important;
     padding-top: 0 !important;
   }
 }
-/* ORDOSYN_EXPLORE_TOP_STATIC_V2_END */
 
-/* ORDOSYN_EXPLORE_SEARCH_ROW_ALIGN_V1
-   Align Explore filter row vertically with sidebar Quick Explore.
-   Desktop only. Static CSS, no observers or transforms.
-*/
-@media (min-width: 1024px) {
-  #app.wrap > .page.ordosyn-explore-sections
-    > section:first-of-type {
-    margin-top: -60px !important;
-  }
-
-  /* Keep the Explore heading-to-category gap consistent. */
-  #app.wrap > .page.ordosyn-explore-sections
-    > section:first-of-type > h2 {
-    margin-bottom: 22px !important;
-  }
-
-  #app.wrap > .page.ordosyn-explore-sections
-    > section:first-of-type > h2 + .chips {
-    margin-top: 0 !important;
-  }
-}
-/* ORDOSYN_EXPLORE_SEARCH_ROW_ALIGN_V1_END */
-
-/* ORDOSYN_FOUR_PAGES_UP_60_V1
-   Move SNS, Caffeine Apps, Newly Indexed and Submit Project
-   up by the same nominal amount as the Explore adjustment.
-
-   Desktop only. No JavaScript, transforms, or observers.
-*/
-@media (min-width: 1024px) {
-
-  /* SNS and Caffeine Apps */
-  #app .page#cats,
-
-  /* Newly Indexed: contains the sort control */
-  #app .page:has(#sort),
-
-  /* Submit Project: contains the submission form */
-  #app .page:has(#sub) {
-    margin-top: -60px !important;
-  }
-
-}
-/* ORDOSYN_FOUR_PAGES_UP_60_V1_END */
+/* ORDOWORLD_FIVE_PAGE_STATIC_LAYOUT_V1_END */
