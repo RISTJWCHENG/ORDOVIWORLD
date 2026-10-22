@@ -71,7 +71,8 @@ function snsNumberPager(n,pg,size,base){
  const shown=[...new Set(numbers.filter(p=>p>=1&&p<=total))].sort((a,b)=>a-b);
  let contents='';
  shown.forEach((p,i)=>{if(i&&p-shown[i-1]>1)contents+=gap();contents+=pageLink(p)});
- return `<nav class="sns-number-pager" data-total="${total}" data-base="${base}" aria-label="SNS pagination">${total>1?arrow('‹',current-1,current===1):''}${contents}${total>1?arrow('›',current+1,current===total):''}</nav>`;
+ /* ORDOWORLD_SNS_PAGER_WRAPPER_V5: a full-width layout row outside the pager itself. */
+ return `<div class="ordoworld-sns-pager-row" style="display:flex;width:100%;max-width:100%;grid-column:1/-1;justify-content:center;align-items:center;box-sizing:border-box;margin:24px 0 36px;clear:both"><nav class="sns-number-pager" style="display:flex;width:100%;justify-content:center;align-items:center;margin:0;flex-wrap:wrap" data-total="${total}" data-base="${base}" aria-label="SNS pagination">${total>1?arrow('‹',current-1,current===1):''}${contents}${total>1?arrow('›',current+1,current===total):''}</nav></div>`;
 }
 document.addEventListener('click',event=>{
  const button=event.target.closest('.sns-number-gap');if(!button)return;
