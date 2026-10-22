@@ -1135,112 +1135,30 @@ body:has(#app > .page:has(#sub)) #mast {
 
 /* ORDOWORLD_FIVE_PAGE_SEARCH_ALIGNMENT_V2_END */
 
-/* ORDOSYN_EXPLORE_PAGER_CIRCLE_V1 */
-#cats .pg.pg-pill{
-  gap:10px;
-  margin-top:28px;
+/* ORDOSYN_UNIFIED_BLUE_RING_PAGER_V2
+   One border + a soft glow, for category and section pagination.
+   Disabled page links have no href; disabled section buttons remain native disabled.
+*/
+#cats .pg.pg-pill {
+  gap: 10px;
+  margin-top: 28px;
+}
+#cats .pg.pg-pill .pg-count {
+  min-width: 46px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: #697586;
 }
 
-#cats .pg.pg-pill .pg-count{
-  min-width:46px;
-  text-align:center;
-  font-size:18px;
-  font-weight:500;
-  color:#697586;
-  letter-spacing:.02em;
-}
-
-#cats .pg.pg-pill .pg-btn{
-  position:relative;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:40px;
-  height:40px;
-  min-width:40px;
-  padding:0;
-  border-radius:999px;
-  border:1px solid #d9dfeb;
-  background:#fff;
-  color:#7c8798;
-  overflow:hidden;
-  box-shadow:0 1px 2px rgba(16,24,40,.05);
-  transition:transform .18s ease, box-shadow .22s ease, color .22s ease, border-color .22s ease, background-color .22s ease;
-}
-
-#cats .pg.pg-pill .pg-btn::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  padding:1px;
-  background:linear-gradient(135deg,#60a5fa,#8b5cf6,#22c55e,#f59e0b,#60a5fa);
-  background-size:250% 250%;
-  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  opacity:0;
-  transition:opacity .22s ease;
-  pointer-events:none;
-}
-
-#cats .pg.pg-pill .pg-btn:hover{
-  color:#243041;
-  transform:translateY(-1px);
-  box-shadow:0 10px 22px rgba(89,107,255,.14);
-}
-
-#cats .pg.pg-pill .pg-btn:hover::before{
-  opacity:1;
-  animation:ordosyn-pg-border-shift 2.4s linear infinite;
-}
-
-#cats .pg.pg-pill .pg-btn.off{
-  opacity:.42;
-  box-shadow:none;
-}
-
-#cats .pg.pg-pill .pg-arrow{
-  display:block;
-  font-size:18px;
-  font-weight:700;
-  line-height:1;
-}
-
-#cats .pg.pg-pill .pg-prev:not(.off) .pg-arrow{
-  animation:ordosyn-pg-nudge-left 1.2s ease-in-out infinite;
-}
-
-#cats .pg.pg-pill .pg-next:not(.off) .pg-arrow{
-  animation:ordosyn-pg-nudge-right 1.2s ease-in-out infinite;
-}
-
-@keyframes ordosyn-pg-border-shift{
-  0%{background-position:0% 50%}
-  100%{background-position:200% 50%}
-}
-
-@keyframes ordosyn-pg-nudge-left{
-  0%,100%{transform:translateX(0)}
-  50%{transform:translateX(-3px)}
-}
-
-@keyframes ordosyn-pg-nudge-right{
-  0%,100%{transform:translateX(0)}
-  50%{transform:translateX(3px)}
-}
-
-/* ORDOSYN_EXPLORE_SECTION_PAGER_ROUND_V1 */
-
-/* Actual Explore section controls, not the category pager. */
+#cats .pg.pg-pill .pg-btn,
 #app.wrap .ordosyn-section button[data-ordosyn-section-prev],
 #app.wrap .ordosyn-section button[data-ordosyn-section-next] {
   position: relative !important;
+  box-sizing: border-box !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-
-  box-sizing: border-box !important;
   flex: 0 0 40px !important;
   width: 40px !important;
   min-width: 40px !important;
@@ -1248,106 +1166,99 @@ body:has(#app > .page:has(#sub)) #mast {
   height: 40px !important;
   min-height: 40px !important;
   max-height: 40px !important;
-
   padding: 0 !important;
   margin: 0 !important;
-  border: 2px solid #e2e8f0 !important;
+  border: 2px solid #dbe6f5 !important;
   border-radius: 50% !important;
-
-  background: #ffffff !important;
-  box-shadow: 0 2px 7px rgba(25,45,80,.05) !important;
-  font-size: 0 !important;
-  line-height: 1 !important;
-
+  background: #fff !important;
+  box-shadow: 0 1px 3px rgba(24, 45, 90, .06) !important;
+  color: #526987 !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-
-  transition:
-    border-color .2s ease,
-    box-shadow .2s ease,
-    background-color .2s ease !important;
+  cursor: pointer;
+  text-decoration: none !important;
+  transition: box-shadow .25s ease, border-color .25s ease !important;
 }
 
-/* Keep disabled pagination non-clickable. */
+/* Neutralized existing pseudo-border effects: there is only one real border. */
+#cats .pg.pg-pill .pg-btn::before {
+  content: none !important;
+}
+#cats .pg.pg-pill .pg-btn.off {
+  cursor: default !important;
+  opacity: .72 !important;
+  pointer-events: auto !important;
+}
 #app.wrap .ordosyn-section button:disabled[data-ordosyn-section-prev],
 #app.wrap .ordosyn-section button:disabled[data-ordosyn-section-next] {
   cursor: default !important;
+  opacity: .72 !important;
 }
 
-/* Reconstruct the visible arrows for independent animation. */
+/* Compact category arrows use real spans. */
+#cats .pg.pg-pill .pg-arrow {
+  display: block !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+}
+/* Section arrows already contain glyphs. Hide the originals, animate ::after. */
+#app.wrap .ordosyn-section button[data-ordosyn-section-prev],
+#app.wrap .ordosyn-section button[data-ordosyn-section-next] {
+  font-size: 0 !important;
+}
 #app.wrap .ordosyn-section button[data-ordosyn-section-prev]::after,
 #app.wrap .ordosyn-section button[data-ordosyn-section-next]::after {
   display: block;
-  position: relative;
-  z-index: 1;
   font-family: Inter, system-ui, sans-serif;
   font-size: 22px;
   font-weight: 600;
   line-height: 1;
-  color: #64748b;
+  color: #526987;
 }
+#app.wrap .ordosyn-section button[data-ordosyn-section-prev]::after { content: '鈥?; }
+#app.wrap .ordosyn-section button[data-ordosyn-section-next]::after { content: '鈥?; }
 
-#app.wrap .ordosyn-section button[data-ordosyn-section-prev]::after {
-  content: "‹";
-  animation: ordosyn-section-arrow-left 1.7s ease-in-out infinite;
-}
-
-#app.wrap .ordosyn-section button[data-ordosyn-section-next]::after {
-  content: "›";
-  animation: ordosyn-section-arrow-right 1.7s ease-in-out infinite;
-}
-
-/* Animated multicolored border on hover. */
+/* A single animated blue-to-violet border, plus a soft non-solid blue halo. */
+#cats .pg.pg-pill .pg-btn:hover,
 #app.wrap .ordosyn-section button[data-ordosyn-section-prev]:hover,
 #app.wrap .ordosyn-section button[data-ordosyn-section-next]:hover {
-  border-color: transparent !important;
-
+  border: 2px solid transparent !important;
   background:
-    linear-gradient(#ffffff,#ffffff) padding-box,
-    linear-gradient(
-      120deg,
-      #60a5fa,
-      #a78bfa,
-      #22c55e,
-      #f59e0b,
-      #60a5fa
-    ) border-box !important;
-
-  background-size: 100% 100%, 300% 300% !important;
-
-  box-shadow:
-    0 0 0 3px rgba(96,165,250,.10),
-    0 5px 16px rgba(99,102,241,.13) !important;
-
-  animation: ordosyn-section-border-flow 2.3s linear infinite;
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(120deg, #619af4, #9dbbff, #8b85ee, #619af4) border-box !important;
+  background-size: 100% 100%, 260% 260% !important;
+  box-shadow: 0 0 0 5px rgba(98, 158, 249, .13) !important;
+  animation: ordosyn-blue-ring-flow 2.5s ease-in-out infinite alternate;
+  color: #415e86 !important;
+  opacity: 1 !important;
 }
 
-#app.wrap .ordosyn-section button[data-ordosyn-section-prev]:hover::after,
-#app.wrap .ordosyn-section button[data-ordosyn-section-next]:hover::after {
-  color: #243653;
+#cats .pg.pg-pill .pg-prev .pg-arrow,
+#app.wrap .ordosyn-section button[data-ordosyn-section-prev]::after {
+  animation: ordosyn-blue-nudge-left 1.7s ease-in-out infinite;
+}
+#cats .pg.pg-pill .pg-next .pg-arrow,
+#app.wrap .ordosyn-section button[data-ordosyn-section-next]::after {
+  animation: ordosyn-blue-nudge-right 1.7s ease-in-out infinite;
 }
 
-@keyframes ordosyn-section-arrow-left {
+@keyframes ordosyn-blue-ring-flow {
+  from { background-position: center, 0% 50%; }
+  to { background-position: center, 100% 50%; }
+}
+@keyframes ordosyn-blue-nudge-left {
   0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(-3px); }
+  50% { transform: translateX(-2px); }
 }
-
-@keyframes ordosyn-section-arrow-right {
+@keyframes ordosyn-blue-nudge-right {
   0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(3px); }
+  50% { transform: translateX(2px); }
 }
 
-@keyframes ordosyn-section-border-flow {
-  0% {
-    background-position: center, 0% 50%;
-  }
-  100% {
-    background-position: center, 100% 50%;
-  }
-}
-
-/* Respect accessibility settings. */
 @media (prefers-reduced-motion: reduce) {
+  #cats .pg.pg-pill .pg-btn,
+  #cats .pg.pg-pill .pg-arrow,
   #app.wrap .ordosyn-section button[data-ordosyn-section-prev],
   #app.wrap .ordosyn-section button[data-ordosyn-section-next],
   #app.wrap .ordosyn-section button[data-ordosyn-section-prev]::after,
@@ -1356,5 +1267,4 @@ body:has(#app > .page:has(#sub)) #mast {
     transition: none !important;
   }
 }
-
-/* ORDOSYN_EXPLORE_SECTION_PAGER_ROUND_V1_END */
+/* ORDOSYN_UNIFIED_BLUE_RING_PAGER_V2_END */
