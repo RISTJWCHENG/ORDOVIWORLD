@@ -1409,3 +1409,76 @@ body:has(#app > .page:has(#sub)) #mast {
 .ordosyn-section .ordosyn-section-page-controls .ordosyn-page-input{box-sizing:border-box!important;display:block!important;flex:0 0 36px!important;width:36px!important;min-width:36px!important;max-width:36px!important;height:28px!important;min-height:28px!important;max-height:28px!important;padding:0!important;margin:0!important;border:1px solid #cbd5e1!important;border-radius:8px!important;background:#fff!important;color:#18212f!important;text-align:center!important;text-indent:0!important;letter-spacing:normal!important;font:500 13px/26px Inter,system-ui,sans-serif!important;appearance:textfield!important;-moz-appearance:textfield!important}
 .ordosyn-section .ordosyn-section-page-controls .ordosyn-page-input::-webkit-inner-spin-button,.ordosyn-section .ordosyn-section-page-controls .ordosyn-page-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .ordosyn-section .ordosyn-section-page-controls .ordosyn-page-total{font:400 13px/1.2 Inter,system-ui,sans-serif;color:#64748b}
+
+/* ORDOWORLD_HOME_PAGER_LAYOUT_V12
+   Fix home section controls: one horizontal row, compact centered input.
+   Intentionally scoped to home section header, not SNS pagination. */
+section[data-ordosyn-section] > div:first-child > div:last-child {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  align-content: center !important;
+  gap: 6px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  white-space: nowrap !important;
+}
+section[data-ordosyn-section] > div:first-child > div:last-child > * {
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+}
+section[data-ordosyn-section] > div:first-child > div:last-child input {
+  box-sizing: border-box !important;
+  display: inline-block !important;
+  flex: 0 0 36px !important;
+  width: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 2px !important;
+  margin: 0 !important;
+  border: 1px solid #d9dee7 !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  color: #111 !important;
+  text-align: center !important;
+  text-indent: 0 !important;
+  font: 500 13px/26px Inter,system-ui,sans-serif !important;
+  vertical-align: middle !important;
+  appearance: textfield !important;
+  -moz-appearance: textfield !important;
+}
+section[data-ordosyn-section] > div:first-child > div:last-child input::-webkit-inner-spin-button,
+section[data-ordosyn-section] > div:first-child > div:last-child input::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+section[data-ordosyn-section] > div:first-child > div:last-child button {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  flex: 0 0 26px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 26px !important;
+  min-width: 26px !important;
+  max-width: 26px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font-size: 19px !important;
+  line-height: 1 !important;
+}
+section[data-ordosyn-section] > div:first-child > div:last-child button:disabled {
+  opacity: .35 !important;
+}
