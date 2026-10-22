@@ -1229,3 +1229,132 @@ body:has(#app > .page:has(#sub)) #mast {
   0%,100%{transform:translateX(0)}
   50%{transform:translateX(3px)}
 }
+
+/* ORDOSYN_EXPLORE_SECTION_PAGER_ROUND_V1 */
+
+/* Actual Explore section controls, not the category pager. */
+#app.wrap .ordosyn-section button[data-ordosyn-section-prev],
+#app.wrap .ordosyn-section button[data-ordosyn-section-next] {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  box-sizing: border-box !important;
+  flex: 0 0 40px !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  max-width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 2px solid #e2e8f0 !important;
+  border-radius: 50% !important;
+
+  background: #ffffff !important;
+  box-shadow: 0 2px 7px rgba(25,45,80,.05) !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+
+  opacity: 1 !important;
+  pointer-events: auto !important;
+
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease,
+    background-color .2s ease !important;
+}
+
+/* Keep disabled pagination non-clickable. */
+#app.wrap .ordosyn-section button:disabled[data-ordosyn-section-prev],
+#app.wrap .ordosyn-section button:disabled[data-ordosyn-section-next] {
+  cursor: default !important;
+}
+
+/* Reconstruct the visible arrows for independent animation. */
+#app.wrap .ordosyn-section button[data-ordosyn-section-prev]::after,
+#app.wrap .ordosyn-section button[data-ordosyn-section-next]::after {
+  display: block;
+  position: relative;
+  z-index: 1;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1;
+  color: #64748b;
+}
+
+#app.wrap .ordosyn-section button[data-ordosyn-section-prev]::after {
+  content: "‹";
+  animation: ordosyn-section-arrow-left 1.7s ease-in-out infinite;
+}
+
+#app.wrap .ordosyn-section button[data-ordosyn-section-next]::after {
+  content: "›";
+  animation: ordosyn-section-arrow-right 1.7s ease-in-out infinite;
+}
+
+/* Animated multicolored border on hover. */
+#app.wrap .ordosyn-section button[data-ordosyn-section-prev]:hover,
+#app.wrap .ordosyn-section button[data-ordosyn-section-next]:hover {
+  border-color: transparent !important;
+
+  background:
+    linear-gradient(#ffffff,#ffffff) padding-box,
+    linear-gradient(
+      120deg,
+      #60a5fa,
+      #a78bfa,
+      #22c55e,
+      #f59e0b,
+      #60a5fa
+    ) border-box !important;
+
+  background-size: 100% 100%, 300% 300% !important;
+
+  box-shadow:
+    0 0 0 3px rgba(96,165,250,.10),
+    0 5px 16px rgba(99,102,241,.13) !important;
+
+  animation: ordosyn-section-border-flow 2.3s linear infinite;
+}
+
+#app.wrap .ordosyn-section button[data-ordosyn-section-prev]:hover::after,
+#app.wrap .ordosyn-section button[data-ordosyn-section-next]:hover::after {
+  color: #243653;
+}
+
+@keyframes ordosyn-section-arrow-left {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-3px); }
+}
+
+@keyframes ordosyn-section-arrow-right {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+@keyframes ordosyn-section-border-flow {
+  0% {
+    background-position: center, 0% 50%;
+  }
+  100% {
+    background-position: center, 100% 50%;
+  }
+}
+
+/* Respect accessibility settings. */
+@media (prefers-reduced-motion: reduce) {
+  #app.wrap .ordosyn-section button[data-ordosyn-section-prev],
+  #app.wrap .ordosyn-section button[data-ordosyn-section-next],
+  #app.wrap .ordosyn-section button[data-ordosyn-section-prev]::after,
+  #app.wrap .ordosyn-section button[data-ordosyn-section-next]::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ORDOSYN_EXPLORE_SECTION_PAGER_ROUND_V1_END */
