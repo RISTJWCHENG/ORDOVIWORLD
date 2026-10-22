@@ -1268,3 +1268,13 @@ body:has(#app > .page:has(#sub)) #mast {
   }
 }
 /* ORDOSYN_UNIFIED_BLUE_RING_PAGER_V2_END */
+
+/* ORDOWORLD_SNS_NUMBER_PAGER_V2 */
+.sns-number-pager{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:28px auto 0}
+.sns-number-pager .sns-number-page,.sns-number-pager .sns-number-arrow,.sns-number-pager .sns-number-gap{box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:0 0 34px;width:34px;min-width:34px;max-width:34px;height:34px;min-height:34px;max-height:34px;aspect-ratio:1/1;padding:0;border:0;border-radius:50%;background:transparent;color:#111;text-decoration:none;font:500 14px/1 Inter,system-ui,sans-serif;box-shadow:none;cursor:pointer}
+.sns-number-pager .sns-number-page.selected{background:#111;color:#fff;border-radius:50%;font-weight:650}
+.sns-number-pager .sns-number-page:not(.selected):hover,.sns-number-pager .sns-number-gap:hover{background:#f1f3f6}
+.sns-number-pager .sns-number-arrow{font-size:25px;font-weight:400}
+.sns-number-pager .sns-number-arrow.disabled{opacity:.3;pointer-events:none}
+.sns-number-pager .sns-number-input{box-sizing:border-box;flex:0 0 54px;width:54px;min-width:54px;height:34px;padding:0 3px;border:1px solid #9caac0;border-radius:8px;background:#fff;color:#111;text-align:center;font:500 13px Inter,system-ui,sans-serif}
+.sns-number-pager .sns-number-input::-webkit-inner-spin-button,.sns-number-pager .sns-number-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}

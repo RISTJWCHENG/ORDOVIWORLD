@@ -59,6 +59,39 @@ const ordosynPagedSection=(key,title)=>{
  <div data-ordosyn-section-grid="${key}">${items.length?grid(items.slice(page*4,page*4+4)):'<p class="mute">No projects in this section yet.</p>'}</div>
  </section>`;
 };
+// ORDOWORLD_SNS_NUMBER_PAGER_V2
+function snsNumberPager(n,pg,size,base){
+ const total=Math.ceil(n/size);
+ if(total===0)return '';
+ const current=Math.min(total,Math.max(1,Math.floor(Number(pg)||1)));
+ const pageLink=p=>`<a class="sns-number-page${p===current?' selected':''}" href="#${base}&page=${p}" ${p===current?'aria-current="page"':''} aria-label="Page ${p}">${p}</a>`;
+ const arrow=(direction,p,disabled)=>`<a class="sns-number-arrow${disabled?' disabled':''}" ${disabled?'aria-disabled="true" tabindex="-1"':`href="#${base}&page=${p}"`} aria-label="${direction==='‹'?'Previous':'Next'} page">${direction}</a>`;
+ const gap=()=>'<button type="button" class="sns-number-gap" aria-label="Jump to page" title="Jump to page">...</button>';
+ const numbers=total<=4?Array.from({length:total},(_,i)=>i+1):[1,2,3,current-1,current,current+1,total];
+ const shown=[...new Set(numbers.filter(p=>p>=1&&p<=total))].sort((a,b)=>a-b);
+ let contents='';
+ shown.forEach((p,i)=>{if(i&&p-shown[i-1]>1)contents+=gap();contents+=pageLink(p)});
+ return `<nav class="sns-number-pager" data-total="${total}" data-base="${base}" aria-label="SNS pagination">${total>1?arrow('‹',current-1,current===1):''}${contents}${total>1?arrow('›',current+1,current===total):''}</nav>`;
+}
+document.addEventListener('click',event=>{
+ const button=event.target.closest('.sns-number-gap');if(!button)return;
+ const nav=button.closest('.sns-number-pager');if(!nav)return;
+ const field=document.createElement('input');field.type='number';field.inputMode='numeric';field.min='1';field.max=nav.dataset.total;field.step='1';
+ field.className='sns-number-input';field.placeholder='页码';field.setAttribute('aria-label','Page number');
+ button.replaceWith(field);field.focus();
+ const reset=()=>{if(field.isConnected)field.replaceWith(button)};
+ field.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){reset();return}
+  if(e.key!=='Enter')return;
+  e.preventDefault();const p=Number(field.value),total=Number(nav.dataset.total);
+  if(!field.value.trim()||!Number.isSafeInteger(p)||p<1||p>total){field.setCustomValidity('Enter a page number between 1 and '+total);field.reportValidity();return}
+  const hash='#'+nav.dataset.base+'&page='+p;
+  if(location.hash===hash)reset();else location.hash=hash;
+ });
+ field.addEventListener('input',()=>field.setCustomValidity(''));
+ field.addEventListener('blur',reset);
+});
+
 const V={
 profile(){return renderProfile()},
 home(){return`<div style="max-width:760px;margin:0 auto">${noteHTML()}</div>`+
@@ -70,7 +103,7 @@ ordosynPagedSection('games','Discover ICP Games')+
 sec('Join the Ecosystem','<div class="glass card" style="flex-direction:row;align-items:center;flex-wrap:wrap"><p class="mute" style="flex:1">Building on ICP? Submit your project for review. Basic listings are free.</p><a class="btn p" href="#/submit">Submit Project</a></div>')},
 search(q){const pg=+q.page||1,sort=q.sort||'relevance',all=find({...q,sort}),sl=all.slice((pg-1)*6,pg*6),b=`/search?q=${encodeURIComponent(q.q||'')}&cat=${encodeURIComponent(q.cat||'')}&sort=${sort}`;
 return`<div class="page"><h1>${!q.q && q.sort==="updated"?"Discover Newly Indexed Projects":"Search"}</h1><div class="row" style="margin-top:20px;flex-wrap:wrap;gap:16px">${chips(CATS,q.cat,'cat')}<label style="margin-left:auto;display:flex;gap:8px;align-items:center;margin:0">Sort <select id="sort" style="width:auto"><option value="relevance">Relevance</option><option value="alpha"${sort==='alpha'?' selected':''}>A–Z</option><option value="updated"${sort==='updated'?' selected':''}>Recently updated</option></select></label></div><div style="margin-top:24px" aria-live="polite" id="remote-search-results"><p class="mute" style="font-size:14px;margin-bottom:12px">${all.length} result${all.length===1?'':'s'}${q.q?` for “${esc(q.q)}”`:''}</p>${all.length?grid(sl)+pager(all.length,pg,6,b):'<p class="glass card mute" style="padding:40px;text-align:center">No projects match yet. Try a different keyword or clear the filters.</p>'}</div></div>`},
-explore(q){if(!q.cat&&!q.source){return '<div class="page ordosyn-explore-sections">'+V.home()+'</div>';}const pg=+q.page||1,all=find({cat:q.cat,source:q.source,sort:'alpha'}),pageSize=(q.source==='sns'||q.cat==='Caffeine Apps')?12:9;return`<div class="page ordosyn-explore-sections" id="cats"><h1>${q.source==="sns"?"Discover the ICP Community DAOs":q.cat==="Caffeine Apps"?"Explore Apps Built with Caffeine AI":"Explore the Internet Computer Ecosystem"}</h1>${noteHTML()}${chips(CATS,q.cat,'cat')}<div style="margin-top:24px">${all.length?grid(all.slice((pg-1)*pageSize,pg*pageSize))+pager(all.length,pg,pageSize,`/explore?cat=${encodeURIComponent(q.cat||'')}&source=${encodeURIComponent(q.source||'')}`,1):'<p class="glass card mute" style="padding:40px;text-align:center">No projects in this category yet.</p>'}</div></div>`},
+explore(q){if(!q.cat&&!q.source){return '<div class="page ordosyn-explore-sections">'+V.home()+'</div>';}const pg=+q.page||1,all=find({cat:q.cat,source:q.source,sort:'alpha'}),pageSize=(q.source==='sns'||q.cat==='Caffeine Apps')?12:9;return`<div class="page ordosyn-explore-sections" id="cats"><h1>${q.source==="sns"?"Discover the ICP Community DAOs":q.cat==="Caffeine Apps"?"Explore Apps Built with Caffeine AI":"Explore the Internet Computer Ecosystem"}</h1>${noteHTML()}${chips(CATS,q.cat,'cat')}<div style="margin-top:24px">${all.length?grid(all.slice((pg-1)*pageSize,pg*pageSize))+(q.source==='sns'?snsNumberPager(all.length,pg,pageSize,`/explore?cat=${encodeURIComponent(q.cat||'')}&source=${encodeURIComponent(q.source||'')}`):pager(all.length,pg,pageSize,`/explore?cat=${encodeURIComponent(q.cat||'')}&source=${encodeURIComponent(q.source||'')}`,1)):'<p class="glass card mute" style="padding:40px;text-align:center">No projects in this category yet.</p>'}</div></div>`},
 games(q){return`<div class="page"><h1>ICP Games</h1><p class="mute" style="margin:12px 0 20px">Published ICP games from the live search index. Listings are not security endorsements.</p><div id="ordosyn-live-games" aria-live="polite"><p class="mute">Loading published games...</p></div></div>`},
 app(slug){const p=P.find(x=>x.slug===slug);if(!p)return'<p style="padding:80px 0;text-align:center">Project not found. <a href="#/explore" style="text-decoration:underline">Browse all projects</a></p>';const rel=P.filter(x=>x!==p&&x.cats.some(c=>p.cats.includes(c))).slice(0,3);
 return`<div class="page"><div class="cover" style="height:110px" aria-hidden="true"></div><div class="row" style="margin-top:24px;flex-wrap:wrap;gap:16px">${logo(p,64)}<div><h1 style="font-size:26px;font-weight:600">${esc(p.name)}</h1><div class="row" style="gap:6px;margin-top:6px"><span class="tag">${IDN[p.idn]}</span>${p.demo?'<span class="tag demo">Demo data</span>':''}</div></div><div class="row" style="margin-left:auto">${ext(p.play||p.url,'Launch application',1)}${ext(p.gh,'GitHub')}</div></div><p class="mute" style="max-width:760px;margin-top:24px">${esc(p.desc)}</p><p class="note" style="max-width:760px;margin:24px 0">Being listed does not mean this project is safe, audited, or endorsed. “Verified identity” only means ownership was proven.</p><dl><div><dt>Category & tags</dt><dd>${esc(p.cats.join(', '))} · ${p.tags.map(t=>'#'+esc(t)).join(' ')}</dd></div><div><dt>Official website</dt><dd>${esc(p.url)}</dd></div><div><dt>Related canister IDs</dt><dd>${p.cans.length?p.cans.map(c=>esc(c.id)+' ('+esc(c.role)+')').join(', '):'None recorded'}</dd></div><div><dt>Data sources</dt><dd>${p.srcs.map(x=>esc(x.t)+', collected '+esc(String(x.at).slice(0,10))).join('; ')||'None'}</dd></div><div><dt>Last website check</dt><dd>${p.ver?esc(p.ver.slice(0,10))+' ('+esc(p.websiteStatus||'up')+')':'Not checked'}</dd></div><div><dt>Developer claim</dt><dd>${{discovered:'Unclaimed',claimed:'Claimed, pending proof review',verified:'Claimed and verified'}[p.idn]}</dd></div></dl>${rel.length?sec('Related projects',grid(rel)):''}</div>`},
