@@ -1385,3 +1385,19 @@ body:has(#app > .page:has(#sub)) #mast {
   gap: 8px !important;
   text-align: center !important;
 }
+
+/* ORDOWORLD_HOME_SECTION_SNS_NUMBER_PAGER_V1 */
+.ordosyn-section .ordosyn-section-number-pager {
+ width: auto !important;
+ max-width: 100% !important;
+ min-height: 34px !important;
+ margin: 0 !important;
+ padding: 0 !important;
+ justify-content: flex-end !important;
+ gap: 8px !important;
+}
+.ordosyn-section .ordosyn-section-number-pager button:disabled {
+ opacity: .3;
+ cursor: default;
+ pointer-events: none;
+}
