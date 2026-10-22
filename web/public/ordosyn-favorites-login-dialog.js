@@ -96,25 +96,55 @@
     });
   }
 
+  /* ORDOSYN_SAVE_NATIVE_CLOSE_V1: preserve upstream dismiss state. */
   function closeDialog(dialog) {
-    const closeLike = Array.from(dialog.querySelectorAll('button')).find(btn => {
-      const txt = textOf(btn);
+    const buttons = Array.from(dialog.querySelectorAll('button'));
+
+    // Use the original Cancel event handler.
+    const cancel = buttons.find(btn =>
+      /^cancel$/i.test(textOf(btn))
+    );
+
+    if (cancel) {
+      cancel.click();
+      return;
+    }
+
+    // Support versions with an original Close button.
+    const originalClose = buttons.find(btn => {
+      if (btn.classList.contains('ordosyn-fav-login-close')) {
+        return false;
+      }
       const label = btn.getAttribute('aria-label') || '';
-      return /cancel|close|×|✕/i.test(txt) || /close/i.test(label);
+      return /^(close|cancel|×|✕)$/i.test(textOf(btn)) ||
+             /close/i.test(label);
     });
 
-    if (closeLike && !closeLike.classList.contains('ordosyn-fav-login-close')) {
-      closeLike.click();
+    if (originalClose) {
+      originalClose.click();
       return;
     }
 
+    // Preserve native dialog lifecycle.
+    if (typeof dialog.close === 'function' && dialog.open) {
+      dialog.close();
+      return;
+    }
+
+    // Ask original handlers to dismiss the dialog.
+    // Never directly remove the overlay.
     const overlay = dialog.parentElement;
-    if (overlay && overlay !== document.body) {
-      overlay.remove();
-      return;
-    }
 
-    dialog.remove();
+    if (overlay && overlay !== document.body) {
+      overlay.click();
+    } else {
+      document.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'Escape',
+          bubbles: true
+        })
+      );
+    }
   }
 
   function patchDialog(dialog) {
@@ -133,7 +163,12 @@
     dialog.classList.add('ordosyn-fav-login-dialog');
 
     const cancelBtn = allButtons.find(btn => /^cancel$/i.test(textOf(btn)));
-    if (cancelBtn) cancelBtn.remove();
+    if (cancelBtn) {
+      // Hide the original button without removing its handler.
+      cancelBtn.style.setProperty('display', 'none', 'important');
+      cancelBtn.setAttribute('aria-hidden', 'true');
+      cancelBtn.tabIndex = -1;
+    }
 
     const oldHeading = Array.from(dialog.querySelectorAll('h1,h2,h3,h4,strong')).find(el =>
       /sign in|save|favorites/i.test(textOf(el))
