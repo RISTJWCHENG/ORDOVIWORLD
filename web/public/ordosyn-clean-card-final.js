@@ -195,9 +195,10 @@
     card.dataset.ordosynCleanCard = '1';
     card.classList.add('ordosyn-clean-card');
     // Reuse the original external link, retaining its destination.
-    website.textContent = 'Website \u2197';
-    website.classList.add('ordosyn-website-top');
-    card.appendChild(website);
+    // ORDOWORLD_REMOVE_WEBSITE_LINK_V4: delete the original card Website anchor from the DOM.
+    website.remove();
+
+
     details.classList.add('ordosyn-hidden-detail');
     const header = card.querySelector(':scope > .row') || card.firstElementChild;
     if (header) {
