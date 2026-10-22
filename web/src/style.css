@@ -1278,3 +1278,87 @@ body:has(#app > .page:has(#sub)) #mast {
 .sns-number-pager .sns-number-arrow.disabled{opacity:.3;pointer-events:none}
 .sns-number-pager .sns-number-input{box-sizing:border-box;flex:0 0 54px;width:54px;min-width:54px;height:34px;padding:0 3px;border:1px solid #9caac0;border-radius:8px;background:#fff;color:#111;text-align:center;font:500 13px Inter,system-ui,sans-serif}
 .sns-number-pager .sns-number-input::-webkit-inner-spin-button,.sns-number-pager .sns-number-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+
+/* ORDOWORLD_SNS_PAGER_CENTERED_V3_20261022
+   SNS only: center pagination under the card grid. */
+.page .sns-number-pager {
+  display: flex !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 36px;
+  margin: 30px auto 0 !important;
+  padding: 0 0 44px !important;
+  justify-content: center !important;
+  align-items: center !important;
+  align-content: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap;
+  text-align: center;
+  box-sizing: border-box;
+}
+.page .sns-number-pager .sns-number-page,
+.page .sns-number-pager .sns-number-arrow,
+.page .sns-number-pager .sns-number-gap {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 34px !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  max-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  color: #18212f !important;
+  font: 500 14px/1 Inter,system-ui,sans-serif !important;
+  text-decoration: none !important;
+  text-align: center;
+}
+.page .sns-number-pager .sns-number-page.selected,
+.page .sns-number-pager .sns-number-page[aria-current="page"] {
+  background: #111 !important;
+  color: #fff !important;
+  border-radius: 50% !important;
+  font-weight: 650 !important;
+}
+.page .sns-number-pager .sns-number-page:not(.selected):hover,
+.page .sns-number-pager .sns-number-gap:hover {
+  background: #f1f3f6 !important;
+}
+.page .sns-number-pager .sns-number-arrow {
+  font-size: 25px !important;
+  font-weight: 400 !important;
+}
+.page .sns-number-pager .sns-number-arrow.disabled {
+  opacity: .3 !important;
+  pointer-events: none !important;
+}
+.page .sns-number-pager .sns-number-input {
+  box-sizing: border-box;
+  flex: 0 0 54px !important;
+  width: 54px !important;
+  min-width: 54px !important;
+  max-width: 54px !important;
+  height: 34px !important;
+  padding: 0 3px !important;
+  margin: 0 !important;
+  border: 1px solid #9caac0 !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  color: #111 !important;
+  text-align: center !important;
+  font: 500 13px/1 Inter,system-ui,sans-serif !important;
+}
+@media(max-width:639px) {
+  .page .sns-number-pager {
+    gap: 4px !important;
+    margin-top: 24px !important;
+    padding-bottom: 30px !important;
+  }
+}
