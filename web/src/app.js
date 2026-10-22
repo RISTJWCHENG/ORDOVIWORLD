@@ -46,13 +46,10 @@ const ordosynSectionWindow=(key)=>{
  ordosynSectionPages[key]=page;
  return {items,page,pages};
 };
+// ORDOWORLD_HOME_COMPACT_INPUT_V11
 const ordosynSectionPager=(key,page,pages)=>{
- const item=(p)=>`<button type="button" class="sns-number-page${p===page?' selected':''}" data-ordosyn-section-page="${key}" data-page="${p}" ${p===page?'aria-current="page"':''} aria-label="Page ${p+1}">${p+1}</button>`;
- const arrow=(dir,p,disabled)=>`<button type="button" class="sns-number-arrow${disabled?' disabled':''}" data-ordosyn-section-page="${key}" data-page="${p}" aria-label="${dir==='prev'?'Previous':'Next'} page" ${disabled?'disabled':''}>${dir==='prev'?'‹':'›'}</button>`;
- const positions=new Set([0,pages-1]);for(let i=Math.max(0,page-2);i<=Math.min(pages-1,page+2);i++)positions.add(i);
- const visible=[...positions].sort((a,b)=>a-b);let last=-1;
- const links=visible.map(p=>{const gap=last>=0&&p-last>1?'<span class="sns-number-gap" aria-hidden="true">…</span>':'';last=p;return gap+item(p)}).join('');
- return `<nav class="sns-number-pager ordosyn-section-number-pager" aria-label="Section pagination">${arrow('prev',page,page===0)}${links}${arrow('next',page,page===pages-1)}</nav>`;
+ const arrow=(dir,disabled)=>`<button type="button" class="ordosyn-page-arrow" data-ordosyn-section-${dir}="${key}" aria-label="${dir==='prev'?'Previous':'Next'} page" ${disabled?'disabled':''}>${dir==='prev'?'‹':'›'}</button>`;
+ return `<div class="ordosyn-section-page-controls" role="group" aria-label="Section pagination">${arrow('prev',page===0)}<input class="ordosyn-page-input" type="number" inputmode="numeric" min="1" max="${pages}" value="${page+1}" data-ordosyn-section-input="${key}" aria-label="Page number"><span class="ordosyn-page-total">of ${pages}</span>${arrow('next',page===pages-1)}</div>`;
 };
 const ordosynPagedSection=(key,title)=>{
  const {items,page,pages}=ordosynSectionWindow(key);
@@ -145,19 +142,44 @@ document.querySelectorAll('.navrow a').forEach(a=>{
   if(active){a.setAttribute('aria-current','page')}
   else{a.removeAttribute('aria-current')}
 })}
-app.addEventListener('click',e=>{
- const button=e.target.closest('[data-ordosyn-section-page]');
- if(!button||button.disabled)return;
- const key=button.dataset.ordosynSectionPage;
- const {items,page,pages}=ordosynSectionWindow(key);
- const upcoming=Number(button.dataset.page);
- if(!Number.isInteger(upcoming)||upcoming<0||upcoming>=pages||upcoming===page)return;
- const section=button.closest('[data-ordosyn-section]');
+function ordosynGoSectionPage(section,key,wanted){
  if(!section)return;
+ const {items,pages}=ordosynSectionWindow(key);
+ const index=Math.max(0,Math.min(pages-1,Number.isFinite(wanted)?Math.trunc(wanted):0));
+ ordosynSectionPages[key]=index;
+ const target=section.querySelector('[data-ordosyn-section-grid]');
+ if(target)target.innerHTML=grid(items.slice(index*4,index*4+4));
+ const controls=section.querySelector('[data-ordosyn-section-controls]');
+ if(controls)controls.innerHTML=ordosynSectionPager(key,index,pages);
+}
+app.addEventListener('click',e=>{
+ const next=e.target.closest('[data-ordosyn-section-next]');
+ const prev=e.target.closest('[data-ordosyn-section-prev]');
+ const button=next||prev;
+ if(!button||button.disabled)return;
  e.preventDefault();
- ordosynSectionPages[key]=upcoming;
- section.querySelector('[data-ordosyn-section-grid]').innerHTML=grid(items.slice(upcoming*4,upcoming*4+4));
- section.querySelector('[data-ordosyn-section-controls]').innerHTML=ordosynSectionPager(key,upcoming,pages);
+ const key=next?next.dataset.ordosynSectionNext:prev.dataset.ordosynSectionPrev;
+ const section=button.closest('[data-ordosyn-section]');
+ const {page}=ordosynSectionWindow(key);
+ ordosynGoSectionPage(section,key,page+(next?1:-1));
+});
+function ordosynCommitPageInput(input){
+ const section=input.closest('[data-ordosyn-section]');
+ if(!section)return;
+ const key=input.dataset.ordosynSectionInput;
+ const {page}=ordosynSectionWindow(key);
+ const value=input.value.trim();
+ const requested=value!==''&&/^\d+$/.test(value)?Number(value)-1:page;
+ ordosynGoSectionPage(section,key,requested);
+}
+app.addEventListener('change',e=>{
+ const input=e.target.closest('[data-ordosyn-section-input]');
+ if(input)ordosynCommitPageInput(input);
+});
+app.addEventListener('keydown',e=>{
+ const input=e.target.closest('[data-ordosyn-section-input]');
+ if(!input||e.key!=='Enter')return;
+ e.preventDefault();ordosynCommitPageInput(input);input.blur();
 });
 app.addEventListener('click',e=>{const a=e.target.closest('[data-k]');if(!a)return;e.preventDefault();const q=query(location.hash.slice(1)),path=location.hash.slice(1).split('?')[0]||'/';q[a.dataset.k]=a.dataset.v;delete q.page;location.hash=path+'?'+Object.entries(q).filter(([,v])=>v).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')});
 app.addEventListener('change',e=>{if(e.target.id!=='sort')return;const q=query(location.hash.slice(1));q.sort=e.target.value;delete q.page;location.hash='/search?'+Object.entries(q).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')});

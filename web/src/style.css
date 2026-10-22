@@ -1401,3 +1401,11 @@ body:has(#app > .page:has(#sub)) #mast {
  cursor: default;
  pointer-events: none;
 }
+
+/* ORDOWORLD_HOME_COMPACT_INPUT_V11 */
+.ordosyn-section .ordosyn-section-page-controls{display:inline-flex;align-items:center;justify-content:flex-end;gap:7px;white-space:nowrap}
+.ordosyn-section .ordosyn-section-page-controls .ordosyn-page-arrow{appearance:none;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;padding:0 3px!important;margin:0!important;min-width:22px!important;width:22px!important;height:28px!important;color:#34455d!important;font:400 22px/28px Inter,system-ui,sans-serif!important;cursor:pointer}
+.ordosyn-section .ordosyn-section-page-controls .ordosyn-page-arrow:disabled{opacity:.3;cursor:default}
+.ordosyn-section .ordosyn-section-page-controls .ordosyn-page-input{box-sizing:border-box!important;display:block!important;flex:0 0 36px!important;width:36px!important;min-width:36px!important;max-width:36px!important;height:28px!important;min-height:28px!important;max-height:28px!important;padding:0!important;margin:0!important;border:1px solid #cbd5e1!important;border-radius:8px!important;background:#fff!important;color:#18212f!important;text-align:center!important;text-indent:0!important;letter-spacing:normal!important;font:500 13px/26px Inter,system-ui,sans-serif!important;appearance:textfield!important;-moz-appearance:textfield!important}
+.ordosyn-section .ordosyn-section-page-controls .ordosyn-page-input::-webkit-inner-spin-button,.ordosyn-section .ordosyn-section-page-controls .ordosyn-page-input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.ordosyn-section .ordosyn-section-page-controls .ordosyn-page-total{font:400 13px/1.2 Inter,system-ui,sans-serif;color:#64748b}
