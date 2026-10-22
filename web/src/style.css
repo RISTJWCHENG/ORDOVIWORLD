@@ -1482,3 +1482,96 @@ section[data-ordosyn-section] > div:first-child > div:last-child button {
 section[data-ordosyn-section] > div:first-child > div:last-child button:disabled {
   opacity: .35 !important;
 }
+/* ORDOWORLD_HOME_PAGER_V13_EXACT_CLASSES: target the ACTUAL inner control row. */
+.ordosyn-section [data-ordosyn-section-controls] {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.ordosyn-section .ordosyn-section-page-controls {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: center !important;
+  align-content: center !important;
+  gap: 6px !important;
+  width: max-content !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: 28px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+}
+.ordosyn-section .ordosyn-section-page-controls > * {
+  position: static !important;
+  float: none !important;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
+  vertical-align: middle !important;
+}
+.ordosyn-section .ordosyn-section-page-controls input.ordosyn-page-input {
+  box-sizing: border-box !important;
+  display: block !important;
+  flex: 0 0 36px !important;
+  width: 36px !important;
+  min-width: 36px !important;
+  max-width: 36px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  margin: 0 !important;
+  padding: 0 2px !important;
+  border: 1px solid #d9dee7 !important;
+  border-radius: 8px !important;
+  background: #fff !important;
+  text-align: center !important;
+  text-indent: 0 !important;
+  font: 500 13px/26px Inter,system-ui,sans-serif !important;
+  appearance: textfield !important;
+  -moz-appearance: textfield !important;
+}
+.ordosyn-section .ordosyn-section-page-controls input.ordosyn-page-input::-webkit-inner-spin-button,
+.ordosyn-section .ordosyn-section-page-controls input.ordosyn-page-input::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+.ordosyn-section .ordosyn-section-page-controls button.ordosyn-page-arrow {
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  flex: 0 0 24px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  min-width: 24px !important;
+  max-width: 24px !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  max-height: 28px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  font: 400 22px/1 Inter,system-ui,sans-serif !important;
+}
+.ordosyn-section .ordosyn-section-page-controls button.ordosyn-page-arrow::before,
+.ordosyn-section .ordosyn-section-page-controls button.ordosyn-page-arrow::after {
+  content: none !important;
+  display: none !important;
+}
+.ordosyn-section .ordosyn-section-page-controls .ordosyn-page-total {
+  display: inline !important;
+  width: auto !important;
+  min-width: 0 !important;
+  font: 400 13px/28px Inter,system-ui,sans-serif !important;
+  white-space: nowrap !important;
+}
