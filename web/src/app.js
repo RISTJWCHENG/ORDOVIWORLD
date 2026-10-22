@@ -50,6 +50,8 @@ const ordosynSectionWindow=(key)=>{
 // ORDOWORLD_HOME_PAGER_INLINE_LAYOUT_V14
 // Explicit inline layout prevents global input/button rules from breaking the control.
 const ordosynSectionPager=(key,page,pages)=>{
+ // ORDOWORLD_HIDE_SINGLE_PAGE_CONTROLS_V15
+ if(pages<=1)return '';
  const arrow=(dir,disabled)=>`<button type="button" class="ordosyn-page-arrow" data-ordosyn-section-${dir}="${key}" aria-label="${dir==='prev'?'Previous':'Next'} page" ${disabled?'disabled':''} style="box-sizing:border-box!important;display:inline-flex!important;position:static!important;float:none!important;flex:0 0 24px!important;align-items:center!important;justify-content:center!important;width:24px!important;min-width:24px!important;max-width:24px!important;height:28px!important;min-height:28px!important;max-height:28px!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;color:#34455d!important;font:400 22px/1 Arial,sans-serif!important;cursor:pointer">${dir==='prev'?'&#8249;':'&#8250;'}</button>`;
  return `<div class="ordosyn-section-page-controls" role="group" aria-label="Section pagination" style="box-sizing:border-box!important;display:inline-flex!important;position:static!important;float:none!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:center!important;gap:6px!important;width:max-content!important;min-width:0!important;max-width:none!important;height:28px!important;min-height:28px!important;margin:0!important;padding:0!important;white-space:nowrap!important">${arrow('prev',page===0)}<input class="ordosyn-page-input" type="number" inputmode="numeric" min="1" max="${pages}" value="${page+1}" data-ordosyn-section-input="${key}" aria-label="Page number" style="box-sizing:border-box!important;display:block!important;position:static!important;float:none!important;flex:0 0 36px!important;width:36px!important;min-width:36px!important;max-width:36px!important;height:28px!important;min-height:28px!important;max-height:28px!important;margin:0!important;padding:0 2px!important;border:1px solid #d9dee7!important;border-radius:8px!important;background:#fff!important;color:#111!important;text-align:center!important;text-indent:0!important;font:500 13px/26px Arial,sans-serif!important;appearance:textfield!important"><span class="ordosyn-page-total" style="display:inline-block!important;position:static!important;float:none!important;flex:0 0 auto!important;width:auto!important;min-width:0!important;height:auto!important;margin:0!important;padding:0!important;color:#64748b!important;font:400 13px/28px Arial,sans-serif!important;white-space:nowrap!important">of ${pages}</span>${arrow('next',page===pages-1)}</div>`;
 };
@@ -58,7 +60,7 @@ const ordosynPagedSection=(key,title)=>{
  return `<section class="ordosyn-section" data-ordosyn-section="${key}">
  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:14px">
  <h2 style="margin:0">${title}</h2>
- <div data-ordosyn-section-controls="${key}">${ordosynSectionPager(key,page,pages)}</div>
+ ${pages>1?`<div data-ordosyn-section-controls="${key}">${ordosynSectionPager(key,page,pages)}</div>`:""}
  </div>
  <div data-ordosyn-section-grid="${key}">${items.length?grid(items.slice(page*4,page*4+4)):'<p class="mute">No projects in this section yet.</p>'}</div>
  </section>`;
