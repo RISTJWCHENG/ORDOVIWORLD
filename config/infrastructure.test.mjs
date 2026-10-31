@@ -25,3 +25,8 @@ test('resource renderer escapes untrusted metadata and offers safe direct websit
 test('empty, loading and error states remain distinct and do not invent resources',()=>{
  assert.match(renderInfrastructure([]),/Good resources deserve a place here/);assert.match(renderInfrastructure([],'loading'),/Loading resources/);assert.match(renderInfrastructure([],'error'),/Resources could not be loaded/);assert.match(renderInfrastructure([]),/id="infra-admin-add"[^>]*hidden/);
 });
+
+test('resource cards expose a readable classification instead of reserved metadata',()=>{
+ const html=renderInfrastructure([resource()]);
+ assert.ok(html.includes('Network &amp; data'));assert.ok(html.includes('#Infrastructure'));assert.ok(!html.includes('#resource-type:'));
+});

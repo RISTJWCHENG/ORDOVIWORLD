@@ -6,8 +6,8 @@ import { loadPublishedProjects } from './catalog-data.js'
 import { renderProfile, initProfile } from './profile.js'
 import { getAdministratorAccess } from './auth.js'
 import { startAdminDashboard } from './admin-dashboard.js'
-import {renderInfrastructure,mountInfrastructure} from './infrastructure.js'
-import {resourceTypeForTags} from './resource-model.js'
+import {renderInfrastructure,mountInfrastructure,resourceCard} from './infrastructure.js'
+import {RESOURCE_TYPES,resourceTypeForTags} from './resource-model.js'
 
 const CATS=['Games','Social','Productivity','DeFi','NFT','DAO','Websites','Other'];
 // Keep historical and top-navigation categories readable without showing extra chips.
@@ -27,7 +27,7 @@ const safe=u=>{try{return new URL(u).protocol==='https:'}catch(e){return false}}
 const ext=(u,t,p)=>u?`<a class="btn ${p?'p':''}" href="${esc(u)}" target="_blank" rel="noopener noreferrer nofollow">${t} ↗</a>`:`<span class="btn off" title="No verified URL">${t}</span>`;
 const logo=(p,s=48)=>`<div class="logo" style="width:${s}px;height:${s}px" aria-hidden="true">${safe(p.logoUrl)?`<img class="catalog-project-logo" src="${esc(p.logoUrl)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:''}<span class="catalog-logo-initial">${esc(p.name.replace('Demo ','')[0])}</span></div>`;
 document.addEventListener('error',e=>{if(e.target?.classList?.contains('catalog-project-logo'))e.target.remove()},true);
-const card=(p,big)=>`<article class="card glass">${big?'<div class="cover" aria-hidden="true"></div>':''}<div class="row">${logo(p)}<div><h3><a href="#/app/${p.slug}">${esc(p.name)}</a></h3><p class="mute" style="font-size:12px">${esc(p.cats.join(', '))}${p.genre?' · '+p.genre:''}</p></div></div><p class="mute" style="font-size:14px">${esc(p.desc)}</p><div class="row" style="flex-wrap:wrap;gap:4px">${p.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}${p.demo?'<span class="tag demo">Demo data</span>':''}</div><div class="acts">${big?ext(p.play,'Play Now',1):ext(p.url,'Visit Website',1)}<a class="btn" href="#/app/${p.slug}">Project Details</a></div></article>`;
+const card=(p,big)=>p.cats.includes('Infrastructure')?resourceCard(p).replace('<li ' ,'<article ').replace('</li>','</article>'):`<article class="card glass">${big?'<div class="cover" aria-hidden="true"></div>':''}<div class="row">${logo(p)}<div><h3><a href="#/app/${p.slug}">${esc(p.name)}</a></h3><p class="mute" style="font-size:12px">${esc(p.cats.includes('Infrastructure')?(RESOURCE_TYPES.find(t=>t.id===p.resourceType)?.label||'Other resources'):p.cats.join(', '))}${p.genre?' · '+p.genre:''}</p></div></div><p class="mute" style="font-size:14px">${esc(p.desc)}</p><div class="row" style="flex-wrap:wrap;gap:4px">${[...(p.cats.includes('Infrastructure')?['Infrastructure']:[]),...p.tags.filter(t=>!t.startsWith('resource-type:')&&t!=='Infrastructure')].map(t=>`<span class="tag">#${esc(t)}</span>`).join('')}${p.demo?'<span class="tag demo">Demo data</span>':''}</div><div class="acts">${big?ext(p.play,'Play Now',1):ext(p.url,'Visit Website',1)}<a class="btn" href="#/app/${p.slug}">Project Details</a></div></article>`;
 const grid=(l,big)=>`<div class="grid">${l.map(p=>card(p,big)).join('')}</div>`;
 /* CATALOG_CATEGORY_NAMES_V1: visible labels only, canonical data unchanged. */
   const catalogCategoryLabel=(category)=>({
@@ -284,7 +284,7 @@ async function remoteSearch(q, startedHash) {
   }
 }
 // Real data: only records you approved (web/public/projects.json). Falls back to labeled demo data when none exist.
-const fromRecord=r=>({source:String(r.source||''),status:r.status,relationship:r.relationship||'unverified',evidenceUrl:safe(r.evidenceUrl)?r.evidenceUrl:'',resourceType:resourceTypeForTags(r.tags),name:String(r.name||'').slice(0,80),desc:String(r.description||''),cats:normalizeCategories(r.categories, CATALOG_CATEGORIES),tags:(r.tags||[]).slice(0,5).map(String),slug:String(r.slug||'').replace(/[^a-z0-9-]/g,''),url:safe(r.websiteUrl)?r.websiteUrl:'',play:'',gh:safe(r.githubUrl)?r.githubUrl:'',genre:'',idn:['claimed','verified'].includes(r.identity)?r.identity:'discovered',ver:r.lastVerifiedAt||'',websiteStatus:r.websiteStatus||'unchecked',logoUrl:safe(r.logoUrl)?r.logoUrl:'',upd:String(r.updatedAt||'').slice(0,10),demo:false,cans:(r.canisters||[]).map(c=>({id:String(c.canisterId),role:String(c.role)})),srcs:(r.sources||[]).map(x=>({t:String(x.sourceType),u:x.sourceUrl,at:String(x.collectedAt)}))});
+const fromRecord=r=>({source:String(r.source||''),status:r.status,relationship:r.relationship||'unverified',evidenceUrl:safe(r.evidenceUrl)?r.evidenceUrl:'',resourceType:resourceTypeForTags(r.tags),name:String(r.name||'').slice(0,80),desc:String(r.description||''),cats:normalizeCategories(r.categories, CATALOG_CATEGORIES),tags:(r.tags||[]).filter(t=>!String(t).startsWith('resource-type:')).slice(0,5).map(String),slug:String(r.slug||'').replace(/[^a-z0-9-]/g,''),url:safe(r.websiteUrl)?r.websiteUrl:'',play:'',gh:safe(r.githubUrl)?r.githubUrl:'',genre:'',idn:['claimed','verified'].includes(r.identity)?r.identity:'discovered',ver:r.lastVerifiedAt||'',websiteStatus:r.websiteStatus||'unchecked',logoUrl:safe(r.logoUrl)?r.logoUrl:'',upd:String(r.updatedAt||'').slice(0,10),demo:false,cans:(r.canisters||[]).map(c=>({id:String(c.canisterId),role:String(c.role)})),srcs:(r.sources||[]).map(x=>({t:String(x.sourceType),u:x.sourceUrl,at:String(x.collectedAt)}))});
 const applyCatalog = data => {
  const records=(data?.records || []).filter(r=>r.status==='published' && r.slug).map(fromRecord);
  P=records;

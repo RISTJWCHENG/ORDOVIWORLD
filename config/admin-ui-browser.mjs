@@ -21,7 +21,7 @@ try {
     await page.getByRole('button',{name:'Add a resource'}).click();
     assert.equal(await page.getByPlaceholder('e.g. OpenCloud').isDisabled(),true);
     assert.equal(await page.getByRole('button',{name:'Save resource'}).isDisabled(),true);
-    assert.equal(await page.getByLabel('Resource type',{exact:true}).isDisabled(),true);
+    assert.equal(await page.getByLabel('Resource category',{exact:true}).isDisabled(),true);
     const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
     assert.ok(overflow<=1,`Horizontal overflow at ${width}px: ${overflow}px`);
     await page.close();
