@@ -78,3 +78,5 @@ Validation complete: 28 regression checks and frontend build passed. Run 4124526
 
 ## 2026-10-31 — Integrated management columns
 Replaced the inset management panel with edge-to-edge page columns: a 308px left navigation aligned with the store sidebar and a white content column. Removed the outer rounded border, shadow, maximum width and surrounding padding. The shared header remains. Tablet/mobile navigation reflows above the content. No backend, access or stored-data changes. Validation pending.
+
+Initial layout run 41245674841 passed mode switching and read-only checks. The integrated geometry check expected 72px but the shared header also has a 1px bottom border. Updated the assertion to compare sidebar placement to the actual header bottom, preserving the intended flush alignment.
