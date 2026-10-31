@@ -46,3 +46,27 @@ body.admin-mode>header{border-bottom:0;box-shadow:none}
 body.admin-mode .admin-header-breadcrumb{border-top:0}
 body.admin-mode .admin-sidebar{border-right:0;border-bottom:0}
 @media(min-width:1024px){body.admin-mode::before{content:"";display:block!important;position:fixed;top:0;bottom:0;left:308px;width:1px;background:#e5e7eb;z-index:101;pointer-events:none}}
+
+/* Clear sidebar context, consistent icons and descriptive navigation. */
+.admin-brand .admin-context-label{margin:0 0 10px;color:#8291a7;font-size:9px;font-weight:700;letter-spacing:.15em}
+.admin-brand strong{font-size:17px;font-weight:650;letter-spacing:-.025em;color:#23334b}
+.admin-brand small{margin-top:8px;font-size:12px;line-height:1.65;color:#8190a6;max-width:235px}
+body.admin-mode .admin-brand{padding:4px 8px 24px;border-bottom:1px solid #edf0f5}
+.admin-sidebar .admin-nav-label{padding:12px 10px 0;font-size:9px;letter-spacing:.14em;color:#94a0b2}
+.admin-nav{gap:7px}
+.admin-nav .admin-nav-item{gap:11px;padding:12px 10px;border:1px solid transparent;border-radius:10px;min-height:64px}
+.admin-nav .admin-nav-item .admin-nav-glyph{width:32px;height:32px;flex:none;display:grid;place-items:center;border-radius:9px;background:#f5f7fa;color:#7c8da5}
+.admin-nav-copy{min-width:0}
+.admin-nav-copy strong{display:block;font-size:12px;font-weight:600;line-height:1.4}
+.admin-nav-copy small{display:block;margin-top:4px;color:#91a0b4;font-size:10px;font-weight:400;line-height:1.4}
+body.admin-mode .admin-nav-item.is-active{background:#f0f5ff;border-color:#e4ecfc;color:#2e63cd}
+body.admin-mode .admin-nav-item.is-active .admin-nav-glyph{background:#e1ebff;color:#386fd6}
+body.admin-mode .admin-nav-item.is-active small{color:#7d97bc}
+.admin-nav .admin-nav-item:hover:not(.is-active){background:#f8fafc;color:#3e5574}
+.admin-nav .admin-nav-item:focus-visible{outline:2px solid #7ba5ed;outline-offset:2px}
+body.admin-mode .admin-side-note strong{font-size:11px;color:#61748e;font-weight:600}
+body.admin-mode .admin-side-note p{margin:8px 0 14px;color:#91a0b3;font-size:11px;line-height:1.7}
+body.admin-mode .admin-side-note a{font-size:11px;color:#5478b3}
+@media(max-width:1023px){.admin-nav .admin-nav-item{min-height:40px;padding:9px 10px;gap:7px}.admin-nav-copy small{display:none}.admin-nav .admin-nav-item .admin-nav-glyph{height:22px;width:22px;background:none!important}.admin-nav-copy strong{font-size:11px}.admin-nav{gap:4px}}
+
+.admin-nav .admin-nav-item .admin-nav-copy{display:block;width:auto;min-width:0;font-size:inherit;color:inherit;text-align:left}

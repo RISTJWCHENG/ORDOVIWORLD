@@ -15,3 +15,5 @@
 - [x] Add management header breadcrumbs, hide its application launcher and suppress routine verified-status banners.
 
 - [x] Extend the management column divider through the header and remove navigation horizontal rules.
+
+- [x] Refine management sidebar hierarchy, descriptions and navigation icons.

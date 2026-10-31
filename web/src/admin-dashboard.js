@@ -10,14 +10,14 @@ export async function startAdminDashboard(root, access, options={}) {
 
   root.innerHTML = `<div class="admin-shell">
     <aside class="admin-sidebar" aria-label="Administrator navigation">
-      <div class="admin-brand"><span class="admin-brand-icon">✦</span><div><strong>Management</strong><small>Manage your store</small></div></div>
-      <p class="admin-nav-label">WORKSPACE</p>
+      <div class="admin-brand"><div><p class="admin-context-label">ADMINISTRATION</p><strong>Store management</strong><small>Curate official ICP resources and keep your directory up to date.</small></div></div>
+      <p class="admin-nav-label">DIRECTORY</p>
       <nav class="admin-nav" aria-label="Dashboard sections">
-        <button class="admin-nav-item is-active" data-tab="overview" type="button"><span aria-hidden="true">▦</span> Overview</button>
-        <button class="admin-nav-item" data-tab="projects" type="button"><span aria-hidden="true">▤</span> Infrastructure resources</button>
-        <button class="admin-nav-item" data-tab="editor" type="button"><span aria-hidden="true">＋</span> Add a resource</button>
+        <button class="admin-nav-item is-active" data-tab="overview" type="button" aria-label="Overview"><span class="admin-nav-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><span class="admin-nav-copy"><strong>Overview</strong><small>Publication at a glance</small></span></button>
+        <button class="admin-nav-item" data-tab="projects" type="button" aria-label="Infrastructure resources"><span class="admin-nav-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></span><span class="admin-nav-copy"><strong>Infrastructure resources</strong><small>Review and manage listings</small></span></button>
+        <button class="admin-nav-item" data-tab="editor" type="button" aria-label="Add a resource"><span class="admin-nav-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></span><span class="admin-nav-copy"><strong>Add a resource</strong><small>Create a new directory entry</small></span></button>
       </nav>
-      <div class="admin-side-note"><strong>Curated with care</strong><p>Review sources and evidence before publishing a project.</p><a href="#/explore?cat=Infrastructure">View public directory ↗</a></div>
+      <div class="admin-side-note"><strong>Before you publish</strong><p>Check the website and supporting sources so visitors can find reliable information.</p><a href="#/explore?cat=Infrastructure">Open public directory ↗</a></div>
     </aside>
     <div class="admin-main">
       
