@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {renderInfrastructure} from '../web/src/infrastructure.js';
-import {resourceTypeForTags,withResourceType,newResourceId,resourceUrl,filterResources} from '../web/src/resource-model.js';
+import {resourceIconUrl,resourceTypeForTags,withResourceType,newResourceId,resourceUrl,filterResources} from '../web/src/resource-model.js';
 const resource=(changes={})=>({name:'Network Explorer',desc:'Network activity and statistics',slug:'manual-example',url:'https://network.example.org/',source:'manual',status:'published',cats:['Infrastructure'],tags:['resource-type:network'],resourceType:'network',relationship:'protocol',evidenceUrl:'https://source.example.org/',...changes});
 test('resource metadata preserves custom tags while changing only the selected type',()=>{
  const tags=withResourceType(['custom','resource-type:network','owner-note'],'developer');
@@ -29,4 +29,11 @@ test('empty, loading and error states remain distinct and do not invent resource
 test('resource cards expose a readable classification instead of reserved metadata',()=>{
  const html=renderInfrastructure([resource()]);
  assert.ok(html.includes('Network &amp; data'));assert.ok(html.includes('#Infrastructure'));assert.ok(!html.includes('#resource-type:'));
+});
+
+test('resource icons derive only from the HTTPS website origin',()=>{
+ assert.equal(resourceIconUrl('https://example.org/path?q=private#fragment'),'https://example.org/favicon.ico');
+ assert.equal(resourceIconUrl('https://user:password@example.org'),'');assert.equal(resourceIconUrl('javascript:alert(1)'),'');
+ const html=renderInfrastructure([resource({logoUrl:'https://custom.example.org/logo.png'})]);
+ assert.ok(html.includes('src="https://network.example.org/favicon.ico"'));assert.ok(!html.includes('custom.example.org'));assert.ok(html.includes('referrerpolicy="no-referrer"'));
 });

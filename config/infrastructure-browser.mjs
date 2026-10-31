@@ -19,8 +19,11 @@ try{
  browser=await chromium.launch({headless:true});
  for(const width of [1440,390]){
   const page=await browser.newPage({viewport:{width,height:900}});
+  await page.route('**/favicon.ico',route=>route.abort());
   await page.goto('http://127.0.0.1:5174/infrastructure-preview.html');await page.getByRole('heading',{name:'Official ICP Resources'}).waitFor();
   assert.equal(await page.locator('.infra-resource-card').count(),3);assert.equal(await page.locator('.catalog-vote').count(),0);
+  await page.waitForFunction(()=>document.querySelectorAll('.infra-resource-icon img').length===0);
+  assert.equal(await page.locator('.infra-resource-icon span').count(),3);
   assert.equal(await page.getByRole('link',{name:'Add a resource',exact:true}).count(),0);
   await page.getByRole('button',{name:'Developer tools',exact:true}).click();assert.equal(await page.locator('.infra-resource-card').count(),1);assert.equal(await page.getByRole('link',{name:'Visit Example SDK',exact:true}).getAttribute('href'),'https://sdk.example.org/');
   await page.getByRole('searchbox',{name:'Search infrastructure resources'}).fill('not-present');await page.getByRole('heading',{name:'No resources found'}).waitFor();await page.getByRole('button',{name:'Clear filters'}).click();assert.equal(await page.locator('.infra-resource-card').count(),3);
@@ -28,7 +31,7 @@ try{
   for(const mode of ['empty','loading','error']){await page.goto('http://127.0.0.1:5174/infrastructure-preview.html?mode='+mode);await page.getByRole('heading',{name:mode==='empty'?'Good resources deserve a place here.':mode==='loading'?'Loading resources':'Resources could not be loaded'}).waitFor();assert.equal(await page.locator('.infra-resource-card').count(),0);}
   await page.goto('http://127.0.0.1:5174/resource-admin-preview.html');await page.getByText('Identity verified',{exact:true}).waitFor();
   await page.getByPlaceholder('e.g. OpenCloud').fill('New test resource');await page.getByLabel('Website URL',{exact:false}).fill('https://new.example.org/');await page.getByLabel('Resource category',{exact:true}).selectOption('developer');await page.getByLabel('Status',{exact:true}).selectOption('published');await page.getByRole('button',{name:'Save resource',exact:true}).click();await page.getByText('The listing is published.',{exact:true}).waitFor();
-  let saved=await page.evaluate(()=>window.__testProjects.find(p=>p.name==='New test resource'));assert.match(saved.id,/^manual-[0-9a-f]{32}$/);assert.deepEqual(saved.tags,['resource-type:developer']);assert.equal(saved.category,'Infrastructure');assert.equal(saved.status,'published');assert.equal(await page.evaluate(()=>window.__testUpdates),1);
+  let saved=await page.evaluate(()=>window.__testProjects.find(p=>p.name==='New test resource'));assert.match(saved.id,/^manual-[0-9a-f]{32}$/);assert.deepEqual(saved.tags,['resource-type:developer']);assert.equal(saved.category,'Infrastructure');assert.equal(saved.status,'published');assert.equal(saved.logoUrl,'');assert.equal(await page.locator('input[name=logoUrl]').count(),0);assert.equal(await page.evaluate(()=>window.__testUpdates),1);
   await page.getByRole('button',{name:'Infrastructure resources',exact:true}).click();await page.locator('#admin-projects .admin-project-row').filter({hasText:'Seeded resource'}).getByRole('button',{name:'Edit →',exact:true}).click();await page.getByLabel('Resource category',{exact:true}).selectOption('identity');await page.getByRole('button',{name:'Save resource',exact:true}).click();await page.getByText('The listing is saved as a draft.',{exact:true}).waitFor();
   saved=await page.evaluate(()=>window.__testProjects.find(p=>p.id==='manual-seeded'));assert.deepEqual(saved.tags,['resource-type:identity','custom-owner-tag']);assert.equal(await page.evaluate(()=>window.__testUpdates),2);
   await page.getByRole('button',{name:'Add a resource',exact:true}).click();assert.equal(await page.getByPlaceholder('e.g. OpenCloud').inputValue(),'');assert.equal(await page.locator('input[name=id]').inputValue(),'');assert.equal(await page.getByLabel('Resource category',{exact:true}).inputValue(),'other');

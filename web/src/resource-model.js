@@ -15,3 +15,5 @@ export function filterResources(records,query='',type='all'){
  const words=query.trim().toLowerCase().split(/\s+/).filter(Boolean);
  return selectResources(records).filter(p=>(type==='all'||p.resourceType===type)&&words.every(word=>`${p.name} ${p.desc} ${new URL(p.url).hostname}`.toLowerCase().includes(word))).sort((a,b)=>a.name.localeCompare(b.name));
 }
+
+export function resourceIconUrl(website){const url=resourceUrl(website);return url?new URL('/favicon.ico',url).href:'';}

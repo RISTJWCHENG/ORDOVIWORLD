@@ -1,4 +1,4 @@
-import {RESOURCE_TYPES,filterResources,selectResources,resourceUrl} from './resource-model.js';
+import {RESOURCE_TYPES,filterResources,selectResources,resourceUrl,resourceIconUrl} from './resource-model.js';
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const icon=(name,size=20)=>`<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${{
  link:'<path d="M10 13a5 5 0 0 0 7 .1l3-3a5 5 0 0 0-7.1-7.1l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7-.1l-3 3a5 5 0 0 0 7.1 7.1l1.7-1.7"/>',
@@ -10,9 +10,9 @@ const icon=(name,size=20)=>`<svg width="${size}" height="${size}" viewBox="0 0 2
 }[name]||''}</svg>`;
 const relationshipLabels={protocol:'Protocol service',dfinity:'DFINITY related',ecosystem:'Ecosystem resource',unverified:'Curated link'};
 export function resourceCard(p){
- const url=resourceUrl(p.url),type=RESOURCE_TYPES.find(t=>t.id===p.resourceType)||RESOURCE_TYPES.at(-1),evidence=resourceUrl(p.evidenceUrl),logo=resourceUrl(p.logoUrl);
+ const url=resourceUrl(p.url),type=RESOURCE_TYPES.find(t=>t.id===p.resourceType)||RESOURCE_TYPES.at(-1),evidence=resourceUrl(p.evidenceUrl),logo=resourceIconUrl(p.url);
  const host=new URL(url).hostname.replace(/^www\./,'');
- return `<li class="infra-resource-card"><div class="infra-resource-top"><div class="infra-resource-icon"><span>${esc(p.name?.slice(0,1).toUpperCase()||'R')}</span>${logo?`<img class="catalog-project-logo" src="${esc(logo)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:''}</div><span class="infra-type-label">${esc(type.label)}</span></div><h3><a href="${esc(url)}" target="_blank" rel="noopener noreferrer nofollow">${esc(p.name)}</a></h3><span class="tag">#Infrastructure</span><p class="infra-resource-domain">${esc(host)}</p><p class="infra-resource-description">${esc(p.desc||'Visit the website for details.')}</p><div class="infra-resource-meta"><span>${esc(relationshipLabels[p.relationship]||relationshipLabels.unverified)}</span>${evidence?`<a href="${esc(evidence)}" target="_blank" rel="noopener noreferrer nofollow">Source ${icon('arrow',13)}</a>`:''}</div><a class="infra-visit" href="${esc(url)}" target="_blank" rel="noopener noreferrer nofollow" aria-label="Visit ${esc(p.name)}">Visit website ${icon('arrow',16)}</a></li>`;
+ return `<li class="infra-resource-card"><div class="infra-resource-top"><div class="infra-resource-icon"><span>${esc(p.name?.slice(0,1).toUpperCase()||'R')}</span>${logo?`<img class="catalog-project-logo" src="${esc(logo)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">`:''}</div><span class="infra-type-label">${esc(type.label)}</span></div><h3><a href="${esc(url)}" target="_blank" rel="noopener noreferrer nofollow">${esc(p.name)}</a></h3><span class="tag">#Infrastructure</span><p class="infra-resource-domain">${esc(host)}</p><p class="infra-resource-description">${esc(p.desc||'Visit the website for details.')}</p><div class="infra-resource-meta"><span>${esc(relationshipLabels[p.relationship]||relationshipLabels.unverified)}</span>${evidence?`<a href="${esc(evidence)}" target="_blank" rel="noopener noreferrer nofollow">Source ${icon('arrow',13)}</a>`:''}</div><a class="infra-visit" href="${esc(url)}" target="_blank" rel="noopener noreferrer nofollow" aria-label="Visit ${esc(p.name)}">Visit website ${icon('arrow',16)}</a></li>`;
 }
 function results(records,state,query='',type='all'){
  if(state==='loading')return `<div class="infra-state" role="status"><span class="infra-state-icon">${icon('network',28)}</span><h2>Loading resources</h2><p>Getting the latest links from the directory…</p></div>`;
@@ -28,6 +28,7 @@ export function renderInfrastructure(records,state='ready'){
 }
 export function mountInfrastructure(root,records,state='ready'){
  if(!root)return;
+ root.addEventListener('error',event=>{if(event.target?.classList?.contains('catalog-project-logo'))event.target.remove();},true);
  let type='all';const input=root.querySelector('#infra-search'),target=root.querySelector('#infra-results'),count=root.querySelector('#infra-count');
  const update=()=>{target.innerHTML=results(records,state,input.value,type);const n=filterResources(records,input.value,type).length;count.textContent=n+' resource'+(n===1?'':'s');root.querySelectorAll('[data-infra-type]').forEach(b=>{const active=b.dataset.infraType===type;b.classList.toggle('is-active',active);b.setAttribute('aria-pressed',String(active));});};
  input.addEventListener('input',update);
