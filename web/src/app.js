@@ -142,6 +142,7 @@ mast.innerHTML=`<h1 class="catalog-store-title"><a href="#/" aria-label="${SITE_
 
 function route(){const h=location.hash.slice(1)||'/',path=h.split('?')[0],q=query(h),seg=path.split('/')[1]||'home';
 document.body.classList.toggle('admin-mode',seg==='admin');
+const headerSection=document.getElementById('admin-header-section');if(headerSection)headerSection.textContent=q.tab==='editor'?'Add a Resource':'Overview';
 const mi=mast.querySelector('input');if(mi)mi.value=seg==='search'?(q.q||''):'';app.innerHTML=(seg==='app'?V.app(path.split('/')[2]):(V[seg]||(()=>'<p style="padding:80px 0;text-align:center">Nothing here. <a href="#/" style="text-decoration:underline">Back home</a></p>'))(q));
 if(seg==='admin') { const target=document.getElementById('admin-dashboard'); void getAdministratorAccess().then(access=>startAdminDashboard(target,access,{initialPanel:q.tab==='editor'?'editor':'overview'})).catch(()=>{if(target?.isConnected)target.textContent='Administrator access is unavailable.'}); }
 if(seg==='explore'&&q.cat==='Infrastructure'&&!q.source){

@@ -13,7 +13,7 @@ try{
   await page.evaluate(()=>{window.__modeDocument='retained';location.hash='/admin';});
   await page.locator('body.admin-mode').waitFor();
   assert.equal(await page.locator('#mast .catalog-store-title').isVisible(),true);
-  assert.equal(await page.locator('#auth').isVisible(),true);
+  assert.equal(await page.locator('#auth').isVisible(),true);assert.equal(await page.locator('.account-apps-btn').isVisible(),false);assert.equal(await page.locator('.admin-header-breadcrumb').isVisible(),true);
   assert.equal(await page.locator('#mast .navrow').isVisible(),false);
   assert.equal(await page.locator('#mast .sbar').isVisible(),false);
   assert.equal(await page.locator('footer').isVisible(),false);
@@ -22,7 +22,7 @@ try{
   assert.equal(context.pages().length,1);assert.equal(await page.evaluate(()=>window.__modeDocument),'retained');
   await page.locator('#mast .catalog-store-title a').click();
   await page.waitForFunction(()=>!document.body.classList.contains('admin-mode'));
-  assert.equal(await page.locator('#mast .navrow').isVisible(),true);
+  assert.equal(await page.locator('#mast .navrow').isVisible(),true);assert.equal(await page.locator('.account-apps-btn').isVisible(),true);assert.equal(await page.locator('.admin-header-breadcrumb').isVisible(),false);
   assert.equal(await page.locator('footer').isVisible(),true);
   assert.equal(await page.evaluate(()=>window.__modeDocument),'retained');
   await context.close();

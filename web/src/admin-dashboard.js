@@ -20,9 +20,9 @@ export async function startAdminDashboard(root, access, options={}) {
       <div class="admin-side-note"><strong>Curated with care</strong><p>Review sources and evidence before publishing a project.</p><a href="#/explore?cat=Infrastructure">View public directory ↗</a></div>
     </aside>
     <div class="admin-main">
-      <div class="admin-topline"><span>MANAGEMENT / <span id="admin-breadcrumb">OVERVIEW</span></span><a href="#/explore?cat=Infrastructure">View directory ↗</a></div>
+      
       <div class="admin-alert" id="admin-alert" role="status" aria-live="polite"><span class="admin-alert-dot"></span><div><strong id="admin-status-title">Verifying your identity</strong><p id="admin-status-detail">Connecting securely with Internet Identity…</p></div><button type="button" class="admin-retry" id="admin-retry" hidden>Try again</button></div>
-      <div id="admin-overview" data-panel="overview">
+      <div id="admin-feedback" role="status" aria-live="polite" hidden></div><div id="admin-overview" data-panel="overview">
         <div class="admin-heading"><div><span class="admin-eyebrow">YOUR WORKSPACE</span><h1>Admin Dashboard</h1><p>Manage the resources published in your Infrastructure directory.</p></div><button class="admin-button primary" type="button" data-go="editor">＋ <span>Add resource</span></button></div>
         <div class="admin-stats"><article><span class="admin-stat-icon purple">▤</span><p>MANAGED RESOURCES</p><strong id="admin-total">—</strong><small>Manually curated entries</small></article><article><span class="admin-stat-icon green">✓</span><p>PUBLISHED</p><strong id="admin-published">—</strong><small>Visible in the directory</small></article><article><span class="admin-stat-icon amber">◷</span><p>DRAFTS</p><strong id="admin-drafts">—</strong><small>Not publicly visible</small></article></div>
         <div class="admin-overview-grid"><div class="admin-card"><div class="admin-card-head"><div><h2>Infrastructure resources</h2><p>Your manually managed listings</p></div><button type="button" class="admin-text-button" data-go="projects">View all →</button></div><div id="admin-recent" class="admin-project-list"><div class="admin-empty">Connect to load your resources.</div></div></div><div class="admin-card admin-guide"><span class="admin-guide-icon">✧</span><h2>Build a trusted directory</h2><p>Add official links and supporting evidence to help people understand each project’s relationship to the Internet Computer ecosystem.</p><div class="admin-guide-step"><span>1</span> Add resource details</div><div class="admin-guide-step"><span>2</span> Review its sources</div><div class="admin-guide-step"><span>3</span> Save a draft or publish</div><button class="admin-button secondary" type="button" data-go="editor">Create a listing →</button></div></div>
@@ -36,14 +36,19 @@ export async function startAdminDashboard(root, access, options={}) {
   const form=$('#admin-form'), fields=$('#admin-fields'), list=$('#admin-projects'), recent=$('#admin-recent');
   let token='', projects=[], loaded=false, preservedTags=[];
   const stateOf = project => project.status === 'published' ? 'published' : 'draft';
+  let feedbackTimer;
   function setStatus(title, detail, state='waiting') {
-    statusTitle.textContent=title; statusDetail.textContent=detail; alert.dataset.state=state; retry.hidden=state!=='error';
+    statusTitle.textContent=state==='success'?'':title; statusDetail.textContent=state==='success'?'':detail; alert.dataset.state=state; retry.hidden=state!=='error';
+    alert.hidden=state==='success';
+    const feedback=$('#admin-feedback');clearTimeout(feedbackTimer);feedback.hidden=true;
+    if(state==='success'&&title!=='Identity verified'){feedback.textContent=detail;feedback.hidden=false;feedbackTimer=setTimeout(()=>{feedback.hidden=true;},4500);}
   }
   function setPanel(name) {
     root.querySelectorAll('[data-panel]').forEach(panel=>{panel.hidden=panel.dataset.panel!==name;});
     root.querySelectorAll('[data-tab]').forEach(button=>{const active=button.dataset.tab===name;button.classList.toggle('is-active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
-    $('#admin-breadcrumb').textContent=({overview:'OVERVIEW',projects:'PROJECTS',editor:'RESOURCE EDITOR'})[name];
+    const section=document.getElementById('admin-header-section');if(section)section.textContent=({overview:'Overview',projects:'Infrastructure Resources',editor:$('#admin-editor-title').textContent==='Edit resource'?'Edit Resource':'Add a Resource'})[name];
   }
+  const breadcrumbHome=document.getElementById('admin-breadcrumb-home');if(breadcrumbHome)breadcrumbHome.onclick=()=>{if(root.isConnected)setPanel('overview');};
   root.querySelectorAll('[data-tab], [data-go]').forEach(button=>button.addEventListener('click',()=>{if((button.dataset.go||button.dataset.tab)==='editor'){form.reset();form.elements.id.readOnly=false;$('#admin-editor-title').textContent='Add a resource';$('#admin-form-status').textContent='';}setPanel(button.dataset.tab||button.dataset.go);}));
   async function call(path,options={}) {return adminRequest(access.identity,path,options);}
   function edit(project) {
@@ -74,12 +79,12 @@ export async function startAdminDashboard(root, access, options={}) {
   async function refresh(){const data=await call('/api/projects');if(!Array.isArray(data.projects))throw Error('Resource data is unavailable.');projects=data.projects;loaded=true;render();}
   async function connect(){
     token='';fields.disabled=true;loaded=false;projects=[];render();retry.disabled=true;setStatus('Verifying your identity','Connecting securely with Internet Identity…');
-    try{const check=await call('/api/ii/session');if(!check.authenticated)throw Error('Administrator authorization required.');token='icp';if(!root.isConnected)return;const capabilities=await call('/api/ii/session');await refresh();fields.disabled=capabilities.writesEnabled!==true;setStatus('Identity verified',fields.disabled?'Connected in read-only mode. Editing is currently unavailable.':'Connected to your administrator workspace.','success');}
+    try{const check=await call('/api/ii/session');if(!check.authenticated)throw Error('Administrator authorization required.');token='icp';if(!root.isConnected)return;const capabilities=await call('/api/ii/session');await refresh();fields.disabled=capabilities.writesEnabled!==true;setStatus(fields.disabled?'Read-only mode':'Identity verified',fields.disabled?'Connected in read-only mode. Editing is currently unavailable.':'Connected to your administrator workspace.',fields.disabled?'warning':'success');}
     catch(error){if(root.isConnected)setStatus('Connection unavailable',`${error.message||'Administrator authentication failed.'} Resource data and editing are unavailable until verification succeeds.`,'error');}
     finally{retry.disabled=false;}
   }
   $('#admin-search').addEventListener('input',render);$('#admin-filter').addEventListener('change',render);retry.addEventListener('click',connect);
-  $('#admin-refresh').addEventListener('click',async()=>{if(!token){await connect();return;}try{await refresh();setStatus('Identity verified','Resource list updated.','success');}catch(error){setStatus('Unable to refresh',error.message,'error');}});
+  $('#admin-refresh').addEventListener('click',async()=>{if(!token){await connect();return;}try{await refresh();setStatus(fields.disabled?'Read-only mode':'Identity verified',fields.disabled?'Connected in read-only mode. Editing is currently unavailable.':'Resource list updated.',fields.disabled?'warning':'success');}catch(error){setStatus('Unable to refresh',error.message,'error');}});
   form.addEventListener('reset',()=>{preservedTags=[];form.elements.id.value='';form.elements.id.readOnly=false;$('#admin-editor-title').textContent='Add a resource';$('#admin-form-status').textContent='';});
   form.addEventListener('submit',async event=>{event.preventDefault();const evidence=form.elements.evidenceUrl;if(form.elements.relationship.value!=='unverified'&&!evidence.value){evidence.setCustomValidity('Add an evidence URL for this relationship.');evidence.reportValidity();evidence.setCustomValidity('');return;}const button=form.querySelector('[type="submit"]');button.disabled=true;$('#admin-form-status').textContent='Saving…';try{const project=Object.fromEntries(new FormData(form));project.id=project.id||newResourceId();project.logoUrl='';project.tags=withResourceType(preservedTags,project.resourceType);delete project.resourceType;project.category='Infrastructure';await call('/api/projects',{method:'POST',body:JSON.stringify(project)});await refresh();preservedTags=[...project.tags];form.elements.id.value=project.id;$('#admin-form-status').textContent='Resource saved.';setStatus('Resource saved',project.status==='published'?'The listing is published.':'The listing is saved as a draft.','success');window.dispatchEvent(new Event('catalog:projects-updated'));}catch(error){$('#admin-form-status').textContent=error.message||'Unable to save project.';}finally{button.disabled=false;}});
   setPanel(['overview','projects','editor'].includes(options.initialPanel)?options.initialPanel:'overview');await connect();

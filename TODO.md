@@ -11,3 +11,5 @@
 - [x] Switch the current site view into administrator mode while retaining the shared logo and account controls.
 
 - [x] Integrate the management sidebar and content into the page layout, matching the store column alignment.
+
+- [x] Add management header breadcrumbs, hide its application launcher and suppress routine verified-status banners.
