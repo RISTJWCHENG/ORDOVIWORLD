@@ -63,3 +63,5 @@ Production verification: validation run 41238055102 passed all 26 unit checks, n
 
 ## 2026-10-31 — Resource card classification
 Kept the administrator workspace inside the existing site, per the latest user instruction. Manual Infrastructure records use the resource card renderer across discovery grids, with human-readable purpose labels and #Infrastructure. Reserved resource-type tags are removed from public tags; stored metadata is preserved. Renamed the administrator selector to Resource category. The independent admin entry was withdrawn before any deployment. Unit checks and the frontend build passed; browser validation is pending.
+
+Validation complete: run 41243882690 passed 27 unit checks, frontend build, read-only administrator checks and isolated desktop/mobile create/edit/publish/filter tests. Production frontend deployment passed certified v2 verification for root, HTML, CSS and JS. Live OpenCloud displays Network & data and #Infrastructure, with no internal metadata tag. In-site administrator routing is retained. No backend module or catalog data was changed.
