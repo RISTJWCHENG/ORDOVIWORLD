@@ -54,3 +54,5 @@ Validation complete: 28 regression checks and frontend build passed. Run 4124526
 
 ## 2026-10-31 — Integrated management columns
 Replaced the inset management panel with edge-to-edge page columns: a 308px left navigation aligned with the store sidebar and a white content column. Removed the outer rounded border, shadow, maximum width and surrounding padding. The shared header remains. Tablet/mobile navigation reflows above the content. No backend, access or stored-data changes. Validation pending.
+
+Validation complete: run 41245762757 passed 28 regression checks, build, same-document mode switching, read-only access and isolated desktop/mobile administrator create/edit/publish checks. Geometry assertions verify a borderless, full-width shell at x=0, desktop sidebar width 308px and alignment directly below the shared header. No mobile horizontal overflow. Frontend production deployment passed certified v2 root, HTML, CSS and JS verification. No backend or data changes.
