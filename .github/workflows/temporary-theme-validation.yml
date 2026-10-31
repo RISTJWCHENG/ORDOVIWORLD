@@ -1,0 +1,39 @@
+name: Temporary responsive theme validation
+on:
+  push:
+    branches: [responsive-theme-switch, main]
+    paths: ['web/**', 'config/**', '.github/workflows/temporary-theme-validation.yml']
+permissions:
+  contents: read
+jobs:
+  validate:
+    if: github.ref_name == 'responsive-theme-switch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22, cache: npm}
+      - run: npm ci
+      - run: npm test
+      - run: npm run build:icp
+      - run: npm install --no-save playwright@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - run: node config/personal-dashboard-browser.mjs
+      - run: node config/admin-mode-browser.mjs
+      - run: node config/admin-ui-browser.mjs
+      - run: node config/infrastructure-browser.mjs
+  cleanup:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const branch='responsive-theme-switch';
+            const review=await github.rest.git.getRef({...context.repo,ref:'heads/'+branch});
+            const main=await github.rest.git.getRef({...context.repo,ref:'heads/main'});
+            const result=await github.rest.repos.compareCommitsWithBasehead({...context.repo,basehead:review.data.object.sha+'...'+main.data.object.sha});
+            if(!['ahead','identical'].includes(result.data.status))throw Error('Review branch not included in main');
+            await github.rest.git.deleteRef({...context.repo,ref:'heads/'+branch});

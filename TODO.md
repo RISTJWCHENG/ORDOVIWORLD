@@ -19,3 +19,5 @@
 - [x] Refine management sidebar hierarchy, descriptions and navigation icons.
 
 - [x] Add My Dashboard with profile settings, real favorites and browser-local light/dark appearance.
+
+- [x] Refine theme control styling and immediate pointer/keyboard response.
