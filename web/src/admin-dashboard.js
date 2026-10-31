@@ -10,7 +10,7 @@ export async function startAdminDashboard(root, access, options={}) {
 
   root.innerHTML = `<div class="admin-shell">
     <aside class="admin-sidebar" aria-label="Administrator navigation">
-      <div class="admin-brand"><span class="admin-brand-icon">✦</span><div><strong>Store Admin</strong><small>Management workspace</small></div></div>
+      <div class="admin-brand"><span class="admin-brand-icon">✦</span><div><strong>Management</strong><small>Manage your store</small></div></div>
       <p class="admin-nav-label">WORKSPACE</p>
       <nav class="admin-nav" aria-label="Dashboard sections">
         <button class="admin-nav-item is-active" data-tab="overview" type="button"><span aria-hidden="true">▦</span> Overview</button>
