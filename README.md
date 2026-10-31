@@ -63,3 +63,5 @@ separate work. The UI must not report success for unsupported operations.
 
 The repository contains only the ICP application and its current crawler tools.
 Historical deployment prototypes and their configuration have been removed.
+
+Infrastructure icons load directly from each HTTPS website origin at `/favicon.ico`; unavailable icons fall back to the resource initial. Administrators do not supply logo URLs, and neither derived icon URLs nor image bytes are persisted by this feature. Custom favicon paths may fall back to initials.
