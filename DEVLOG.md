@@ -85,3 +85,5 @@ Validation complete: run 41245762757 passed 28 regression checks, build, same-do
 
 ## 2026-10-31 — Management header and status refinement
 Management mode hides the existing application launcher, preserving the avatar and store logo. A header breadcrumb follows overview, resources, add and edit panels; its home button returns to the overview. Removed the duplicate content breadcrumb. Healthy writable connection status is hidden; waiting, failures and read-only restrictions remain visible. Save confirmations use a brief accessible toast. Public launcher returns when leaving management. Validation pending.
+
+Initial header run 41246834034 passed store-shell switching, launcher visibility, breadcrumbs, create/edit/publish and status hiding. The new read-only test used Playwright isDisabled on a fieldset, which does not represent input disabled semantics. Replaced it with checks of the actual name input and fieldset disabled property. Production read-only behavior was unchanged.

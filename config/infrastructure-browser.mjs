@@ -40,7 +40,7 @@ try{
   await page.getByRole('button',{name:'Add a resource',exact:true}).click();assert.equal(await page.getByPlaceholder('e.g. OpenCloud').inputValue(),'');assert.equal(await page.locator('input[name=id]').inputValue(),'');assert.equal(await page.getByLabel('Resource category',{exact:true}).inputValue(),'other');
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth+1),'Admin overflow at '+width);
   await page.getByRole('button',{name:'Admin Dashboard',exact:true}).click();assert.equal(await page.locator('#admin-header-section').textContent(),'Overview');
-  await page.goto('http://127.0.0.1:5174/resource-admin-preview.html?readonly');await page.getByText('Read-only mode',{exact:true}).waitFor();assert.equal(await page.locator('#admin-alert').isVisible(),true);assert.equal(await page.locator('#admin-fields').isDisabled(),true);
+  await page.goto('http://127.0.0.1:5174/resource-admin-preview.html?readonly');await page.getByText('Read-only mode',{exact:true}).waitFor();assert.equal(await page.locator('#admin-alert').isVisible(),true);assert.equal(await page.getByPlaceholder('e.g. OpenCloud').isDisabled(),true);assert.equal(await page.locator('#admin-fields').evaluate(el=>el.disabled),true);
   await page.close();
  }
  console.log('Infrastructure UI: public states, filtering, safe links, responsive layout and isolated administrator create/edit/publish flows passed.');
