@@ -20,7 +20,7 @@ try{
  const link=page.getByRole('link',{name:'My Dashboard',exact:true});assert.equal(await link.locator('svg').count(),0);assert.equal(await page.getByRole('link',{name:'Admin Dashboard',exact:true}).isVisible(),true);
  await page.getByRole('button',{name:'Dark',exact:true}).click();assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
  await page.reload();await page.getByRole('heading',{name:'Welcome, Alice',exact:true}).waitFor();assert.equal(await page.locator('html').getAttribute('data-theme'),'dark');
- await page.locator('.personal-dashboard nav').getByRole('link',{name:'Profile Settings',exact:false}).click();await page.locator('#profile-name').waitFor();
+ await page.locator('.personal-dashboard nav').getByRole('link',{name:'Profile Settings',exact:false}).click();await page.locator('#profile-name').waitFor();assert.equal(await page.locator('label[for=profile-name]').evaluate(el=>getComputedStyle(el).color),'rgb(220, 230, 245)');
  await page.locator('#profile-name').fill('Alice Updated');await page.getByRole('button',{name:'Save Profile',exact:true}).click();await page.getByText('✓ Saved on ICP',{exact:true}).waitFor();
  assert.equal(await page.evaluate(()=>window.__testSavedProfile.profile.name),'Alice Updated');assert.equal(await page.evaluate(()=>window.__testSavedProfile.owner),'user-alpha');
  await page.locator('.personal-dashboard nav').getByRole('link',{name:'My Favorites',exact:false}).click();await page.getByRole('link',{name:'Saved App',exact:true}).waitFor();

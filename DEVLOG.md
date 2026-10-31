@@ -102,3 +102,5 @@ Validation complete: run 41248222194 passed the build, 28 existing regression ch
 
 ## 2026-10-31 — Personal dashboard and appearance
 Replaced the account-menu My Profile entry with an icon-free My Dashboard link and added Light/Dark background controls below the administrator entry (or personal entry for non-admins). Theme choice is local to the browser. Added same-document personal overview, favorites and Profile Settings using the existing shared workspace shell. Overview uses actual profile/favorite load states, not fabricated activity. Favorites support opening/removing/retrying; existing profile editing, identity copy and self-data deletion remain available. Existing #/profile links open Profile Settings. The native backend and stored formats are unchanged. Added isolated browser coverage for both accounts and failure paths. Validation pending.
+
+Final theme review adjusted explicit form/favorite label colors for dark backgrounds and normalized appearance button typography. Added a dark profile-label assertion. Also ignored detached administrator roots so a late access response cannot overwrite personal dashboard breadcrumbs after navigation.

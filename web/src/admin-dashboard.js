@@ -2,7 +2,7 @@ import {adminRequest} from './icp-client.js';
 import {RESOURCE_TYPES,resourceTypeForTags,withResourceType,newResourceId} from './resource-model.js';
 
 export async function startAdminDashboard(root, access, options={}) {
-  if (!root) return;
+  if (!root?.isConnected) return;
   if (!access?.identity || access?.transport!=='icp') {
     root.textContent = 'Administrator access is unavailable. Sign in with the authorized Internet Identity.';
     return;
