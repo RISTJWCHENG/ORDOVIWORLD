@@ -141,6 +141,7 @@ const mast=document.getElementById('mast');
 mast.innerHTML=`<h1 class="catalog-store-title"><a href="#/" aria-label="${SITE_NAME}, home">${SITE_NAME}</a></h1><p class="catalog-store-intro">Discover the next generation of apps, games, and decentralized experiences built on the Internet Computer.</p>${sbar()}<p class="catalog-store-notice">Projects are indexed from public sources. Listing does not imply security verification or endorsement.</p>${navRow()}`})();
 
 function route(){const h=location.hash.slice(1)||'/',path=h.split('?')[0],q=query(h),seg=path.split('/')[1]||'home';
+document.body.classList.toggle('admin-mode',seg==='admin');
 const mi=mast.querySelector('input');if(mi)mi.value=seg==='search'?(q.q||''):'';app.innerHTML=(seg==='app'?V.app(path.split('/')[2]):(V[seg]||(()=>'<p style="padding:80px 0;text-align:center">Nothing here. <a href="#/" style="text-decoration:underline">Back home</a></p>'))(q));
 if(seg==='admin') { const target=document.getElementById('admin-dashboard'); void getAdministratorAccess().then(access=>startAdminDashboard(target,access,{initialPanel:q.tab==='editor'?'editor':'overview'})).catch(()=>{if(target?.isConnected)target.textContent='Administrator access is unavailable.'}); }
 if(seg==='explore'&&q.cat==='Infrastructure'&&!q.source){
@@ -150,7 +151,7 @@ if(seg==='explore'&&q.cat==='Infrastructure'&&!q.source){
 }
 if(seg==='search') void remoteSearch(q,location.hash);
 if(seg==='games') void remoteGames(location.hash);
-document.title=seg==='explore'&&q.cat==='Infrastructure'&&!q.source?`Official ICP Resources · ${SITE_NAME}`:seg==='home'?`${SITE_NAME} — ${site.tagline}`:SITE_NAME+' · '+seg;window.scrollTo({top:0,left:0,behavior:'instant'});
+document.title=seg==='admin'?`Admin Dashboard · ${SITE_NAME}`:seg==='explore'&&q.cat==='Infrastructure'&&!q.source?`Official ICP Resources · ${SITE_NAME}`:seg==='home'?`${SITE_NAME} — ${site.tagline}`:SITE_NAME+' · '+seg;window.scrollTo({top:0,left:0,behavior:'instant'});
 document.querySelectorAll('.navrow a').forEach(a=>{
   const target=a.getAttribute('href');
   const current=location.hash||'#/explore';

@@ -7,3 +7,5 @@
 - Expand manual administration beyond Infrastructure after defining review and categorization rules.
 
 - [x] Load Infrastructure website icons in the browser without manual logo URLs or canister image storage.
+
+- [x] Switch the current site view into administrator mode while retaining the shared logo and account controls.

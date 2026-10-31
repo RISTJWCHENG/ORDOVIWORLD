@@ -70,3 +70,6 @@ Validation complete: run 41243882690 passed 27 unit checks, frontend build, read
 Resource cards derive /favicon.ico from the HTTPS website origin and request it directly in the visitor browser without a referrer. Failed icons reveal the existing initial. Removed the administrator logo URL input; saves send an empty legacy logo field, never a derived URL or image bytes. No backend schema change or data migration. Validation pending.
 
 Validation complete: 28 unit checks and the frontend build passed. GitHub run 41244443916 passed desktop/mobile resource navigation, failed-icon initial fallback and isolated administrator create/edit/publish checks, including absence of the logo URL field and empty legacy logo value. Production deployment passed certified v2 root/HTML/CSS/JS checks. Live OpenCloud loaded https://opencloud.org/favicon.ico successfully. No backend installation or production data migration occurred.
+
+## 2026-10-31 — In-place management mode
+The existing #/admin route now switches the site shell into management mode without a new page or tab. It preserves the original logo and account/launcher controls, hides the public navigation, introduction and footer, and expands the administrator workspace. Return-to-store links restore the normal shell. Native backend authorization is unchanged. Validation pending.
