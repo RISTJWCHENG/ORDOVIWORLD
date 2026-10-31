@@ -84,3 +84,5 @@ Validation complete: run 41250129874 passed unit/build and all four browser suit
 
 ## 2026-11-01 — Align personal workspace headings
 The personal content column used a section element and inherited the public section margin-top:64px, unlike the administrator div column. Reset margin on direct workspace content columns and standardized personal heading spacing. Existing desktop/mobile browser coverage now checks overview, favorites and profile heading coordinates against column padding. Backend and data unchanged. Validation pending.
+
+Validation complete: run 41252074319 passed unit/build and all four browser suites. Personal overview, favorites and profile heading geometry matches the content column padding at desktop and phone sizes; the inherited 64px section margin is absent. Existing theme, identity, favorites and administrator flows passed. Production root, HTML, CSS and JS passed certified v2 verification. No backend/data changes.
