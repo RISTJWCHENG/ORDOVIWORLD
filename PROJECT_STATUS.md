@@ -79,3 +79,5 @@ Validation complete: final run 41249353235 passed 28 existing unit checks, build
 
 ## 2026-10-31 — Theme switch refinement
 Replaced separate swatch buttons with a compact sun/moon segmented control and a shared moving selection surface. Increased target height to 36px, kept keyboard focus/pressed semantics, and applied changes on primary pointer-down with click fallback for keyboard activation. DOM state updates precede preference persistence; repeated activation of the same theme does not rewrite storage. Reduced-motion support is preserved. Validation pending.
+
+Validation complete: run 41250129874 passed unit/build and all four browser suites. The personal browser check verifies theme/pressed state changes immediately after mouse-down, before mouse-up, keyboard Enter activation, reload persistence and existing account/profile/favorites behavior at desktop/mobile sizes. Production root, HTML, CSS and JS passed certified v2 verification. No backend/data changes.
