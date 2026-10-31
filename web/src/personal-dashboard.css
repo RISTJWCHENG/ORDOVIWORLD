@@ -28,3 +28,7 @@ html[data-theme=dark] .account-appearance .theme-picker::before{transform:transl
 html[data-theme=dark] .account-appearance button[data-theme-choice]{color:#8296b3!important}
 html[data-theme=dark] .account-appearance button[data-theme-choice][aria-pressed=true]{color:#eef4ff!important}
 @media(prefers-reduced-motion:reduce){.account-appearance .theme-picker::before{transition:none}}
+/* Workspace columns must not inherit the public section spacing. */
+.admin-shell>.admin-main{margin:0}
+.personal-heading,.personal-dashboard .profile-heading{margin-bottom:24px}
+.personal-heading h1,.personal-dashboard .profile-heading h1{margin:7px 0}

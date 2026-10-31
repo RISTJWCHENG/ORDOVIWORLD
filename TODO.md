@@ -21,3 +21,5 @@
 - [x] Add My Dashboard with profile settings, real favorites and browser-local light/dark appearance.
 
 - [x] Refine theme control styling and immediate pointer/keyboard response.
+
+- [x] Align My Dashboard headings with the administrator content column.
