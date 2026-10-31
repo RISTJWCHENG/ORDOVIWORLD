@@ -36,7 +36,7 @@ export function renderProfile() {
   const avatar = avatars.includes(data.avatar) ? data.avatar : avatars[0]
   const role = roles.includes(data.role) ? data.role : roles[0]
   return `<div class="page profile-page">
-    <div class="profile-heading"><div><span class="profile-eyebrow">CATALOG IDENTITY</span><h1>My Profile</h1><p class="mute">A little about you and what you're building on ICP.</p></div><span class="profile-status">● Connected with Internet Identity</span></div>
+    <div class="profile-heading"><div><span class="profile-eyebrow">CATALOG IDENTITY</span><h1>Profile Settings</h1><p class="mute">A little about you and what you're building on ICP.</p></div><span class="profile-status">● Connected with Internet Identity</span></div>
     <div class="profile-layout">
       <aside class="profile-preview glass">
         <div class="profile-banner"></div><div class="profile-avatar" id="profile-avatar-preview">${avatar}</div>
@@ -124,3 +124,5 @@ export function initProfile() {
 }
 
 export function getProfileName(principal) { return principal ? load(principal).name.trim() : '' }
+
+export function profileSnapshot(principal){return {profile:load(principal),state:usingIcp?(remoteStatus.get(principal)||'idle'):'ready'};}

@@ -1,0 +1,6 @@
+const key='catalog:appearance:v1';
+export function currentTheme(){return document.documentElement.dataset.theme==='dark'?'dark':'light';}
+export function setTheme(value){const theme=value==='dark'?'dark':'light';document.documentElement.dataset.theme=theme;try{localStorage.setItem(key,theme);}catch{}document.querySelectorAll('[data-theme-choice]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.themeChoice===theme)));}
+export function appearanceControls(){return `<div class="account-appearance" role="group" aria-label="Background color"><span>Appearance</span><div><button type="button" data-theme-choice="light" aria-pressed="${currentTheme()==='light'}"><i class="theme-swatch light" aria-hidden="true"></i>Light</button><button type="button" data-theme-choice="dark" aria-pressed="${currentTheme()==='dark'}"><i class="theme-swatch dark" aria-hidden="true"></i>Dark</button></div></div>`;}
+let installed=false;
+export function initAppearance(){let theme='light';try{theme=localStorage.getItem(key)||'light';}catch{}setTheme(theme);if(installed)return;installed=true;document.addEventListener('click',event=>{const button=event.target.closest('[data-theme-choice]');if(button)setTheme(button.dataset.themeChoice);});addEventListener('storage',event=>{if(event.key===key)setTheme(event.newValue);});}

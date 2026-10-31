@@ -1,3 +1,4 @@
+import {renderPersonalDashboard,mountPersonalDashboard} from './personal-dashboard.js'
 import site from '../../config/site.json'
 import { normalizeCategories } from './catalog-categories.js'
 const SITE_NAME = site.name;
@@ -117,7 +118,8 @@ document.addEventListener('click',event=>{
 });
 
 const V={
-profile(){return renderProfile()},
+profile(){return renderPersonalDashboard('profile')},
+dashboard(q){return renderPersonalDashboard(q.tab)},
 home(){return`<div style="max-width:760px;margin:0 auto">${noteHTML()}</div>`+
 sec('Explore the Internet Computer Ecosystem',`<div class="chips"><a class="btn on" href="#/explore" aria-current="page">All</a>${CATS.filter(category=>category!=='Infrastructure').map(c=>`<a class="btn" href="#/explore?cat=${encodeURIComponent(c)}">${esc(catalogCategoryLabel(c))}</a>`).join('')}</div>`)+
 catalogPagedSection('featured','Featured Projects')+
@@ -141,9 +143,12 @@ const mast=document.getElementById('mast');
 mast.innerHTML=`<h1 class="catalog-store-title"><a href="#/" aria-label="${SITE_NAME}, home">${SITE_NAME}</a></h1><p class="catalog-store-intro">Discover the next generation of apps, games, and decentralized experiences built on the Internet Computer.</p>${sbar()}<p class="catalog-store-notice">Projects are indexed from public sources. Listing does not imply security verification or endorsement.</p>${navRow()}`})();
 
 function route(){const h=location.hash.slice(1)||'/',path=h.split('?')[0],q=query(h),seg=path.split('/')[1]||'home';
-document.body.classList.toggle('admin-mode',seg==='admin');
-const headerSection=document.getElementById('admin-header-section');if(headerSection)headerSection.textContent=q.tab==='editor'?'Add a Resource':'Overview';
+const personal=seg==='dashboard'||seg==='profile';
+document.body.classList.toggle('admin-mode',seg==='admin'||personal);document.body.classList.toggle('dashboard-mode',personal);
+const dashboardHome=document.getElementById('admin-breadcrumb-home');if(dashboardHome){dashboardHome.textContent=personal?'My Dashboard':'Admin Dashboard';dashboardHome.onclick=()=>{location.hash=personal?'/dashboard?tab=overview':'/admin';};}
+const headerSection=document.getElementById('admin-header-section');if(headerSection)headerSection.textContent=personal?({profile:'Profile Settings',favorites:'My Favorites'}[seg==='profile'?'profile':q.tab]||'Overview'):q.tab==='editor'?'Add a Resource':'Overview';
 const mi=mast.querySelector('input');if(mi)mi.value=seg==='search'?(q.q||''):'';app.innerHTML=(seg==='app'?V.app(path.split('/')[2]):(V[seg]||(()=>'<p style="padding:80px 0;text-align:center">Nothing here. <a href="#/" style="text-decoration:underline">Back home</a></p>'))(q));
+if(personal)mountPersonalDashboard();
 if(seg==='admin') { const target=document.getElementById('admin-dashboard'); void getAdministratorAccess().then(access=>startAdminDashboard(target,access,{initialPanel:q.tab==='editor'?'editor':'overview'})).catch(()=>{if(target?.isConnected)target.textContent='Administrator access is unavailable.'}); }
 if(seg==='explore'&&q.cat==='Infrastructure'&&!q.source){
  const directory=app.querySelector('#infrastructure-directory');mountInfrastructure(directory,P,catalogState);
@@ -152,7 +157,7 @@ if(seg==='explore'&&q.cat==='Infrastructure'&&!q.source){
 }
 if(seg==='search') void remoteSearch(q,location.hash);
 if(seg==='games') void remoteGames(location.hash);
-document.title=seg==='admin'?`Admin Dashboard · ${SITE_NAME}`:seg==='explore'&&q.cat==='Infrastructure'&&!q.source?`Official ICP Resources · ${SITE_NAME}`:seg==='home'?`${SITE_NAME} — ${site.tagline}`:SITE_NAME+' · '+seg;window.scrollTo({top:0,left:0,behavior:'instant'});
+document.title=personal?`My Dashboard · ${SITE_NAME}`:seg==='admin'?`Admin Dashboard · ${SITE_NAME}`:seg==='explore'&&q.cat==='Infrastructure'&&!q.source?`Official ICP Resources · ${SITE_NAME}`:seg==='home'?`${SITE_NAME} — ${site.tagline}`:SITE_NAME+' · '+seg;window.scrollTo({top:0,left:0,behavior:'instant'});
 document.querySelectorAll('.navrow a').forEach(a=>{
   const target=a.getAttribute('href');
   const current=location.hash||'#/explore';
@@ -223,8 +228,9 @@ if(d.github&&!safe(d.github))x.github='Enter a full https:// URL.';if(d.logo&&!s
 const r=document.getElementById('res');if(Object.keys(x).length){r.hidden=true;return}
 r.hidden=false;r.textContent='Submission is not connected yet. Nothing was saved. Please do not assume your project was submitted.'}});
 addEventListener('hashchange',route);
-addEventListener('catalog:profile-loaded',()=>{if(location.hash.startsWith('#/profile'))route();});
-addEventListener('catalog:auth-changed', () => { if (location.hash.startsWith('#/profile') || location.hash.startsWith('#/admin') || location.hash.includes('cat=Infrastructure')) route() });
+addEventListener('catalog:profile-loaded',()=>{if(/^#\/(profile|dashboard)(?:[/?]|$)/.test(location.hash))route();});
+addEventListener('catalog:auth-changed', () => { if (location.hash.startsWith('#/profile') || location.hash.startsWith('#/dashboard') || location.hash.startsWith('#/admin') || location.hash.includes('cat=Infrastructure')) route() });
+addEventListener('catalog:favorites-updated',()=>{if(location.hash.startsWith('#/dashboard')&&!location.hash.includes('tab=profile'))route();});
 initProfile();
 async function remoteGames(startedHash) {
   const target = document.getElementById('catalog-live-games');
@@ -292,7 +298,7 @@ const applyCatalog = data => {
  P=records;
 };
 let catalogLoadVersion=0;
-const renderCatalogRoute=()=>{if(!/^#\/(admin|profile)(?:[/?]|$)/.test(location.hash))route();};
+const renderCatalogRoute=()=>{if(!/^#\/(admin|profile|dashboard)(?:[/?]|$)/.test(location.hash))route();};
 async function refreshCatalog(){
  const version=++catalogLoadVersion;catalogState='loading';renderCatalogRoute();
  try{

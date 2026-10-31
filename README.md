@@ -71,3 +71,5 @@ Selecting Admin Dashboard switches the current document into management mode at 
 Management mode uses integrated page columns rather than an inset dashboard panel. On desktop its 308px navigation aligns with the public store sidebar; tablet and phone navigation moves above the content. The shared branding and account controls remain unchanged.
 
 In management mode the header shows `Admin Dashboard / current section`, and the application launcher is hidden. Normal writable authentication status is silent; read-only/error states remain visible. Successful saves produce a short accessible toast. The public store retains its launcher.
+
+The account menu opens My Dashboard (`#/dashboard`) with personal overview, My Favorites and Profile Settings. Existing `#/profile` links remain supported. Personal data uses the authenticated ICP account; loading failures do not appear as successful empty collections. The menu also offers Light/Dark background settings remembered only in this browser. These controls do not grant administrator access.

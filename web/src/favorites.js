@@ -1,3 +1,7 @@
+let dashboardReader=()=>({items:[],state:'idle'}),dashboardRemove=async()=>false,dashboardRefresh=async()=>{};
+export const favoritesSnapshot=()=>dashboardReader();
+export const removeDashboardFavorite=href=>dashboardRemove(href);
+export const refreshDashboardFavorites=()=>dashboardRefresh();
 import {usingIcp,readMyData,saveMyFavorites} from './icp-client.js'
 import { storage } from '../../config/storage.js'
 /* CATALOG_FAVORITES_GRID_V1 - browser-local per authenticated Principal. */
@@ -56,7 +60,7 @@ export function initFavorites(getPrincipal) {
     if(!usingIcp||!owner)return;
     try{const data=await readMyData(owner);if(getUser()!==owner)return;remoteFavorites=data.favorites.filter(isValid);remoteState='ready';}
     catch{if(getUser()!==owner)return;remoteState='error';}
-    syncButtons();if(!panel.hidden)renderPanel();
+    syncButtons();if(!panel.hidden)renderPanel();window.dispatchEvent(new Event('catalog:favorites-updated'));
   }
   const key = () => storage.favoritesStoragePrefix + getUser();
   const isValid = x => x && typeof x.href === 'string' && /^#\/app\/[a-z0-9._%-]+$/i.test(x.href) && typeof x.name === 'string' && x.name.length < 160;
@@ -67,10 +71,13 @@ export function initFavorites(getPrincipal) {
     catch { return []; }
   }
   async function write(data) {
-    if(usingIcp){const owner=getUser();try{await saveMyFavorites(data,owner);if(owner!==getUser())return false;remoteFavorites=data;return true;}catch{window.alert('Could not save favorites on ICP. Please try again.');return false;}}
-    try { localStorage.setItem(key(), JSON.stringify(data)); return true; }
+    if(usingIcp){const owner=getUser();try{await saveMyFavorites(data,owner);if(owner!==getUser())return false;remoteFavorites=data;window.dispatchEvent(new Event('catalog:favorites-updated'));return true;}catch{window.alert('Could not save favorites on ICP. Please try again.');return false;}}
+    try { localStorage.setItem(key(), JSON.stringify(data));window.dispatchEvent(new Event('catalog:favorites-updated')); return true; }
     catch { window.alert('Could not save favorites in this browser.'); return false; }
   }
+  dashboardReader=()=>({items:read(),state:!getUser()?'idle':usingIcp?(remoteOwner===getUser()?remoteState:'loading'):'ready'});
+  dashboardRefresh=hydrateFavorites;
+  dashboardRemove=async href=>{if(!getUser()||(usingIcp&&(remoteState!=='ready'||remoteOwner!==getUser())))return false;const ok=await write(read().filter(item=>item.href!==href));if(ok){syncButtons();if(!panel.hidden)renderPanel();}return ok;};
   const bookmarkSvg = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4.5A1.5 1.5 0 0 1 7.5 3h9A1.5 1.5 0 0 1 18 4.5V21l-6-4-6 4V4.5Z"/></svg>';
   function appData(card) {
     const href = card.querySelector('a[href*="#/app/"]')?.getAttribute('href');
@@ -180,7 +187,7 @@ export function initFavorites(getPrincipal) {
   },true);
   document.addEventListener('keydown',event=>{if(event.key==='Escape'){closePanel();closeLogin();}});
   window.addEventListener('hashchange',closePanel);
-  window.addEventListener('catalog:user-data-deleted',()=>{remoteFavorites=[];remoteOwner=getUser();remoteState='ready';syncButtons();if(!panel.hidden)renderPanel();});
+  window.addEventListener('catalog:user-data-deleted',()=>{remoteFavorites=[];remoteOwner=getUser();remoteState='ready';window.dispatchEvent(new Event('catalog:favorites-updated'));syncButtons();if(!panel.hidden)renderPanel();});
   window.addEventListener('catalog:auth-changed',async()=>{
     if(usingIcp)await hydrateFavorites();
     if(getUser() && pending) {const item=pending;pending=null;toggleFavorite(item);}

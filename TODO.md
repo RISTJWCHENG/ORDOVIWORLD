@@ -17,3 +17,5 @@
 - [x] Extend the management column divider through the header and remove navigation horizontal rules.
 
 - [x] Refine management sidebar hierarchy, descriptions and navigation icons.
+
+- [x] Add My Dashboard with profile settings, real favorites and browser-local light/dark appearance.
