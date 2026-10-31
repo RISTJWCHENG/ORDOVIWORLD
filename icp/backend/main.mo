@@ -1,3 +1,4 @@
+import Avatar "Avatar";
 import Array "mo:base/Array";
 import Int "mo:base/Int";
 import Nat "mo:base/Nat";
@@ -125,7 +126,7 @@ shared persistent actor class Store(initialAdmin : Principal) = this {
   };
   public shared ({caller}) func save_my_profile(profile : Profile) : async Result<()>  {
     if(not authenticated(caller)) return #err("Sign in required");
-    if(profile.name.size() > 40 or profile.bio.size() > 280 or profile.role.size() > 40 or profile.avatar.size() > 40 or profile.interests.size() > 12 or not url(profile.website,false) or not url(profile.github,false)) return #err("Invalid profile");
+    if(profile.name.size() > 40 or profile.bio.size() > 280 or profile.role.size() > 40 or not Avatar.valid(profile.avatar) or profile.interests.size() > 12 or not url(profile.website,false) or not url(profile.github,false)) return #err("Invalid profile");
     for(topic in profile.interests.vals()) {if(topic.size() > 80) return #err("Invalid interest")};
     let previous=user(caller);putUser(caller,{previous with profile});#ok(())
   };

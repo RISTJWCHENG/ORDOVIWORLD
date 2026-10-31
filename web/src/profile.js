@@ -1,11 +1,12 @@
+import {avatarMarkup,isAvatarPhoto,compressAvatar} from './avatar.js'
 import {usingIcp,readMyData,saveMyProfile,deleteMyData} from './icp-client.js'
 import { storage } from '../../config/storage.js'
 // ICP profiles are loaded into memory; local development uses neutral browser keys.
 import { currentPrincipal } from './auth.js'
 
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))
-const avatars = ['🪐','🦕','🌌','🚀','🧑‍🚀','🌿','🎮','💎']
-const defaults = { name:'', bio:'', role:'Explorer', website:'', github:'', avatar:'🪐', interests:[] }
+
+const defaults = { name:'', bio:'', role:'Explorer', website:'', github:'', avatar:'', interests:[] }
 const roles = ['Explorer','Developer','Creator','Community Builder']
 const topics = ['DeFi','Games','AI','Infrastructure','SNS','NFTs','Developer Tools','Community']
 const storageKey = principal => storage.profileStoragePrefix + principal
@@ -33,18 +34,18 @@ export function renderProfile() {
   if (!principal) return `<div class="page profile-page"><div class="profile-intro"><span class="profile-eyebrow">YOUR IDENTITY ON ICP</span><h1>Make your mark in the ecosystem.</h1><p class="mute">Sign in with Internet Identity to create and personalize your profile.</p><p class="note" style="margin-top:24px">Use the Login button in the top-right corner to get started.</p></div></div>`
   if(usingIcp)void syncRemoteProfile(principal);
   const data = load(principal)
-  const avatar = avatars.includes(data.avatar) ? data.avatar : avatars[0]
+  const avatar = isAvatarPhoto(data.avatar) ? data.avatar : ''
   const role = roles.includes(data.role) ? data.role : roles[0]
   return `<div class="page profile-page">
     <div class="profile-heading"><div><span class="profile-eyebrow">CATALOG IDENTITY</span><h1>Profile Settings</h1><p class="mute">A little about you and what you're building on ICP.</p></div><span class="profile-status">● Connected with Internet Identity</span></div>
     <div class="profile-layout">
       <aside class="profile-preview glass">
-        <div class="profile-banner"></div><div class="profile-avatar" id="profile-avatar-preview">${avatar}</div>
+        <div class="profile-banner"></div><div class="profile-avatar" id="profile-avatar-preview">${avatarMarkup(principal,avatar)}</div>
         <div class="profile-preview-body"><h2 id="profile-name-preview">${escapeHTML(data.name.trim() || 'Member')}</h2><span class="profile-role" id="profile-role-preview">${escapeHTML(role)}</span><p id="profile-bio-preview" class="mute">${escapeHTML(data.bio.trim() || 'Your story starts here.')}</p><div class="profile-pid-heading">INTERNET IDENTITY PRINCIPAL</div><div class="profile-principal">${escapeHTML(principal)}</div><button class="btn" type="button" id="copy-principal">Copy Principal</button></div>
       </aside>
       <div class="profile-editor"><h2>Personal information</h2><p class="mute" style="margin-bottom:24px">Choose how you appear to the community.</p>
       <form id="profile-form" class="f" novalidate><fieldset style="border:0;padding:0;margin:0;display:grid;gap:18px;min-width:0" ${usingIcp&&remoteStatus.get(principal)!=='ready'?'disabled':''}>
-        <div><label>Choose an avatar</label><div class="profile-avatars" role="group" aria-label="Choose avatar">${avatars.map(a=>`<button type="button" class="profile-avatar-option ${a===avatar?'selected':''}" aria-pressed="${a===avatar}" data-avatar="${a}">${a}</button>`).join('')}</div><input type="hidden" name="avatar" value="${avatar}"></div>
+        <div><label>Profile photo</label><div class="profile-photo-control"><div class="profile-photo-current" id="profile-photo-current">${avatarMarkup(principal,avatar)}</div><div><div class="profile-photo-actions"><button type="button" class="btn" id="profile-photo-choose">Upload photo</button><button type="button" class="btn" id="profile-photo-remove" ${avatar?'':'hidden'}>Remove photo</button></div><small>JPEG, PNG or WebP, up to 8 MB. Center-cropped to 96 × 96 pixels.</small><small>Saved on ICP when you select Save Profile. Without a photo, your account uses its own gradient.</small></div></div><input type="file" id="profile-photo-file" accept="image/jpeg,image/png,image/webp" hidden><input type="hidden" name="avatar" value="${escapeHTML(avatar)}"><p id="profile-photo-status" role="status" aria-live="polite"></p></div>
         <div><label for="profile-name">Display name <span class="mute">(optional)</span></label><input id="profile-name" name="name" maxlength="40" placeholder="Member" value="${escapeHTML(data.name)}"></div>
         <div><label for="profile-role">I am a...</label><select id="profile-role" name="role">${roles.map(r=>`<option value="${r}" ${r===role?'selected':''}>${r}</option>`).join('')}</select></div>
         <div><label for="profile-bio">Bio</label><textarea id="profile-bio" name="bio" rows="4" maxlength="280" placeholder="Tell the community what you love building or exploring...">${escapeHTML(data.bio)}</textarea><p class="profile-hint">Up to 280 characters</p></div>
@@ -72,13 +73,8 @@ export function initProfile() {
       try{await deleteMyData(principal);if(currentPrincipal()!==principal)return;remoteProfiles.set(principal,{...defaults});remoteStatus.set(principal,'ready');window.dispatchEvent(new Event('catalog:user-data-deleted'));window.dispatchEvent(new Event('catalog:profile-loaded'));window.dispatchEvent(new Event('catalog:profile-updated'));}
       catch{window.alert('Could not delete your data. Please try again.');button.disabled=false;}return;
     }
-    const avatarButton = e.target.closest('[data-avatar]')
-    if (avatarButton && e.target.closest('#profile-form')) {
-      const form = document.getElementById('profile-form')
-      form.elements.avatar.value = avatarButton.dataset.avatar
-      form.querySelectorAll('[data-avatar]').forEach(b => { b.classList.toggle('selected', b===avatarButton); b.setAttribute('aria-pressed', String(b===avatarButton)) })
-      document.getElementById('profile-avatar-preview').textContent = avatarButton.dataset.avatar
-    }
+    if(e.target.closest('#profile-photo-choose')){document.getElementById('profile-photo-file').click();return;}
+    if(e.target.closest('#profile-photo-remove')){const form=document.getElementById('profile-form');form.elements.avatar.value='';updatePhotoPreview(currentPrincipal(),'');document.getElementById('profile-photo-status').textContent='Your gradient will be used after you save the profile.';return;}
     if (e.target.closest('#copy-principal')) {
       const principal = currentPrincipal()
       if (!principal) return
@@ -93,7 +89,14 @@ export function initProfile() {
     document.getElementById('profile-bio-preview').textContent = form.elements.bio.value.trim() || 'Your story starts here.'
     document.getElementById('profile-role-preview').textContent = form.elements.role.value
   })
-  app.addEventListener('change', e => {
+  app.addEventListener('change', async e => {
+    if(e.target.id==='profile-photo-file'){
+      const file=e.target.files?.[0],form=document.getElementById('profile-form'),owner=currentPrincipal();if(!file||!form||form.dataset.photoProcessing)return;
+      form.dataset.photoProcessing='true';for(const id of ['profile-photo-choose','profile-photo-remove'])document.getElementById(id).disabled=true;const status=document.getElementById('profile-photo-status');status.textContent='Preparing your 96 × 96 photo…';
+      try{const value=await compressAvatar(file);if(!form.isConnected||currentPrincipal()!==owner)return;form.elements.avatar.value=value;updatePhotoPreview(owner,value);status.textContent='Photo ready. Select Save Profile to upload it to ICP.';}
+      catch(error){if(form.isConnected&&currentPrincipal()===owner)status.textContent=error.message;}
+      finally{delete form.dataset.photoProcessing;e.target.value='';if(form.isConnected)for(const id of ['profile-photo-choose','profile-photo-remove'])document.getElementById(id).disabled=false;}return;
+    }
     if (e.target.name === 'role' && e.target.closest('#profile-form')) document.getElementById('profile-role-preview').textContent = e.target.value
   })
   app.addEventListener('submit', async e => {
@@ -101,6 +104,7 @@ export function initProfile() {
     e.preventDefault()
     const principal = currentPrincipal()
     if (!principal) { window.dispatchEvent(new Event('catalog:auth-changed')); return }
+    if(e.target.dataset.photoProcessing){document.getElementById('profile-feedback').textContent='Wait for the photo to finish processing.';return;}
     const data = new FormData(e.target)
     const profile = {
       name: String(data.get('name') || '').trim(), role: String(data.get('role') || ''),
@@ -110,7 +114,7 @@ export function initProfile() {
     }
     const feedback = document.getElementById('profile-feedback')
     if (profile.name.length > 40) { feedback.textContent = 'Please enter a display name (1–40 characters).'; return }
-    if (profile.bio.length > 280 || !roles.includes(profile.role) || !avatars.includes(profile.avatar)) { feedback.textContent = 'Please check your profile fields.'; return }
+    if (profile.bio.length > 280 || !roles.includes(profile.role) || (profile.avatar!==''&&!isAvatarPhoto(profile.avatar))) { feedback.textContent = 'Please check your profile fields.'; return }
     if (!validOptionalURL(profile.website) || !validOptionalURL(profile.github)) { feedback.textContent = 'Links must be valid https:// URLs.'; return }
     if(usingIcp){
       if(remoteStatus.get(principal)!=='ready'){feedback.textContent='Load your profile before saving.';return;}
@@ -126,3 +130,6 @@ export function initProfile() {
 export function getProfileName(principal) { return principal ? load(principal).name.trim() : '' }
 
 export function profileSnapshot(principal){return {profile:load(principal),state:usingIcp?(remoteStatus.get(principal)||'idle'):'ready'};}
+
+function updatePhotoPreview(principal,value){for(const id of ['profile-avatar-preview','profile-photo-current']){const node=document.getElementById(id);if(node)node.innerHTML=avatarMarkup(principal,value);}const remove=document.getElementById('profile-photo-remove');if(remove)remove.hidden=!isAvatarPhoto(value);}
+export function getProfileAvatar(principal){return principal?load(principal).avatar:'';}

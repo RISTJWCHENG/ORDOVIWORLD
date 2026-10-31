@@ -1,0 +1,47 @@
+name: Temporary profile photo validation
+on:
+  push:
+    branches: [profile-photo-avatars, main]
+    paths: ['web/**', 'config/**', 'icp/**', '.github/workflows/temporary-photo-validation.yml']
+permissions:
+  contents: read
+jobs:
+  validate:
+    if: github.ref_name == 'profile-photo-avatars'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22, cache: npm}
+      - run: npm ci
+      - run: npm test
+      - run: npm run build:backend
+      - name: Check previous stable storage compatibility
+        run: |
+          git show 6437b2786257a627ca23bc83b9364ac29e7e9f43:icp/backend/main.mo > .icp-build/previous-main.mo
+          .icp-tools/compiler/moc --package base .icp-tools/base/src -c --stable-types -o .icp-build/previous-backend.wasm .icp-build/previous-main.mo
+          .icp-tools/compiler/moc --stable-compatible .icp-build/previous-backend.most .icp-build/backend.most
+      - run: PREVIOUS_BACKEND_WASM=.icp-build/previous-backend.wasm npm run test:icp
+      - run: npm run build:icp
+      - run: npm install --no-save playwright@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - run: node config/personal-dashboard-browser.mjs
+      - run: node config/admin-mode-browser.mjs
+      - run: node config/admin-ui-browser.mjs
+      - run: node config/infrastructure-browser.mjs
+  cleanup:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const branch='profile-photo-avatars';
+            const review=await github.rest.git.getRef({...context.repo,ref:'heads/'+branch});
+            const main=await github.rest.git.getRef({...context.repo,ref:'heads/main'});
+            const result=await github.rest.repos.compareCommitsWithBasehead({...context.repo,basehead:review.data.object.sha+'...'+main.data.object.sha});
+            if(!['ahead','identical'].includes(result.data.status))throw Error('Review branch not included in main');
+            await github.rest.git.deleteRef({...context.repo,ref:'heads/'+branch});

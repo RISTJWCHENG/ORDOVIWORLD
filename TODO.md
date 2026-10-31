@@ -23,3 +23,5 @@
 - [x] Refine theme control styling and immediate pointer/keyboard response.
 
 - [x] Align My Dashboard headings with the administrator content column.
+
+- [x] Add 96×96 profile photos with backend bounds and Principal-based gradient fallback.
