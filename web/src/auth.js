@@ -70,6 +70,7 @@ export async function initAuth() {
   }
   window.addEventListener('catalog:profile-updated', render)
   root()?.addEventListener('click', async event => {
+    if(event.target.closest('a')){const menu=root()?.querySelector('.account-account-menu');if(menu)menu.hidden=true;root()?.querySelector('[data-act="menu"]')?.setAttribute('aria-expanded','false');}
     const action = event.target.closest('[data-act]')?.dataset.act
     if (action === 'menu') {
       const menu = root()?.querySelector('.account-account-menu')
