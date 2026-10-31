@@ -69,3 +69,5 @@ Infrastructure icons load directly from each HTTPS website origin at `/favicon.i
 Selecting Admin Dashboard switches the current document into management mode at `#/admin`. The shared store logo, launcher and account controls remain; public browsing navigation and footer are hidden until returning to the store. Administrator permissions continue to be checked by the backend.
 
 Management mode uses integrated page columns rather than an inset dashboard panel. On desktop its 308px navigation aligns with the public store sidebar; tablet and phone navigation moves above the content. The shared branding and account controls remain unchanged.
+
+In management mode the header shows `Admin Dashboard / current section`, and the application launcher is hidden. Normal writable authentication status is silent; read-only/error states remain visible. Successful saves produce a short accessible toast. The public store retains its launcher.
