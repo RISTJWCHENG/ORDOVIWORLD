@@ -69,3 +69,5 @@ Validation complete: run 41247588403 passed the existing unit/build and desktop/
 
 ## 2026-10-31 — Management sidebar clarity
 Refined sidebar hierarchy with an Administration eyebrow, Store management title and specific directory-curation description. Navigation uses consistent outlined SVG icons, readable labels and short task descriptions; active state and keyboard focus remain clear. The lower publishing note is concise and links to the public directory. Mobile navigation stays compact. Explicit accessible labels preserve the existing navigation contract. Validation pending.
+
+Validation complete: run 41248222194 passed the build, 28 existing regression checks and desktop/mobile browser checks for sidebar navigation, same-document mode switching, layout/no overflow, breadcrumb/status behavior and isolated resource create/edit/publish. Production root, HTML, CSS and JS passed certified v2 verification. Backend code, permissions and stored data are unchanged.
