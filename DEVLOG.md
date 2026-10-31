@@ -89,3 +89,6 @@ Management mode hides the existing application launcher, preserving the avatar a
 Initial header run 41246834034 passed store-shell switching, launcher visibility, breadcrumbs, create/edit/publish and status hiding. The new read-only test used Playwright isDisabled on a fieldset, which does not represent input disabled semantics. Replaced it with checks of the actual name input and fieldset disabled property. Production read-only behavior was unchanged.
 
 Validation complete: run 41246977890 passed 28 regression checks, frontend build, desktop/mobile store/admin launcher visibility and same-document routing, header breadcrumb navigation including add/edit and overview return, hidden healthy status, visible read-only status with disabled inputs, and existing resource create/edit/publish checks. Production root, HTML, CSS and JS passed certified v2 verification. Backend permissions and production records were unchanged.
+
+## 2026-10-31 — Continuous management divider
+Extended the desktop column divider from viewport top to bottom, including the shared header. Removed the header horizontal border and mobile breadcrumb/navigation separators; removed the duplicate sidebar edge. Single-column mobile layout has no vertical divider. Styling only; backend and data unchanged. Validation pending.

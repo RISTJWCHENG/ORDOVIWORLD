@@ -40,3 +40,9 @@ body.admin-mode .admin-main>.admin-alert:first-child{margin-top:0}
 #admin-feedback{position:fixed;bottom:24px;right:24px;z-index:120;max-width:calc(100vw - 32px);padding:12px 18px;border:1px solid #d6e9df;border-radius:10px;background:#f0fbf5;color:#246345;box-shadow:0 4px 18px #23334c12;font-size:12px}
 @media(max-width:1023px){body.admin-mode .admin-header-breadcrumb{margin-left:260px}}
 @media(max-width:760px){body.admin-mode>header>.wrap{height:auto;min-height:72px;flex-wrap:wrap;gap:0 12px}body.admin-mode #auth{height:72px;display:flex;align-items:center;margin-left:auto!important}body.admin-mode .admin-header-return{display:none!important}body.admin-mode .admin-header-breadcrumb{order:2;flex-basis:100%;margin:0;padding:10px 0 12px;border-top:1px solid #edf0f5;font-size:12px}}
+
+/* Continue the column divider through the shared header. */
+body.admin-mode>header{border-bottom:0;box-shadow:none}
+body.admin-mode .admin-header-breadcrumb{border-top:0}
+body.admin-mode .admin-sidebar{border-right:0;border-bottom:0}
+@media(min-width:1024px){body.admin-mode::before{content:"";display:block!important;position:fixed;top:0;bottom:0;left:308px;width:1px;background:#e5e7eb;z-index:101;pointer-events:none}}

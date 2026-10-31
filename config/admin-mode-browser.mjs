@@ -17,6 +17,9 @@ try{
   assert.equal(await page.locator('#mast .navrow').isVisible(),false);
   assert.equal(await page.locator('#mast .sbar').isVisible(),false);
   assert.equal(await page.locator('footer').isVisible(),false);
+  const divider=await page.locator('body').evaluate(el=>{const s=getComputedStyle(el,'::before');return {display:s.display,top:s.top,bottom:s.bottom,left:s.left};});
+  if(width>=1024)assert.deepEqual(divider,{display:'block',top:'0px',bottom:'0px',left:'308px'});else assert.equal(divider.display,'none');
+  assert.equal(await page.locator('body>header').evaluate(el=>getComputedStyle(el).borderBottomWidth),'0px');
   assert.ok(await page.locator('#app').evaluate(el=>el.getBoundingClientRect().width>innerWidth-50));
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   assert.equal(context.pages().length,1);assert.equal(await page.evaluate(()=>window.__modeDocument),'retained');
