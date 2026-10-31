@@ -65,3 +65,5 @@ The repository contains only the ICP application and its current crawler tools.
 Historical deployment prototypes and their configuration have been removed.
 
 Infrastructure icons load directly from each HTTPS website origin at `/favicon.ico`; unavailable icons fall back to the resource initial. Administrators do not supply logo URLs, and neither derived icon URLs nor image bytes are persisted by this feature. Custom favicon paths may fall back to initials.
+
+Selecting Admin Dashboard switches the current document into management mode at `#/admin`. The shared store logo, launcher and account controls remain; public browsing navigation and footer are hidden until returning to the store. Administrator permissions continue to be checked by the backend.

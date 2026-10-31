@@ -49,3 +49,5 @@ Validation complete: 28 unit checks and the frontend build passed. GitHub run 41
 
 ## 2026-10-31 — In-place management mode
 The existing #/admin route now switches the site shell into management mode without a new page or tab. It preserves the original logo and account/launcher controls, hides the public navigation, introduction and footer, and expands the administrator workspace. Return-to-store links restore the normal shell. Native backend authorization is unchanged. Validation pending.
+
+Validation complete: 28 regression checks and frontend build passed. Run 41245263785 passed desktop/mobile same-document shell switching, responsive layout, retained logo/account controls, restored public navigation/footer and existing administrator/resource editing browser checks. Production root, HTML, CSS and JS passed certified v2 verification. Live anonymous management mode correctly retains authentication enforcement; clicking the original logo restores the store in the same tab. No owner session was impersonated. Backend state and permissions are unchanged.
