@@ -102,3 +102,5 @@ Local tests and the frontend build passed. The deployed frontend passed certifie
 
 ## 2026-11-09 — Account icon alignment
 Use a flex wrapper for the avatar to eliminate the inline baseline gap and align its visual center with the launcher. The account menu still anchors to that wrapper.
+
+Validation: 30 unit checks, frontend build and all browser suites passed in run 42637977574, including desktop/mobile profile-photo and launcher center alignment. Production frontend certification passed; backend was unchanged.
