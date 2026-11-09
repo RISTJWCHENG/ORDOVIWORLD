@@ -697,16 +697,19 @@ select[name*="sort" i]:focus-visible {
 }
 /* CATALOG_TOP_NAV_UNDERLINE_ACTIVE_V1_END */
 
-/* CATALOG_HEADER_BASELINE_FIX_V1 */
+/* Align the public brand and the first navigation row on one vertical center. */
 @media (min-width: 1024px) {
+  #mast.mast { --catalog-header-center: 39px; }
+  #mast.mast > .navrow { top: calc(var(--catalog-header-center) - 19px); }
+  #mast.mast > .navrow > a { line-height: 24px; }
   #mast.mast > h1.catalog-store-title {
-    top: 28px !important;
+    top: calc(var(--catalog-header-center) - 13px) !important;
     margin: 0 !important;
     line-height: 1.25 !important;
     white-space: nowrap !important;
   }
 }
-/* CATALOG_HEADER_BASELINE_FIX_V1_END */
+
 /* CATALOG_EXPLORE_FOUR_COLUMNS_V1
    Align Explore content to the primary navigation's left edge.
    Each section paginates four real records; the last page can be incomplete.

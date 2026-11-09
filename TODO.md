@@ -25,3 +25,5 @@
 - [x] Align My Dashboard headings with the administrator content column.
 
 - [x] Add 96×96 profile photos with backend bounds and Principal-based gradient fallback.
+
+- [x] Move Newly Indexed into Explore and give Websites a dedicated top-navigation entry.
