@@ -127,3 +127,5 @@ Moved Newly Indexed out of the top navigation into the Explore section immediate
 
 ## 2026-11-09 — Public header alignment
 Desktop public branding and the first navigation row use a shared vertical center. Mobile stacking and workspace header overrides remain in place. Includes the previously prepared Explore/Websites navigation changes.
+
+Local tests and the frontend build passed. The deployed frontend passed certified asset verification. Live desktop browser measurement confirms logo and navigation centers both at 39px; the new Websites entry and Newly Indexed section are present. The backend module was unchanged.
