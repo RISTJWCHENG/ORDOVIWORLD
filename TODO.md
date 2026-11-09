@@ -27,3 +27,5 @@
 - [x] Add 96×96 profile photos with backend bounds and Principal-based gradient fallback.
 
 - [x] Move Newly Indexed into Explore and give Websites a dedicated top-navigation entry.
+
+- [x] Align the profile photo with the launcher icon.

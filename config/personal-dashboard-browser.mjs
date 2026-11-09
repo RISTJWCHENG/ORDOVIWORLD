@@ -39,6 +39,11 @@ try{
  await page.locator('#profile-name').fill('Alice Updated');await page.getByRole('button',{name:'Save Profile',exact:true}).click();await page.getByText('✓ Saved on ICP',{exact:true}).waitFor();
  assert.equal(await page.evaluate(()=>window.__testSavedProfile.profile.name),'Alice Updated');assert.equal(await page.evaluate(()=>window.__testSavedProfile.owner),'user-alpha');
  const photo=await page.evaluate(()=>window.__testSavedProfile.profile.avatar);assert.ok(photo.startsWith('data:image/jpeg;base64,'));assert.ok(photo.length<=21871);assert.equal(await page.locator('#auth .account-avatar-btn img').getAttribute('src'),photo);
+ await page.goto('http://127.0.0.1:5176/#/explore');
+ await page.locator('#auth .account-apps-btn svg.catalog-dots16').waitFor();
+ const iconCenters=await page.evaluate(()=>['#auth .account-apps-btn svg','#auth .account-avatar-btn img'].map(s=>{const r=document.querySelector(s).getBoundingClientRect();return r.top+r.height/2;}));
+ assert.ok(Math.abs(iconCenters[0]-iconCenters[1])<1,'Launcher and photo centers differ');
+ await page.goto('http://127.0.0.1:5176/#/dashboard?tab=profile');
  await page.getByRole('button',{name:'Remove photo',exact:true}).click();await page.getByRole('button',{name:'Save Profile',exact:true}).click();await page.waitForFunction(()=>window.__testSavedProfile.profile.avatar==='');assert.equal(await page.locator('#auth .account-avatar-surface').first().getAttribute('style'),defaultGradient);
  await page.locator('.personal-dashboard nav').getByRole('link',{name:'My Favorites',exact:false}).click();await page.getByRole('link',{name:'Saved App',exact:true}).waitFor();await assertHeadingAligned('.personal-heading');
  await page.getByRole('button',{name:'Remove Saved App from favorites',exact:true}).click();await page.getByRole('heading',{name:'Your next discovery starts here.'}).waitFor();assert.equal(await page.evaluate(()=>window.__testSavedFavorites.items.length),0);
