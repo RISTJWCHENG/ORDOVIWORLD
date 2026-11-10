@@ -160,3 +160,7 @@ Validation: workflow 42833259343 passed desktop and mobile checks for selected l
 - Added About as the last public navigation link. Its circular chart shows 50% upvotes and 50% saves.
 - The ICP backend ranks published projects by equal weights after normalizing each count to its highest value in the catalog. A save counts once per account per project; downvotes do not enter the score.
 - The public query returns project IDs only. Existing votes and favorites are read in place, so the upgrade needs no data migration.
+
+Validation: `npm test` passed all 30 tests and `npm run build:icp` succeeded. GitHub workflow 42835432240 passed the previous-module upgrade test and four browser suites, including About and Featured Projects at desktop and mobile widths. The production backend preserved its controllers and catalog count. The live ranking returned exactly the 30 published project IDs.
+
+Production deployment completed. Certified v2 verification passed for the frontend root, index, JavaScript and stylesheet. The temporary review branch was removed.

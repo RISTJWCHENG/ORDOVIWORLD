@@ -37,3 +37,5 @@
 - [x] Persist editable account votes by app in the ICP canister.
 
 - [x] Highlight selected votes by text and icon color without a selection frame.
+
+- [x] Rank Featured Projects by upvotes and saves and explain the weights in About.
