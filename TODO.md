@@ -31,3 +31,5 @@
 - [x] Align the profile photo with the launcher icon.
 
 - [x] Make the Quick Explore slash badge clickable.
+
+- [x] Show equal-width app launch and details links and hide the SNS card tag.

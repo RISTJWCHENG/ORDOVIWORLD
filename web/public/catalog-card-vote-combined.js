@@ -52,9 +52,6 @@
       white-space: nowrap;
     }
 
-    .catalog-vote-layout > .acts {
-      display: none !important;
-    }
 
     .catalog-vote-layout .catalog-vote-panel {
       margin-top: auto;
@@ -219,15 +216,6 @@
     if (more) {
       more.textContent = 'Read More';
     }
-
-    const inline = document.createElement('div');
-    inline.className = 'catalog-inline-actions';
-
-    while (actions.firstChild) {
-      inline.appendChild(actions.firstChild);
-    }
-
-    slot.appendChild(inline);
 
     const panel = document.createElement('div');
     panel.className = 'catalog-vote-panel';

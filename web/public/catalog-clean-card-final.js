@@ -14,8 +14,7 @@
       max-height:none !important;
       padding-bottom:15px !important;
     }
-    #app .grid > .card.catalog-clean-card > .catalog-card-more-slot,
-    #app .grid > .card.catalog-clean-card > .acts {display:none !important;}
+    #app .grid > .card.catalog-clean-card > .catalog-card-more-slot {display:none !important;}
     #app .grid > .card.catalog-clean-card .catalog-hidden-fav,
     #app .grid > .card.catalog-clean-card .catalog-hidden-detail {display:none !important;}
     #app .grid > .card.catalog-clean-card > .catalog-website-top {
@@ -186,20 +185,12 @@
     if (card.dataset.catalogCleanCard === '1') return;
     const panel = card.querySelector(':scope > .catalog-vote-panel');
     if (!panel) return;
-    const anchors = Array.from(card.querySelectorAll('a[href]'));
-    const website = anchors.find(a => /^visit website\b/i.test(a.textContent.trim()));
-    const details = anchors.find(a => /^project details$/i.test(a.textContent.trim()));
-    if (!website || !details) return;
+    const details = card.querySelector('.catalog-app-details[href]');
+    if (!details) return;
     const href = details.getAttribute('href');
     if (!href || href === '#' || /^javascript:/i.test(href)) return;
     card.dataset.catalogCleanCard = '1';
     card.classList.add('catalog-clean-card');
-    // Reuse the original external link, retaining its destination.
-    // CATALOG_REMOVE_WEBSITE_LINK_V4: delete the original card Website anchor from the DOM.
-    website.remove();
-
-
-    details.classList.add('catalog-hidden-detail');
     const header = card.querySelector(':scope > .row') || card.firstElementChild;
     if (header) {
       const favorite = Array.from(header.querySelectorAll('button')).find(b =>

@@ -62,8 +62,7 @@
 
   function enhance(card) {
     const heading = card.querySelector('h3');
-    const details = Array.from(card.querySelectorAll('a[href]'))
-      .find(a => a.textContent.trim().toLowerCase() === 'project details');
+    const details = card.querySelector('.catalog-app-details[href]');
     if (!heading || !details) return;
     const href = details.getAttribute('href');
     if (!href || href === '#' || href.startsWith('javascript:')) return;

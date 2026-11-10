@@ -109,3 +109,6 @@ Validation: 30 unit checks, frontend build and all browser suites passed in run 
 The slash badge is now an accessible button that focuses the existing search input without submitting. The keyboard shortcut remains active outside editable elements when search is visible.
 
 Validation: 30 unit checks and the frontend build passed. Production frontend certification passed; the backend was unchanged.
+
+## 2026-11-10 — App card actions
+Hide the SNS source tag on app cards and keep Launch application and View App Details in an equal-width two-column action row above votes. Legacy card enhancers no longer remove or move these actions.
