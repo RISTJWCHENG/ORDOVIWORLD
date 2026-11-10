@@ -39,6 +39,12 @@ test('ICP backend enforces caller permissions, isolates users and preserves data
   assert.equal(await actor.is_administrator(),true);
   assert.deepEqual((await actor.search('','Infrastructure',0n,30n)).records[0].tags,['resource-type:developer','curated']);
   assert.equal(unwrap(await actor.get_my_data()).favorites.length,1);assert.equal((await actor.search('','',0n,30n)).count,2n);
+  assert.deepEqual(await actor.featured_project_ids(),['sns-one','manual-infrastructure']);
+  unwrap(await actor.set_app_vote('manual-infrastructure',1n));
+  assert.deepEqual(await actor.featured_project_ids(),['manual-infrastructure','sns-one']);
+  unwrap(await actor.set_app_vote('manual-infrastructure',-1n));
+  assert.deepEqual(await actor.featured_project_ids(),['sns-one','manual-infrastructure']);
+  unwrap(await actor.set_app_vote('manual-infrastructure',0n));
   actor.setPrincipal(Principal.anonymous());
   assert.match((await actor.set_app_vote('sns-one',1n)).err,/Sign in/);
   assert.deepEqual(unwrap(await actor.get_app_votes(['sns-one','missing'])),[{id:'sns-one',up:0n,down:0n,mine:0n}]);

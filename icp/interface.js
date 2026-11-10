@@ -18,6 +18,7 @@ export const idlFactory = ({IDL}) => {
     save_project:IDL.Func([Project],[result(IDL.Null)],[]),
     delete_imported_projects:IDL.Func([IDL.Vec(IDL.Text)],[result(IDL.Nat)],[]),
     import_projects:IDL.Func([IDL.Vec(Project)],[result(IDL.Nat)],[]),
+    featured_project_ids:IDL.Func([],[IDL.Vec(IDL.Text)],['query']),
     get_app_votes:IDL.Func([IDL.Vec(IDL.Text)],[result(IDL.Vec(VoteSummary))],['query']),
     set_app_vote:IDL.Func([IDL.Text,IDL.Int],[result(VoteSummary)],[]),
     get_my_data:IDL.Func([],[result(UserData)],['query']),

@@ -154,3 +154,9 @@ Validation: workflow 42832016524 passed previous-module upgrade, persistent vote
 Show red/green vote labels and icons for signed-in users, with a brighter selected color and heavier text. Remove the selection border and fill while preserving keyboard focus.
 
 Validation: workflow 42833259343 passed desktop and mobile checks for selected label/icon color, transparent background and no mouse-click outline. Production frontend certification passed.
+
+## 2026-11-10 — Featured ranking and About
+
+- Added About as the last public navigation link. Its circular chart shows 50% upvotes and 50% saves.
+- The ICP backend ranks published projects by equal weights after normalizing each count to its highest value in the catalog. A save counts once per account per project; downvotes do not enter the score.
+- The public query returns project IDs only. Existing votes and favorites are read in place, so the upgrade needs no data migration.

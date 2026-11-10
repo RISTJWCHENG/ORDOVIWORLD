@@ -23,3 +23,5 @@ export async function saveMyFavorites(favorites,principal){const clean=favorites
 export async function deleteMyData(principal){unwrap(await (await signedActor(principal)).delete_my_data());}
 export async function readAppVotes(ids,principal){const actor=principal?await signedActor(principal):await actorFor();return unwrap(await actor.get_app_votes(ids));}
 export async function saveAppVote(id,vote,principal){return unwrap(await (await signedActor(principal)).set_app_vote(id,BigInt(vote)));}
+
+export async function readFeaturedIds(){return (await actorFor()).featured_project_ids();}

@@ -66,6 +66,7 @@ export function initAppVotes(){
     try{
       const result=await saveAppVote(id,next,principal);
       if(version===epoch)records.set(id,result);
+      window.dispatchEvent(new Event('catalog:ranking-changed'));
     }catch{
       if(version===epoch)errors.set(id,'Could not save vote. Try again.');
     }finally{

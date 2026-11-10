@@ -2,6 +2,7 @@ import Avatar "Avatar";
 import Array "mo:base/Array";
 import Int "mo:base/Int";
 import Nat "mo:base/Nat";
+import Order "mo:base/Order";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
@@ -104,6 +105,44 @@ shared persistent actor class Store(initialAdmin : Principal) = this {
     if(vote < -1 or vote > 1)return #err("Invalid vote");
     if(not published(id))return #err("Application unavailable");
     #ok(replaceVote(id,caller,vote))
+  };
+  public query func featured_project_ids() : async [Text] {
+    let listings=Array.filter<Project>(projects,func(p){p.status=="published"});
+    var available : Trie.Trie<Text, Bool> = Trie.empty();
+    for(p in listings.vals()){available:=Trie.put(available,appKey(p.id),Text.equal,true).0};
+    var saves : Trie.Trie<Text, Nat> = Trie.empty();
+    for((_,entry) in users.vals()){
+      var seen : Trie.Trie<Text, Bool> = Trie.empty();
+      for(favorite in entry.favorites.vals()){
+        switch(Text.stripStart(favorite.href,#text "#/app/")){
+          case (?id){
+            let key=appKey(id);
+            if(Trie.get(available,key,Text.equal)!=null and Trie.get(seen,key,Text.equal)==null){
+              seen:=Trie.put(seen,key,Text.equal,true).0;
+              let count=switch(Trie.get(saves,key,Text.equal)){case (?n) n;case null 0};
+              saves:=Trie.put(saves,key,Text.equal,count+1).0;
+            }
+          };
+          case null {};
+        }
+      }
+    };
+    let candidates=Array.map<Project,{id:Text;up:Nat;saved:Nat}>(
+      listings,
+      func(p){
+        let saved=switch(Trie.get(saves,appKey(p.id),Text.equal)){case (?n) n;case null 0};
+        {id=p.id;up=ballot(p.id).up;saved}
+      }
+    );
+    var maxUp=1;
+    var maxSaved=1;
+    for(p in candidates.vals()){maxUp:=Nat.max(maxUp,p.up);maxSaved:=Nat.max(maxSaved,p.saved)};
+    let ranked=Array.sort(candidates,func(a:{id:Text;up:Nat;saved:Nat},b:{id:Text;up:Nat;saved:Nat}):Order.Order{
+      let aScore=a.up*maxSaved+a.saved*maxUp;
+      let bScore=b.up*maxSaved+b.saved*maxUp;
+      if(aScore==bScore)Text.compare(a.id,b.id) else Nat.compare(bScore,aScore)
+    });
+    Array.map(ranked,func(p:{id:Text;up:Nat;saved:Nat}):Text{p.id})
   };
   public query func health() : async Text { "catalog-icp-v1" };
   public shared query ({caller}) func whoami() : async Principal { caller };

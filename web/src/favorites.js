@@ -71,7 +71,7 @@ export function initFavorites(getPrincipal) {
     catch { return []; }
   }
   async function write(data) {
-    if(usingIcp){const owner=getUser();try{await saveMyFavorites(data,owner);if(owner!==getUser())return false;remoteFavorites=data;window.dispatchEvent(new Event('catalog:favorites-updated'));return true;}catch{window.alert('Could not save favorites on ICP. Please try again.');return false;}}
+    if(usingIcp){const owner=getUser();try{await saveMyFavorites(data,owner);if(owner!==getUser())return false;remoteFavorites=data;window.dispatchEvent(new Event('catalog:favorites-updated'));window.dispatchEvent(new Event('catalog:ranking-changed'));return true;}catch{window.alert('Could not save favorites on ICP. Please try again.');return false;}}
     try { localStorage.setItem(key(), JSON.stringify(data));window.dispatchEvent(new Event('catalog:favorites-updated')); return true; }
     catch { window.alert('Could not save favorites in this browser.'); return false; }
   }

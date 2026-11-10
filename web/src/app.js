@@ -3,6 +3,7 @@ import site from '../../config/site.json'
 import { normalizeCategories } from './catalog-categories.js'
 const SITE_NAME = site.name;
 import {searchCatalog} from './catalog-search.js';
+import {readFeaturedIds} from './icp-client.js'
 import { loadPublishedProjects } from './catalog-data.js'
 import { renderProfile, initProfile } from './profile.js'
 import { getAdministratorAccess } from './auth.js'
@@ -39,7 +40,7 @@ const grid=(l,big)=>`<div class="grid">${l.map(p=>card(p,big)).join('')}</div>`;
   }[category]||category);
   const chips=(items,cur,key,extra='')=>`<div class="chips" role="group" aria-label="Filters"><a class="btn ${!cur?'on':''}" href="#${extra}" data-k="${key}" data-v="">All</a>${items.map(c=>`<a class="btn ${cur===c?'on':''}" href="#" data-k="${key}" data-v="${esc(c)}" aria-pressed="${cur===c}">${esc(catalogCategoryLabel(c))}</a>`).join('')}</div>`;
 const sbar=(v='')=>`<form class="sbar" role="search" id="sf"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input name="q" value="${esc(v)}" aria-label="Search projects" aria-keyshortcuts="/" placeholder="Quick Explore" autocomplete="off"><button type="button" class="search-shortcut" aria-label="Focus search" title="Focus search (/)"><kbd aria-hidden="true">/</kbd></button></form>`;
-const NAV=[['/explore','Explore'],['/explore?cat=Infrastructure','Infrastructure'],['/explore?source=sns','SNS'],['/explore?cat=Community%20Apps','Community Apps'],['/explore?cat=Websites','Websites'],['/submit','Submit Project']];
+const NAV=[['/explore','Explore'],['/explore?cat=Infrastructure','Infrastructure'],['/explore?source=sns','SNS'],['/explore?cat=Community%20Apps','Community Apps'],['/explore?cat=Websites','Websites'],['/submit','Submit Project'],['/about','About']];
 const navRow=()=>`<nav class="navrow" aria-label="Main">${NAV.map(([h,t])=>`<a href="#${h}">${t}</a>`).join('')}</nav>`;
 const noteHTML=()=>'';
 const sec=(t,h)=>`<section><h2>${t}</h2>${h}</section>`;
@@ -48,10 +49,11 @@ function find(o){const t=(o.q||'').toLowerCase().split(/\s+/).filter(Boolean);le
 const S=o.sort;r.sort(S==='alpha'?(a,b)=>a.p.name.localeCompare(b.p.name):S==='updated'?(a,b)=>b.p.upd.localeCompare(a.p.upd):(a,b)=>b.s-a.s||a.p.name.localeCompare(b.p.name));return r.map(x=>x.p)}
 function pager(n,pg,size,base,compact){const pages=Math.max(1,Math.ceil(n/size));if(!compact&&pages<2)return'';if(compact)return snsNumberPager(n,pg,size,base);return`<nav class="pg" aria-label="Pagination"><a class="btn ${pg<=1?'off':''}" href="#${base}&page=${pg-1}">‹ Prev</a>Page ${pg} of ${pages}<a class="btn ${pg>=pages?'off':''}" href="#${base}&page=${pg+1}">Next ›</a></nav>`}
 const catalogSectionPages=Object.create(null);
+let featuredIds=[],featuredState='loading',featuredRequest=0;
 const catalogSectionItems=(key)=>{
  if(key==='featured'){
-  const priority=P.filter(p=>p.idn!=='discovered').concat(P.slice(0,3));
-  const seen=new Set();return priority.filter(p=>{const id=p.slug||p.name;if(seen.has(id))return false;seen.add(id);return true});
+  const byId=new Map(P.map(project=>[project.slug,project]));
+  return featuredIds.map(id=>byId.get(id)).filter(Boolean);
  }
  if(key==='more')return P.slice(3);
  if(key==='recent')return [...P].sort((a,b)=>b.upd.localeCompare(a.upd));
@@ -80,7 +82,9 @@ const catalogPagedSection=(key,title)=>{
  <h2 style="margin:0">${title}</h2>
  ${pages>1?`<div data-catalog-section-controls="${key}">${catalogSectionPager(key,page,pages)}</div>`:""}
  </div>
- <div data-catalog-section-grid="${key}">${items.length?grid(items.slice(page*4,page*4+4)):emptyCatalogMessage()}</div>
+ <div data-catalog-section-grid="${key}">${items.length?grid(items.slice(page*4,page*4+4)):key==='featured'&&featuredState!=='ready'
+  ? featuredState==='loading'?'<p class="mute" role="status">Loading featured projects…</p>':'<p class="mute" role="alert">Featured rankings are unavailable. Please refresh to try again.</p>'
+  :emptyCatalogMessage()}</div>
  </section>`;
 };
 // CATALOG_SNS_NUMBER_PAGER_V2
@@ -135,7 +139,15 @@ app(slug){const p=P.find(x=>x.slug===slug);if(!p)return'<p style="padding:80px 0
 return`<div class="page"><div class="cover" style="height:110px" aria-hidden="true"></div><div class="row" style="margin-top:24px;flex-wrap:wrap;gap:16px">${logo(p,64)}<div><h1 style="font-size:26px;font-weight:600">${esc(p.name)}</h1><div class="row" style="gap:6px;margin-top:6px"><span class="tag">${IDN[p.idn]}</span>${p.demo?'<span class="tag demo">Demo data</span>':''}</div></div><div class="row" style="margin-left:auto">${ext(p.play||p.url,'Launch application',1)}${ext(p.gh,'GitHub')}</div></div><p class="mute" style="max-width:760px;margin-top:24px">${esc(p.desc)}</p><p class="note" style="max-width:760px;margin:24px 0">Being listed does not mean this project is safe, audited, or endorsed. “Verified identity” only means ownership was proven.</p><dl><div><dt>Category & tags</dt><dd>${esc(p.cats.join(', '))} · ${p.tags.map(t=>'#'+esc(t)).join(' ')}</dd></div><div><dt>Official website</dt><dd>${esc(p.url)}</dd></div><div><dt>Related canister IDs</dt><dd>${p.cans.length?p.cans.map(c=>esc(c.id)+' ('+esc(c.role)+')').join(', '):'None recorded'}</dd></div><div><dt>Data sources</dt><dd>${p.srcs.map(x=>esc(x.t)+', collected '+esc(String(x.at).slice(0,10))).join('; ')||'None'}</dd></div><div><dt>Last website check</dt><dd>${p.ver?esc(p.ver.slice(0,10))+' ('+esc(p.websiteStatus||'up')+')':'Not checked'}</dd></div><div><dt>Developer claim</dt><dd>${{discovered:'Unclaimed',claimed:'Claimed, pending proof review',verified:'Claimed and verified'}[p.idn]}</dd></div></dl>${rel.length?sec('Related projects',grid(rel)):''}</div>`},
 submit(){return`<div class="page"><h1>Submit Your Project to the ICP Ecosystem</h1><p class="mute" style="margin-bottom:24px">Submissions go to a review queue. Nothing is published automatically.</p><form class="f" id="sub" novalidate>${[['name','Project name'],['website','Official website','url'],['description','Description','area'],['category','Category','sel'],['logo','Logo URL','url',1],['github','GitHub URL','url',1],['canister','Canister ID','text',1],['contact','Contact email (private)','email']].map(([n,l,t='text',o])=>`<div><label for="${n}">${l}${o?' <span class="mute">(optional)</span>':''}</label>${t==='area'?`<textarea id="${n}" name="${n}" rows="4"></textarea>`:t==='sel'?`<select id="${n}" name="${n}">${[...CATS,'Websites'].map(c=>`<option value="${esc(c)}">${esc(catalogCategoryLabel(c))}</option>`).join('')}</select>`:`<input id="${n}" name="${n}" type="${t}">`}<p class="err" id="e-${n}" role="alert"></p></div>`).join('')}<input name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none"><button class="btn p" style="justify-content:center">Submit for review</button><p id="res" role="status" class="glass card" hidden></p></form></div>`},
 categories(){return`<div class="page"><h1>Categories</h1><div class="grid">${CATS.map(c=>`<a class="card" href="#/explore?cat=${encodeURIComponent(c)}"><h3>${esc(catalogCategoryLabel(c))}</h3><p class="mute">${P.filter(p=>p.cats.includes(c)).length} listing${P.filter(p=>p.cats.includes(c)).length===1?'':'s'}</p></a>`).join('')}</div></div>`},
-about(){return`<div class="page" style="max-width:760px"><h1>About ${SITE_NAME}</h1><p style="font-size:18px">Making the Internet Computer ecosystem easier to discover, explore, and grow.</p><h2 style="margin-top:32px;font-size:20px">Discovery is not endorsement</h2><p class="mute" style="margin-top:8px">Some listings are found automatically from public sources, with the source and collection time recorded. Others are claimed by developers, and a few have a verified identity. None of these labels means a project is safe or audited.</p></div>`},
+about(){return`<div class="page" style="max-width:760px"><h1>About ${SITE_NAME}</h1><p style="font-size:18px">Making the Internet Computer ecosystem easier to discover, explore, and grow.</p><section class="featured-rules" aria-labelledby="featured-rules-title">
+<h2 id="featured-rules-title">How Featured Projects are ranked</h2>
+<p class="mute">Published projects are ranked by community upvotes and saves, with equal weight for both.</p>
+<div class="featured-weights">
+<div class="featured-weights-chart" aria-hidden="true"><span>50 / 50</span></div>
+<ul><li><span class="featured-weight-dot upvotes" aria-hidden="true"></span>Upvotes <strong>50%</strong></li><li><span class="featured-weight-dot saves" aria-hidden="true"></span>Saves <strong>50%</strong></li></ul>
+</div>
+<p class="mute">Each count is measured against the highest count for that metric among published projects. A save counts once per account per project. Downvotes do not affect this ranking.</p>
+</section><h2 style="margin-top:32px;font-size:20px">Discovery is not endorsement</h2><p class="mute" style="margin-top:8px">Some listings are found automatically from public sources, with the source and collection time recorded. Others are claimed by developers, and a few have a verified identity. None of these labels means a project is safe or audited.</p></div>`},
 admin(){return `<div class="page" id="admin-dashboard"><p class="mute">Checking administrator access…</p></div>`}};
 const app=document.getElementById('app');
 const mast=document.getElementById('mast');
@@ -173,7 +185,7 @@ document.querySelectorAll('.navrow a').forEach(a=>{
         ? routePath==='/explore' && routeQuery.cat==='Community Apps' && !routeQuery.source
         : target==='#/explore?cat=Websites'
           ? routePath==='/explore' && routeQuery.cat==='Websites' && !routeQuery.source
-          : routePath==='/submit';
+          : routePath===target.slice(1);
   a.classList.toggle('on',active);
   if(active){a.setAttribute('aria-current','page')}
   else{a.removeAttribute('aria-current')}
@@ -299,6 +311,18 @@ const applyCatalog = data => {
 };
 let catalogLoadVersion=0;
 const renderCatalogRoute=()=>{if(!/^#\/(admin|profile|dashboard)(?:[/?]|$)/.test(location.hash))route();};
+async function refreshFeatured(){
+ const request=++featuredRequest;
+ let ids,state;
+ try{ids=await readFeaturedIds();state='ready';}
+ catch{ids=[];state='error';}
+ if(request!==featuredRequest)return;
+ const changed=featuredState!==state||ids.length!==featuredIds.length||ids.some((id,i)=>id!==featuredIds[i]);
+ featuredIds=ids;featuredState=state;
+ if(changed)app.querySelector('[data-catalog-section="featured"]')?.replaceWith(
+  document.createRange().createContextualFragment(catalogPagedSection('featured','Featured Projects'))
+ );
+}
 async function refreshCatalog(){
  const version=++catalogLoadVersion;catalogState='loading';renderCatalogRoute();
  try{
@@ -306,9 +330,11 @@ async function refreshCatalog(){
   if(version!==catalogLoadVersion)return;
   if(data.loadError)catalogState='error';else{applyCatalog(data);catalogState='ready';}
  }catch{if(version===catalogLoadVersion)catalogState='error';}
- if(version===catalogLoadVersion)renderCatalogRoute();
+ if(version===catalogLoadVersion){renderCatalogRoute();void refreshFeatured();}
 }
 addEventListener('catalog:projects-updated',()=>{void refreshCatalog();});
+addEventListener('catalog:ranking-changed',()=>{void refreshFeatured();});
+addEventListener('catalog:user-data-deleted',()=>{void refreshFeatured();});
 route();void refreshCatalog();
 const quickSearch = mast.querySelector('.sbar input');
 mast.querySelector('.search-shortcut')?.addEventListener('click',()=>quickSearch?.focus());
