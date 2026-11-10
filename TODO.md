@@ -49,3 +49,5 @@
 - [x] Stop the desktop sidebar divider from crossing the public footer.
 
 - [x] Hide the vertical sidebar divider on the public homepage and default Explore view.
+
+- [x] Show immediate dApp icon and name matches below Quick Explore.

@@ -195,3 +195,9 @@ GitHub workflow 42837287848 passed Chromium checks at desktop and mobile widths 
 - Hid the vertical divider on the public homepage and unfiltered Explore view. The sidebar and content keep their existing positions; other routes keep the divider.
 - `npm test` passed 30 tests. `npm run build:icp` succeeded.
 - GitHub workflow 42850705707 passed browser regression checks. Production asset certification passed. Live browser inspection confirmed the divider is hidden on Explore and remains visible on app details. The temporary review branch was removed.
+
+## 2026-11-10 — Quick Explore results
+
+- Quick Explore filters the loaded published catalog while the visitor types and displays up to six clickable app icons and names below the field. A missing logo falls back to the app initial. Escape clears the panel and Enter opens full search.
+- `npm test` passed 30 tests and `npm run build:icp` succeeded.
+- GitHub workflow 42853139745 passed desktop and mobile Chromium checks for icon results, their position below the field, empty matches, Escape, detail navigation and Enter submission. Production certification passed for the updated HTML, JavaScript and stylesheet. The temporary review branch was removed.

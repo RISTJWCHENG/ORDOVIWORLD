@@ -6,7 +6,7 @@
       "35w5h-sdkk3-c4ngn-skhml-bg3uq-w54ch-dpgmo-6dxaq-eb5zi-b2iw6-cae",
       "2up5l-veujr-dgwm2-3dmjr-pr5hv-hoiah-57y6p-sjh2n-oqaep-uissi-mqe"
     ],
-    "cycles": "2041286678157"
+    "cycles": "2039592219005"
   },
   "backend": {
     "id": "ufzkd-paaaa-aaaab-ahcqq-cai",
@@ -15,11 +15,11 @@
       "35w5h-sdkk3-c4ngn-skhml-bg3uq-w54ch-dpgmo-6dxaq-eb5zi-b2iw6-cae",
       "2up5l-veujr-dgwm2-3dmjr-pr5hv-hoiah-57y6p-sjh2n-oqaep-uissi-mqe"
     ],
-    "cycles": "2074402858733"
+    "cycles": "2074335548633"
   },
   "assets": [
-    "/assets/index-CPVizkY_.js",
-    "/assets/index-Ckdi3DWG.css",
+    "/assets/index-BTxxsTJb.css",
+    "/assets/index-CI8Mqmwf.js",
     "/assets/site-logo-CTfcYHAo.png",
     "/catalog-16-dots.js",
     "/catalog-align-filters.js",
@@ -45,5 +45,5 @@
     "/site-logo.png",
     "/"
   ],
-  "deployedAt": "2026-11-10T16:05:07.665Z"
+  "deployedAt": "2026-11-10T16:20:34.042Z"
 }
