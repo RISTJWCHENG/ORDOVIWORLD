@@ -49,7 +49,9 @@ export function initAppVotes(){
   new MutationObserver(entries=>{
     if(entries.some(e=>[...e.addedNodes].some(n=>n.nodeType===1&&(n.matches('.card,.catalog-vote-panel')||n.querySelector('.card,.catalog-vote-panel')))))schedule();
   }).observe(root,{childList:true,subtree:true});
-  window.addEventListener('catalog:auth-changed',()=>{epoch++;records.clear();pending.clear();errors.clear();scan();});
+  const reset=()=>{epoch++;records.clear();pending.clear();errors.clear();scan();};
+  window.addEventListener('catalog:auth-changed',reset);
+  window.addEventListener('catalog:user-data-deleted',reset);
   root.addEventListener('click',async event=>{
     const button=event.target.closest('.catalog-vote-buttons button[data-vote]');
     const card=button?.closest(selector),principal=currentPrincipal();

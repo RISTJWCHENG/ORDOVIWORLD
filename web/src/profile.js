@@ -68,7 +68,7 @@ export function initProfile() {
   app.addEventListener('click', async e => {
     if(usingIcp&&e.target.closest('#profile-retry')){void syncRemoteProfile(currentPrincipal(),true);return;}
     if(usingIcp&&e.target.closest('#profile-delete')){
-      if(!window.confirm('Delete your profile, favorites and preferences from this website? This cannot be undone. Your Internet Identity account will remain.'))return;
+      if(!window.confirm('Delete your profile, favorites, votes and preferences from this website? This cannot be undone. Your Internet Identity account will remain.'))return;
       const principal=currentPrincipal();const button=e.target.closest('button');button.disabled=true;
       try{await deleteMyData(principal);if(currentPrincipal()!==principal)return;remoteProfiles.set(principal,{...defaults});remoteStatus.set(principal,'ready');window.dispatchEvent(new Event('catalog:user-data-deleted'));window.dispatchEvent(new Event('catalog:profile-loaded'));window.dispatchEvent(new Event('catalog:profile-updated'));}
       catch{window.alert('Could not delete your data. Please try again.');button.disabled=false;}return;
