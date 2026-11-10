@@ -65,6 +65,7 @@ try{
  await about.click();await page.getByRole('heading',{name:'How Featured Projects are ranked'}).waitFor();
  assert.equal(await about.getAttribute('aria-current'),'page');
  assert.deepEqual(await page.locator('.featured-weights li').allTextContents(),['Upvotes 50%','Saves 50%']);
+ assert.match(await page.locator('.featured-weights-chart').evaluate(el=>getComputedStyle(el).backgroundImage),/conic-gradient/);
  await page.locator('.navrow').getByRole('link',{name:'Explore',exact:true}).click();
  const viewed=page.locator('[data-catalog-section="viewed"]');
  assert.equal(await viewed.count(),0);
@@ -79,7 +80,6 @@ try{
  await viewed.locator('h3').last().waitFor();
  assert.deepEqual(await viewed.locator('h3').allTextContents(),['Personal Site','Game App']);
 
- assert.match(await page.locator('.featured-weights-chart').evaluate(el=>getComputedStyle(el).backgroundImage),/conic-gradient/);
  await page.locator('.navrow').getByRole('link',{name:'Websites',exact:true}).click();await page.getByRole('heading',{name:'Explore Websites',exact:true}).waitFor();await page.locator('#app .grid h3').filter({hasText:'Personal Site'}).waitFor();assert.deepEqual(await page.locator('#app .grid h3').allTextContents(),['Personal Site']);assert.equal(await page.locator('.navrow').getByRole('link',{name:'Websites',exact:true}).getAttribute('aria-current'),'page');assert.equal(await page.locator('.navrow').getByRole('link',{name:'Explore',exact:true}).getAttribute('aria-current'),null);
  await page.evaluate(()=>{window.__testCatalog=[];dispatchEvent(new Event('catalog:projects-updated'));});await page.getByRole('heading',{name:'No websites listed yet',exact:true}).waitFor();
  await page.goto('http://127.0.0.1:5176/#/dashboard');await page.getByRole('heading',{name:'Welcome, Alice',exact:true}).waitFor();
