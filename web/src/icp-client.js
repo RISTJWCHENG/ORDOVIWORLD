@@ -21,3 +21,5 @@ export async function readMyData(principal){return unwrap(await (await signedAct
 export async function saveMyProfile(profile,principal){unwrap(await (await signedActor(principal)).save_my_profile(profile));}
 export async function saveMyFavorites(favorites,principal){const clean=favorites.map(item=>({...item,logo:/^https:\/\//i.test(item.logo||'')?item.logo:''}));unwrap(await (await signedActor(principal)).save_my_favorites(clean));}
 export async function deleteMyData(principal){unwrap(await (await signedActor(principal)).delete_my_data());}
+export async function readAppVotes(ids,principal){const actor=principal?await signedActor(principal):await actorFor();return unwrap(await actor.get_app_votes(ids));}
+export async function saveAppVote(id,vote,principal){return unwrap(await (await signedActor(principal)).set_app_vote(id,BigInt(vote)));}

@@ -134,12 +134,12 @@
 
   document.head.appendChild(style);
 
-  function disabledButton(name) {
+  function voteButton(name, direction) {
     const button = document.createElement('button');
     button.type = 'button';
     button.textContent = name;
-    button.disabled = true;
-    button.title = 'ICP voting backend not yet connected';
+    button.dataset.vote = direction;
+    button.setAttribute('aria-pressed','false');
     return button;
   }
 
@@ -255,11 +255,14 @@
     );
 
     buttons.append(
-      existingUp || disabledButton('Upvote'),
-      existingDown || disabledButton('Downvote')
+      existingUp || voteButton('Upvote','up'),
+      existingDown || voteButton('Downvote','down')
     );
 
-    panel.append(summary, track, buttons);
+    const feedback=document.createElement('div');
+    feedback.className='catalog-vote-feedback';
+    feedback.setAttribute('role','status');
+    panel.append(summary, track, buttons, feedback);
     card.appendChild(panel);
 
     updateVotes(card);

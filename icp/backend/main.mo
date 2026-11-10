@@ -5,6 +5,7 @@ import Nat "mo:base/Nat";
 import Principal "mo:base/Principal";
 import Text "mo:base/Text";
 import Time "mo:base/Time";
+import Trie "mo:base/Trie";
 import Prim "mo:prim";
 
 shared persistent actor class Store(initialAdmin : Principal) = this {
@@ -20,6 +21,9 @@ shared persistent actor class Store(initialAdmin : Principal) = this {
   public type Favorite = { href : Text; name : Text; logo : Text };
   public type UserData = { profile : Profile; favorites : [Favorite] };
   public type Result<T> = { #ok : T; #err : Text };
+  public type VoteSummary = { id : Text; up : Nat; down : Nat; mine : Int };
+  type Ballot = { up : Nat; down : Nat; voters : Trie.Trie<Principal, Int> };
+  var ballots : Trie.Trie<Text, Ballot> = Trie.empty();
   var projects : [Project] = [];
   var users : [(Principal, UserData)] = [];
   var administrators : [Principal] = if (Principal.isAnonymous(initialAdmin)) [] else [initialAdmin];
@@ -60,6 +64,46 @@ shared persistent actor class Store(initialAdmin : Principal) = this {
     if (Array.find<Project>(projects,func(item) {item.id==p.id}) != null) {
       projects := Array.map<Project,Project>(projects,func(item) {if(item.id==p.id) value else item})
     } else { assert projects.size() < 10000;projects:=Array.append(projects,[value]) }
+  };
+  func appKey(id : Text) : Trie.Key<Text> { {key=id;hash=Text.hash(id)} };
+  func voterKey(who : Principal) : Trie.Key<Principal> { {key=who;hash=Principal.hash(who)} };
+  func published(id : Text) : Bool {
+    id.size() <= 100 and Array.find<Project>(projects,func(p){p.id==id and p.status=="published"}) != null
+  };
+  func ballot(id : Text) : Ballot {
+    switch(Trie.get(ballots,appKey(id),Text.equal)){
+      case (?value) value;
+      case null { {up=0;down=0;voters=Trie.empty()} }
+    }
+  };
+  func choice(value : Ballot, who : Principal) : Int {
+    switch(Trie.get(value.voters,voterKey(who),Principal.equal)){case (?v) v;case null 0}
+  };
+  func summary(id : Text, who : Principal) : VoteSummary {
+    let value=ballot(id);
+    {id;up=value.up;down=value.down;mine=choice(value,who)}
+  };
+  func replaceVote(id : Text, who : Principal, next : Int) : VoteSummary {
+    let value=ballot(id);
+    let old=choice(value,who);
+    if(old==next)return {id;up=value.up;down=value.down;mine=next};
+    let key=voterKey(who);
+    let voters=if(next==0) Trie.remove(value.voters,key,Principal.equal).0 else Trie.put(value.voters,key,Principal.equal,next).0;
+    let up=Nat.sub(value.up,if(old==1) 1 else 0)+(if(next==1) 1 else 0);
+    let down=Nat.sub(value.down,if(old== -1) 1 else 0)+(if(next== -1) 1 else 0);
+    let app=appKey(id);
+    ballots:=if(up+down==0) Trie.remove(ballots,app,Text.equal).0 else Trie.put(ballots,app,Text.equal,{up;down;voters}).0;
+    {id;up;down;mine=next}
+  };
+  public shared query ({caller}) func get_app_votes(ids : [Text]) : async Result<[VoteSummary]> {
+    if(ids.size() > 30)return #err("Too many applications");
+    #ok(Array.map<Text,VoteSummary>(Array.filter<Text>(ids,published),func(id){summary(id,caller)}))
+  };
+  public shared ({caller}) func set_app_vote(id : Text, vote : Int) : async Result<VoteSummary> {
+    if(not authenticated(caller))return #err("Sign in required");
+    if(vote < -1 or vote > 1)return #err("Invalid vote");
+    if(not published(id))return #err("Application unavailable");
+    #ok(replaceVote(id,caller,vote))
   };
   public query func health() : async Text { "catalog-icp-v1" };
   public shared query ({caller}) func whoami() : async Principal { caller };
@@ -138,6 +182,7 @@ shared persistent actor class Store(initialAdmin : Principal) = this {
   };
   public shared ({caller}) func delete_my_data() : async Result<()>  {
     if(not authenticated(caller)) return #err("Sign in required");
+    for((id,value) in Trie.iter(ballots)){if(choice(value,caller)!=0)ignore replaceVote(id,caller,0)};
     users:=Array.filter<(Principal,UserData)>(users,func(entry){entry.0!=caller});#ok(())
   };
 }

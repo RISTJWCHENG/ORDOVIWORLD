@@ -204,15 +204,6 @@
     down.classList.add("catalog-vote-down");
     up.classList.add("catalog-vote-up");
 
-    // Preserve the disabled-backend status before enabling clicks.
-    // No vote is ever submitted by this script.
-    for (const button of [down, up]) {
-      if (button.disabled) {
-        button.dataset.catalogVoteBackendUnavailable = "1";
-        button.disabled = false;
-      }
-    }
-
     if (row.firstElementChild !== down) {
       row.insertBefore(down, row.firstElementChild);
     }
@@ -247,14 +238,6 @@
       return;
     }
 
-    if (button.dataset.catalogVoteBackendUnavailable === "1") {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      showPrompt(
-        "Community voting is not available yet. No vote was submitted.",
-        false
-      );
-    }
   }, true);
 
   document.addEventListener("keydown", event => {

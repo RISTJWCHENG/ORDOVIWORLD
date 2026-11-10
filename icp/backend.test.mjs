@@ -39,13 +39,29 @@ test('ICP backend enforces caller permissions, isolates users and preserves data
   assert.equal(await actor.is_administrator(),true);
   assert.deepEqual((await actor.search('','Infrastructure',0n,30n)).records[0].tags,['resource-type:developer','curated']);
   assert.equal(unwrap(await actor.get_my_data()).favorites.length,1);assert.equal((await actor.search('','',0n,30n)).count,2n);
+  actor.setPrincipal(Principal.anonymous());
+  assert.match((await actor.set_app_vote('sns-one',1n)).err,/Sign in/);
+  assert.deepEqual(unwrap(await actor.get_app_votes(['sns-one','missing'])),[{id:'sns-one',up:0n,down:0n,mine:0n}]);
+  actor.setPrincipal(alice);
+  assert.match((await actor.set_app_vote('missing',1n)).err,/unavailable/);
+  assert.match((await actor.set_app_vote('sns-one',2n)).err,/Invalid vote/);
+  assert.deepEqual(unwrap(await actor.set_app_vote('sns-one',1n)),{id:'sns-one',up:1n,down:0n,mine:1n});
+  assert.equal(unwrap(await actor.set_app_vote('sns-one',1n)).up,1n);
+  assert.deepEqual(unwrap(await actor.set_app_vote('sns-one',-1n)),{id:'sns-one',up:0n,down:1n,mine:-1n});
+  actor.setPrincipal(bob);
+  assert.equal(unwrap(await actor.get_app_votes(['sns-one']))[0].mine,0n);
+  assert.equal(unwrap(await actor.set_app_vote('sns-one',1n)).up,1n);
+  assert.deepEqual(unwrap(await actor.set_app_vote('sns-one',0n)),{id:'sns-one',up:0n,down:1n,mine:0n});
+  unwrap(await actor.set_app_vote('sns-one',1n));
+  actor.setPrincipal(importer);unwrap(await actor.import_projects([make('sns-one')]));
+  assert.deepEqual(unwrap(await actor.get_app_votes(['sns-one']))[0],{id:'sns-one',up:1n,down:1n,mine:0n});
   const photos=JSON.parse(await readFile(new URL('./avatar-fixtures.json',import.meta.url),'utf8'));
   actor.setPrincipal(alice);
   for(const avatar of [photos.wrongSize,'data:image/svg+xml;base64,PHN2Zz4=','data:image/jpeg;base64,@@@@','data:image/jpeg;base64,'+'A'.repeat(23000)])assert.match((await actor.save_my_profile({...profile,avatar})).err,/Invalid profile/);
   unwrap(await actor.save_my_profile({...profile,avatar:photos.valid}));assert.equal(unwrap(await actor.get_my_data()).profile.avatar,photos.valid);
   actor.setPrincipal(bob);assert.notEqual(unwrap(await actor.get_my_data()).profile.avatar,photos.valid);
   await pic.upgradeCanister({canisterId,wasm,arg,sender:owner,upgradeModeOptions:{skip_pre_upgrade:[],wasm_memory_persistence:[{keep:null}]}});
-  actor.setPrincipal(alice);assert.equal(unwrap(await actor.get_my_data()).profile.avatar,photos.valid);assert.equal(unwrap(await actor.get_my_data()).favorites.length,1);
+  actor.setPrincipal(alice);assert.deepEqual(unwrap(await actor.get_app_votes(['sns-one']))[0],{id:'sns-one',up:1n,down:1n,mine:-1n});assert.equal(unwrap(await actor.get_my_data()).profile.avatar,photos.valid);assert.equal(unwrap(await actor.get_my_data()).favorites.length,1);
   actor.setPrincipal(importer);unwrap(await actor.import_projects([make('community-test','community')]));
   assert.match((await actor.delete_imported_projects(['community-test'])).err,/Controller/);
   actor.setPrincipal(owner);
@@ -56,6 +72,6 @@ test('ICP backend enforces caller permissions, isolates users and preserves data
   assert.equal((await actor.search('','',0n,30n)).count,2n);
   actor.setPrincipal(alice);assert.equal(unwrap(await actor.get_my_data()).profile.name,'Alice');
   unwrap(await actor.delete_my_data());assert.equal(unwrap(await actor.get_my_data()).profile.name,'');assert.notEqual(unwrap(await actor.get_my_data()).profile.avatar,photos.valid);assert.equal(unwrap(await actor.get_my_data()).favorites.length,0);assert.equal((await actor.search('','',0n,30n)).count,2n);
-  actor.setPrincipal(Principal.anonymous());assert.match((await actor.save_my_profile({...profile,avatar:photos.valid})).err,/Sign in/);assert.match((await actor.delete_my_data()).err,/Sign in/);
+  actor.setPrincipal(Principal.anonymous());assert.deepEqual(unwrap(await actor.get_app_votes(['sns-one']))[0],{id:'sns-one',up:1n,down:0n,mine:0n});assert.match((await actor.save_my_profile({...profile,avatar:photos.valid})).err,/Sign in/);assert.match((await actor.delete_my_data()).err,/Sign in/);
  } finally {if(pic)await pic.tearDown();await server.stop();}
 });

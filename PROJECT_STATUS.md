@@ -114,3 +114,6 @@ Validation: 30 unit checks and the frontend build passed. Production frontend ce
 Hide the SNS source tag on app cards and keep Launch application and View App Details in an equal-width two-column action row above votes. Legacy card enhancers no longer remove or move these actions.
 
 Validation: 30 unit checks and browser run 42830034402 passed, including equal action widths, URLs and SNS tag removal. Frontend certification passed; backend unchanged.
+
+## 2026-11-10 — ICP application voting
+Authenticated principals can set, replace or clear one vote per published application. Persistent per-app ballot buckets hold counts and principal choices separately from crawler metadata. Public reads return counts and the caller’s own choice only. Self-data deletion also clears the caller’s votes. Cards show authoritative counts and the selected choice. Local build, 30 unit tests and Motoko stable compatibility passed.

@@ -33,3 +33,5 @@
 - [x] Make the Quick Explore slash badge clickable.
 
 - [x] Show equal-width app launch and details links and hide the SNS card tag.
+
+- [x] Persist editable account votes by app in the ICP canister.

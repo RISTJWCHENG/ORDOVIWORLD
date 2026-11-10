@@ -5,6 +5,7 @@ export const idlFactory = ({IDL}) => {
   const Profile=IDL.Record({name:IDL.Text,bio:IDL.Text,role:IDL.Text,website:IDL.Text,github:IDL.Text,avatar:IDL.Text,interests:IDL.Vec(IDL.Text)});
   const Favorite=IDL.Record({href:IDL.Text,name:IDL.Text,logo:IDL.Text});
   const UserData=IDL.Record({profile:Profile,favorites:IDL.Vec(Favorite)});
+  const VoteSummary=IDL.Record({id:IDL.Text,up:IDL.Nat,down:IDL.Nat,mine:IDL.Int});
   const result=type=>IDL.Variant({ok:type,err:IDL.Text});
   return IDL.Service({
     health:IDL.Func([],[IDL.Text],['query']),whoami:IDL.Func([],[IDL.Principal],['query']),
@@ -17,6 +18,8 @@ export const idlFactory = ({IDL}) => {
     save_project:IDL.Func([Project],[result(IDL.Null)],[]),
     delete_imported_projects:IDL.Func([IDL.Vec(IDL.Text)],[result(IDL.Nat)],[]),
     import_projects:IDL.Func([IDL.Vec(Project)],[result(IDL.Nat)],[]),
+    get_app_votes:IDL.Func([IDL.Vec(IDL.Text)],[result(IDL.Vec(VoteSummary))],['query']),
+    set_app_vote:IDL.Func([IDL.Text,IDL.Int],[result(VoteSummary)],[]),
     get_my_data:IDL.Func([],[result(UserData)],['query']),
     save_my_profile:IDL.Func([Profile],[result(IDL.Null)],[]),
     save_my_favorites:IDL.Func([IDL.Vec(Favorite)],[result(IDL.Null)],[]),
