@@ -201,3 +201,10 @@ GitHub workflow 42837287848 passed Chromium checks at desktop and mobile widths 
 - Quick Explore filters the loaded published catalog while the visitor types and displays up to six clickable app icons and names below the field. A missing logo falls back to the app initial. Escape clears the panel and Enter opens full search.
 - `npm test` passed 30 tests and `npm run build:icp` succeeded.
 - GitHub workflow 42853139745 passed desktop and mobile Chromium checks for icon results, their position below the field, empty matches, Escape, detail navigation and Enter submission. Production certification passed for the updated HTML, JavaScript and stylesheet. The temporary review branch was removed.
+
+## 2026-11-10 — Homepage brand colors
+
+- Enlarged the store name and logo on the homepage and default Explore view, preserving alignment with the desktop navigation.
+- Both parts animate for the first two seconds of each five-second cycle after a five-second delay. The effect respects reduced motion and provides separate colors for dark mode.
+- `npm test` passed 30 tests. `npm run build:icp` succeeded.
+- GitHub workflow 42854332029 passed desktop and mobile browser regression checks, including desktop brand and navigation alignment. Production asset certification passed. The temporary review branch was removed.

@@ -131,3 +131,4 @@ Validation: workflow 42833259343 passed desktop and mobile checks for selected l
 - 2026-11-10: The public desktop sidebar divider no longer appears over the full-width footer.
 - 2026-11-10: The public homepage and unfiltered Explore view omit the desktop sidebar divider. Other views retain their existing separation.
 - 2026-11-10: Quick Explore shows up to six matching published dApps with their icons below the sidebar search field. Selecting a result opens its details; Enter opens the full search results.
+- 2026-11-10: The homepage and default Explore view use a larger wordmark and icon, with two seconds of synchronized color changes every five seconds. Reduced motion disables the effect.

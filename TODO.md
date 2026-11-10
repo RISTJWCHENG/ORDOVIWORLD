@@ -51,3 +51,5 @@
 - [x] Hide the vertical sidebar divider on the public homepage and default Explore view.
 
 - [x] Show immediate dApp icon and name matches below Quick Explore.
+
+- [x] Enlarge the homepage brand and add periodic synchronized color animation.
