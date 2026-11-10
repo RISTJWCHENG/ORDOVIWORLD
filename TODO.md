@@ -45,3 +45,5 @@
 - [x] Align the desktop app detail cover and content beneath the public navigation.
 
 - [x] Remove the decorative app detail cover and compact the space above the app identity.
+
+- [x] Stop the desktop sidebar divider from crossing the public footer.

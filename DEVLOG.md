@@ -183,3 +183,9 @@ GitHub workflow 42837287848 passed Chromium checks at desktop and mobile widths 
 - Removed the decorative gradient and the margin it added before the app identity. The detail route keeps the desktop mast collapsed and uses a 20 px top inset.
 - `npm test` passed 30 tests and `npm run build:icp` succeeded. The change is frontend only.
 - GitHub workflow 42846886231 passed the desktop and mobile Chromium regression checks. Production asset certification passed. The live ICPSwap page starts with the app title and launch action, 22 px below the desktop navigation, with no cover. The temporary review branch was removed.
+
+## 2026-11-10 — Footer divider
+
+- Raised the opaque public footer above the fixed desktop divider. The line stays visible beside the content and disappears at the footer boundary.
+- `npm test` passed 30 tests and `npm run build:icp` succeeded.
+- GitHub workflow 42848488004 passed browser regression checks. Production asset certification passed. The live footer has an opaque background and is stacked above the divider. The temporary review branch was removed.
