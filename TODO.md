@@ -43,3 +43,5 @@
 - [x] Replace the Explore games shelf with a browser-local Recently Viewed shelf.
 
 - [x] Align the desktop app detail cover and content beneath the public navigation.
+
+- [x] Remove the decorative app detail cover and compact the space above the app identity.
