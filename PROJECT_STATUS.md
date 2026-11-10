@@ -122,3 +122,5 @@ Validation: workflow 42832016524 passed previous-module upgrade, persistent vote
 
 ## 2026-11-10 — Vote selection styling
 Show red/green vote labels and icons for signed-in users, with a brighter selected color and heavier text. Remove the selection border and fill while preserving keyboard focus.
+
+Validation: workflow 42833259343 passed desktop and mobile checks for selected label/icon color, transparent background and no mouse-click outline. Production frontend certification passed.
