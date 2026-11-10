@@ -540,6 +540,11 @@ select[name*="sort" i]:focus-visible {
     pointer-events: none;
     z-index: 20;
   }
+  /* Keep the fixed sidebar divider behind the full-width footer. */
+  body > footer {
+    position: relative;
+    z-index: 21;
+  }
 
 }
 
