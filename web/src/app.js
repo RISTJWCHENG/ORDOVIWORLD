@@ -39,7 +39,7 @@ const grid=(l,big)=>`<div class="grid">${l.map(p=>card(p,big)).join('')}</div>`;
     'Developer Tools':'Dev Tools'
   }[category]||category);
   const chips=(items,cur,key,extra='')=>`<div class="chips" role="group" aria-label="Filters"><a class="btn ${!cur?'on':''}" href="#${extra}" data-k="${key}" data-v="">All</a>${items.map(c=>`<a class="btn ${cur===c?'on':''}" href="#" data-k="${key}" data-v="${esc(c)}" aria-pressed="${cur===c}">${esc(catalogCategoryLabel(c))}</a>`).join('')}</div>`;
-const sbar=(v='')=>`<form class="sbar" role="search" id="sf"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input name="q" value="${esc(v)}" aria-label="Search projects" aria-keyshortcuts="/" placeholder="Quick Explore" autocomplete="off"><button type="button" class="search-shortcut" aria-label="Focus search" title="Focus search (/)"><kbd aria-hidden="true">/</kbd></button></form>`;
+const sbar=(v='')=>`<form class="sbar" role="search" id="sf"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input name="q" value="${esc(v)}" aria-label="Search projects" aria-keyshortcuts="/" aria-controls="quick-explore-matches" placeholder="Quick Explore" autocomplete="off"><button type="button" class="search-shortcut" aria-label="Focus search" title="Focus search (/)"><kbd aria-hidden="true">/</kbd></button></form>`;
 const NAV=[['/explore','Explore'],['/explore?cat=Infrastructure','Infrastructure'],['/explore?source=sns','SNS'],['/explore?cat=Community%20Apps','Community Apps'],['/explore?cat=Websites','Websites'],['/submit','Submit Project'],['/about','About']];
 const navRow=()=>`<nav class="navrow" aria-label="Main">${NAV.map(([h,t])=>`<a href="#${h}">${t}</a>`).join('')}</nav>`;
 const noteHTML=()=>'';
@@ -164,7 +164,21 @@ admin(){return `<div class="page" id="admin-dashboard"><p class="mute">Checking 
 const app=document.getElementById('app');
 const mast=document.getElementById('mast');
 (()=>{const C=['#2F6BFF','#E5484D','#E8920C','#12A594','#8E4EC6','#E93D82','#3E63DD','#30A46C','#F76B15','#0091FF','#D6409F','#5B5BD6','#E54D2E','#00A2C7','#46A758','#CE2C31'];let k=0;
-mast.innerHTML=`<h1 class="catalog-store-title"><a href="#/" aria-label="${SITE_NAME}, home">${SITE_NAME}</a></h1><p class="catalog-store-intro">Discover the next generation of apps, games, and decentralized experiences built on the Internet Computer.</p>${sbar()}<p class="catalog-store-notice">Projects are indexed from public sources. Listing does not imply security verification or endorsement.</p>${navRow()}`})();
+mast.innerHTML=`<h1 class="catalog-store-title"><a href="#/" aria-label="${SITE_NAME}, home">${SITE_NAME}</a></h1><p class="catalog-store-intro">Discover the next generation of apps, games, and decentralized experiences built on the Internet Computer.</p>${sbar()}<div id="quick-explore-matches" class="quick-explore-matches" aria-label="Quick Explore results" role="region" hidden></div><p class="catalog-store-notice">Projects are indexed from public sources. Listing does not imply security verification or endorsement.</p>${navRow()}`})();
+
+const quickSearch=mast.querySelector('.sbar input');
+const quickMatches=mast.querySelector('#quick-explore-matches');
+let quickRoute,quickMatchesHtml='';
+function renderQuickMatches(){
+ const term=quickSearch.value.trim().slice(0,150);
+ quickMatches.hidden=!term;
+ const matches=term?find({q:term}).slice(0,6):[];
+ const status=catalogState==='loading'?'Searching the catalog…':catalogState==='error'?'Quick results are unavailable.':'No matching apps.';
+ const html=!term?'':matches.length
+  ? `<ul>${matches.map(p=>`<li><a href="#/app/${p.slug}">${logo(p,32)}<span>${esc(p.name)}</span></a></li>`).join('')}</ul>`
+  : `<p class="mute" role="status">${status}</p>`;
+ if(html!==quickMatchesHtml){quickMatchesHtml=html;quickMatches.innerHTML=html;}
+}
 
 function route(){const h=location.hash.slice(1)||'/',path=h.split('?')[0],q=query(h),seg=path.split('/')[1]||'home';
 document.body.classList.toggle('catalog-home-view',seg==='home'||(seg==='explore'&&!q.cat&&!q.source));
@@ -172,7 +186,8 @@ const personal=seg==='dashboard'||seg==='profile';
 document.body.classList.toggle('admin-mode',seg==='admin'||personal);document.body.classList.toggle('dashboard-mode',personal);
 const dashboardHome=document.getElementById('admin-breadcrumb-home');if(dashboardHome){dashboardHome.textContent=personal?'My Dashboard':'Admin Dashboard';dashboardHome.onclick=()=>{location.hash=personal?'/dashboard?tab=overview':'/admin';};}
 const headerSection=document.getElementById('admin-header-section');if(headerSection)headerSection.textContent=personal?({profile:'Profile Settings',favorites:'My Favorites'}[seg==='profile'?'profile':q.tab]||'Overview'):q.tab==='editor'?'Add a Resource':'Overview';
-const mi=mast.querySelector('input');if(mi)mi.value=seg==='search'?(q.q||''):'';app.innerHTML=(seg==='app'?V.app(path.split('/')[2]):(V[seg]||(()=>'<p style="padding:80px 0;text-align:center">Nothing here. <a href="#/" style="text-decoration:underline">Back home</a></p>'))(q));
+if(quickRoute!==h){quickRoute=h;quickSearch.value=seg==='search'?(q.q||''):'';}renderQuickMatches();
+app.innerHTML=(seg==='app'?V.app(path.split('/')[2]):(V[seg]||(()=>'<p style="padding:80px 0;text-align:center">Nothing here. <a href="#/" style="text-decoration:underline">Back home</a></p>'))(q));
 if(personal)mountPersonalDashboard();
 if(seg==='admin') { const target=document.getElementById('admin-dashboard'); void getAdministratorAccess().then(access=>startAdminDashboard(target,access,{initialPanel:q.tab==='editor'?'editor':'overview'})).catch(()=>{if(target?.isConnected)target.textContent='Administrator access is unavailable.'}); }
 if(seg==='explore'&&q.cat==='Infrastructure'&&!q.source){
@@ -349,7 +364,8 @@ addEventListener('catalog:projects-updated',()=>{void refreshCatalog();});
 addEventListener('catalog:ranking-changed',()=>{void refreshFeatured();});
 addEventListener('catalog:user-data-deleted',()=>{void refreshFeatured();});
 route();void refreshCatalog();
-const quickSearch = mast.querySelector('.sbar input');
+quickSearch.addEventListener('input',renderQuickMatches);
+quickSearch.addEventListener('keydown',e=>{if(e.key==='Escape'&&quickSearch.value){quickSearch.value='';renderQuickMatches();}});
 mast.querySelector('.search-shortcut')?.addEventListener('click',()=>quickSearch?.focus());
 addEventListener('keydown',e=>{
  if(e.key!=='/'||e.defaultPrevented||e.isComposing||e.ctrlKey||e.altKey||e.metaKey)return;

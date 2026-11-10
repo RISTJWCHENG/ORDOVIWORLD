@@ -80,6 +80,27 @@ try{
  await viewed.locator('h3').last().waitFor();
  assert.deepEqual(await viewed.locator('h3').allTextContents(),['Personal Site','Game App']);
 
+ const quickResults=page.getByRole('region',{name:'Quick Explore results'});
+ await search.fill('Game');
+ const quickGame=quickResults.getByRole('link',{name:'Game App',exact:true});
+ await quickGame.waitFor();
+ assert.equal(await quickGame.locator('.logo').count(),1);
+ assert.equal(await quickResults.getByRole('link').count(),1);
+ const quickFieldBox=await search.boundingBox(),quickResultBox=await quickResults.boundingBox();
+ assert.ok(quickResultBox.y>=quickFieldBox.y+quickFieldBox.height,'Quick results should sit under the search field');
+ await search.fill('no-such-app');
+ await quickResults.getByText('No matching apps.',{exact:true}).waitFor();
+ await search.press('Escape');
+ assert.equal(await quickResults.isVisible(),false);
+ await search.fill('Game');
+ await quickGame.click();
+ await page.getByRole('heading',{name:'Game App',exact:true}).waitFor();
+ assert.equal(await quickResults.isVisible(),false);
+ await search.fill('Game');
+ await search.press('Enter');
+ await page.waitForURL('**/#/search?q=Game');
+ await page.getByRole('heading',{name:'Search',exact:true}).waitFor();
+
  await page.locator('.navrow').getByRole('link',{name:'Websites',exact:true}).click();await page.getByRole('heading',{name:'Explore Websites',exact:true}).waitFor();await page.locator('#app .grid h3').filter({hasText:'Personal Site'}).waitFor();assert.deepEqual(await page.locator('#app .grid h3').allTextContents(),['Personal Site']);assert.equal(await page.locator('.navrow').getByRole('link',{name:'Websites',exact:true}).getAttribute('aria-current'),'page');assert.equal(await page.locator('.navrow').getByRole('link',{name:'Explore',exact:true}).getAttribute('aria-current'),null);
  await page.evaluate(()=>{window.__testCatalog=[];dispatchEvent(new Event('catalog:projects-updated'));});await page.getByRole('heading',{name:'No websites listed yet',exact:true}).waitFor();
  await page.goto('http://127.0.0.1:5176/#/dashboard');await page.getByRole('heading',{name:'Welcome, Alice',exact:true}).waitFor();
