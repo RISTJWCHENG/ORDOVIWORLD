@@ -126,3 +126,4 @@ Show red/green vote labels and icons for signed-in users, with a brighter select
 Validation: workflow 42833259343 passed desktop and mobile checks for selected label/icon color, transparent background and no mouse-click outline. Production frontend certification passed.
 - 2026-11-10: About describes the equal weights of community upvotes and saves. Featured Projects uses the ordered list from the ICP backend.
 - 2026-11-10: Explore shows Recently Viewed in place of Discover ICP Games. It keeps up to 12 distinct published app detail visits in the current browser, newest first, and hides the section when there are none.
+- 2026-11-10: App detail content starts directly below desktop navigation, aligned to the Explore text. The mobile layout retains its existing spacing.

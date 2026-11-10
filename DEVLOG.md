@@ -171,3 +171,9 @@ Production deployment completed. Certified v2 verification passed for the fronte
 - `npm test` passed 30 tests. `npm run build:icp` succeeded. No backend changes are required.
 
 GitHub workflow 42837287848 passed Chromium checks at desktop and mobile widths for empty history, visit order, deduplication and reload persistence. The frontend was deployed and its certified root, HTML, JS and CSS responses verified. The temporary review branch was removed.
+
+## 2026-11-10 — App detail spacing
+
+- Removed the redundant 64 px desktop mast spacer on app detail pages. The 12 px content inset and the existing left alignment are preserved; the mobile mast keeps its normal flow.
+- `npm test` passed 30 tests. `npm run build:icp` succeeded. GitHub workflow 42844430559 passed Chromium regression checks at desktop and mobile widths.
+- Production frontend certification passed. On the live ICPSwap detail page, the cover and title both moved up 64 px, with 14 px between the desktop navigation and cover. The temporary review branch was removed.
