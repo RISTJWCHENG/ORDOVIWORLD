@@ -107,3 +107,5 @@ Validation: 30 unit checks, frontend build and all browser suites passed in run 
 
 ## 2026-11-10 — Quick Explore shortcut button
 The slash badge is now an accessible button that focuses the existing search input without submitting. The keyboard shortcut remains active outside editable elements when search is visible.
+
+Validation: 30 unit checks and the frontend build passed. Production frontend certification passed; the backend was unchanged.
