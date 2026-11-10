@@ -167,6 +167,7 @@ const mast=document.getElementById('mast');
 mast.innerHTML=`<h1 class="catalog-store-title"><a href="#/" aria-label="${SITE_NAME}, home">${SITE_NAME}</a></h1><p class="catalog-store-intro">Discover the next generation of apps, games, and decentralized experiences built on the Internet Computer.</p>${sbar()}<p class="catalog-store-notice">Projects are indexed from public sources. Listing does not imply security verification or endorsement.</p>${navRow()}`})();
 
 function route(){const h=location.hash.slice(1)||'/',path=h.split('?')[0],q=query(h),seg=path.split('/')[1]||'home';
+document.body.classList.toggle('catalog-home-view',seg==='home'||(seg==='explore'&&!q.cat&&!q.source));
 const personal=seg==='dashboard'||seg==='profile';
 document.body.classList.toggle('admin-mode',seg==='admin'||personal);document.body.classList.toggle('dashboard-mode',personal);
 const dashboardHome=document.getElementById('admin-breadcrumb-home');if(dashboardHome){dashboardHome.textContent=personal?'My Dashboard':'Admin Dashboard';dashboardHome.onclick=()=>{location.hash=personal?'/dashboard?tab=overview':'/admin';};}
