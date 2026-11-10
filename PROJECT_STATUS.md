@@ -112,3 +112,5 @@ Validation: 30 unit checks and the frontend build passed. Production frontend ce
 
 ## 2026-11-10 — App card actions
 Hide the SNS source tag on app cards and keep Launch application and View App Details in an equal-width two-column action row above votes. Legacy card enhancers no longer remove or move these actions.
+
+Validation: 30 unit checks and browser run 42830034402 passed, including equal action widths, URLs and SNS tag removal. Frontend certification passed; backend unchanged.
