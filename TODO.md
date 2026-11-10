@@ -39,3 +39,5 @@
 - [x] Highlight selected votes by text and icon color without a selection frame.
 
 - [x] Rank Featured Projects by upvotes and saves and explain the weights in About.
+
+- [x] Replace the Explore games shelf with a browser-local Recently Viewed shelf.

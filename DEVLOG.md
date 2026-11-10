@@ -164,3 +164,10 @@ Validation: workflow 42833259343 passed desktop and mobile checks for selected l
 Validation: `npm test` passed all 30 tests and `npm run build:icp` succeeded. GitHub workflow 42835432240 passed the previous-module upgrade test and four browser suites, including About and Featured Projects at desktop and mobile widths. The production backend preserved its controllers and catalog count. The live ranking returned exactly the 30 published project IDs.
 
 Production deployment completed. Certified v2 verification passed for the frontend root, index, JavaScript and stylesheet. The temporary review branch was removed.
+
+## 2026-11-10 — Recently Viewed on Explore
+
+- Replaced the Discover ICP Games shelf with recently visited app details. Opening an app again moves it to the front. Records stay in browser storage and are matched against the current published catalog.
+- `npm test` passed 30 tests. `npm run build:icp` succeeded. No backend changes are required.
+
+GitHub workflow 42837287848 passed Chromium checks at desktop and mobile widths for empty history, visit order, deduplication and reload persistence. The frontend was deployed and its certified root, HTML, JS and CSS responses verified. The temporary review branch was removed.
