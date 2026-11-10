@@ -1,11 +1,11 @@
 {
   "canisterId": "ufzkd-paaaa-aaaab-ahcqq-cai",
-  "previousModuleHash": "f60c1cfadf08589ccc8915e058fdb94da5ee6bcf4407b7f4a9e9158a801bce44",
-  "moduleHash": "5db02754154c1b080fadc19e0b5fba7cbec5840ebb9d993e6e50356057ce1873",
+  "previousModuleHash": "5db02754154c1b080fadc19e0b5fba7cbec5840ebb9d993e6e50356057ce1873",
+  "moduleHash": "f99cf89e3a987b85a67737a88f1fcbe0bddc0e7a8f0e2d7b5835bd24207543ab",
   "controllers": [
     "2up5l-veujr-dgwm2-3dmjr-pr5hv-hoiah-57y6p-sjh2n-oqaep-uissi-mqe",
     "35w5h-sdkk3-c4ngn-skhml-bg3uq-w54ch-dpgmo-6dxaq-eb5zi-b2iw6-cae"
   ],
   "catalogCount": "30",
-  "upgradedAt": "2026-10-31T23:46:37.855Z"
+  "upgradedAt": "2026-11-10T14:15:20.911Z"
 }

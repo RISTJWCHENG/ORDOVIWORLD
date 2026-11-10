@@ -6,20 +6,20 @@
       "35w5h-sdkk3-c4ngn-skhml-bg3uq-w54ch-dpgmo-6dxaq-eb5zi-b2iw6-cae",
       "2up5l-veujr-dgwm2-3dmjr-pr5hv-hoiah-57y6p-sjh2n-oqaep-uissi-mqe"
     ],
-    "cycles": "2054777512398"
+    "cycles": "2053100506278"
   },
   "backend": {
     "id": "ufzkd-paaaa-aaaab-ahcqq-cai",
-    "moduleHash": "5db02754154c1b080fadc19e0b5fba7cbec5840ebb9d993e6e50356057ce1873",
+    "moduleHash": "f99cf89e3a987b85a67737a88f1fcbe0bddc0e7a8f0e2d7b5835bd24207543ab",
     "controllers": [
       "35w5h-sdkk3-c4ngn-skhml-bg3uq-w54ch-dpgmo-6dxaq-eb5zi-b2iw6-cae",
       "2up5l-veujr-dgwm2-3dmjr-pr5hv-hoiah-57y6p-sjh2n-oqaep-uissi-mqe"
     ],
-    "cycles": "2079249048356"
+    "cycles": "2077120159988"
   },
   "assets": [
-    "/assets/index-Dko9Z0r2.css",
-    "/assets/index-rUNh5bS1.js",
+    "/assets/index-d3014sRr.js",
+    "/assets/index-sNm9SN9m.css",
     "/assets/site-logo-CTfcYHAo.png",
     "/catalog-16-dots.js",
     "/catalog-align-filters.js",
@@ -45,5 +45,5 @@
     "/site-logo.png",
     "/"
   ],
-  "deployedAt": "2026-11-10T14:03:36.979Z"
+  "deployedAt": "2026-11-10T14:17:24.729Z"
 }

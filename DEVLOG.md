@@ -147,3 +147,5 @@ Validation: 30 unit checks and browser run 42830034402 passed, including equal a
 
 ## 2026-11-10 — ICP application voting
 Authenticated principals can set, replace or clear one vote per published application. Persistent per-app ballot buckets hold counts and principal choices separately from crawler metadata. Public reads return counts and the caller’s own choice only. Self-data deletion also clears the caller’s votes. Cards show authoritative counts and the selected choice. Local build, 30 unit tests and Motoko stable compatibility passed.
+
+Validation: workflow 42832016524 passed previous-module upgrade, persistent vote storage, crawler isolation and browser voting. The production upgrade preserved memory, controllers, health and catalog count (30). Live public vote queries and frontend asset certification passed.
