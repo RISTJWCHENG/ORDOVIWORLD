@@ -38,7 +38,7 @@ const grid=(l,big)=>`<div class="grid">${l.map(p=>card(p,big)).join('')}</div>`;
     'Developer Tools':'Dev Tools'
   }[category]||category);
   const chips=(items,cur,key,extra='')=>`<div class="chips" role="group" aria-label="Filters"><a class="btn ${!cur?'on':''}" href="#${extra}" data-k="${key}" data-v="">All</a>${items.map(c=>`<a class="btn ${cur===c?'on':''}" href="#" data-k="${key}" data-v="${esc(c)}" aria-pressed="${cur===c}">${esc(catalogCategoryLabel(c))}</a>`).join('')}</div>`;
-const sbar=(v='')=>`<form class="sbar" role="search" id="sf"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input name="q" value="${esc(v)}" aria-label="Search projects" aria-keyshortcuts="/" placeholder="Quick Explore" autocomplete="off"><kbd aria-hidden="true">/</kbd></form>`;
+const sbar=(v='')=>`<form class="sbar" role="search" id="sf"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input name="q" value="${esc(v)}" aria-label="Search projects" aria-keyshortcuts="/" placeholder="Quick Explore" autocomplete="off"><button type="button" class="search-shortcut" aria-label="Focus search" title="Focus search (/)"><kbd aria-hidden="true">/</kbd></button></form>`;
 const NAV=[['/explore','Explore'],['/explore?cat=Infrastructure','Infrastructure'],['/explore?source=sns','SNS'],['/explore?cat=Community%20Apps','Community Apps'],['/explore?cat=Websites','Websites'],['/submit','Submit Project']];
 const navRow=()=>`<nav class="navrow" aria-label="Main">${NAV.map(([h,t])=>`<a href="#${h}">${t}</a>`).join('')}</nav>`;
 const noteHTML=()=>'';
@@ -310,4 +310,12 @@ async function refreshCatalog(){
 }
 addEventListener('catalog:projects-updated',()=>{void refreshCatalog();});
 route();void refreshCatalog();
-addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){const i=document.querySelector('.sbar input');if(i){e.preventDefault();i.focus()}}});
+const quickSearch = mast.querySelector('.sbar input');
+mast.querySelector('.search-shortcut')?.addEventListener('click',()=>quickSearch?.focus());
+addEventListener('keydown',e=>{
+ if(e.key!=='/'||e.defaultPrevented||e.isComposing||e.ctrlKey||e.altKey||e.metaKey)return;
+ const active=document.activeElement;
+ if(active?.matches('input,textarea,select')||active?.isContentEditable||!quickSearch?.getClientRects().length)return;
+ e.preventDefault();
+ quickSearch.focus();
+});

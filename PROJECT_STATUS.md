@@ -104,3 +104,6 @@ Local tests and the frontend build passed. The deployed frontend passed certifie
 Use a flex wrapper for the avatar to eliminate the inline baseline gap and align its visual center with the launcher. The account menu still anchors to that wrapper.
 
 Validation: 30 unit checks, frontend build and all browser suites passed in run 42637977574, including desktop/mobile profile-photo and launcher center alignment. Production frontend certification passed; backend was unchanged.
+
+## 2026-11-10 — Quick Explore shortcut button
+The slash badge is now an accessible button that focuses the existing search input without submitting. The keyboard shortcut remains active outside editable elements when search is visible.

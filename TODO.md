@@ -29,3 +29,5 @@
 - [x] Move Newly Indexed into Explore and give Websites a dedicated top-navigation entry.
 
 - [x] Align the profile photo with the launcher icon.
+
+- [x] Make the Quick Explore slash badge clickable.

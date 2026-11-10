@@ -18,6 +18,19 @@ try{
  assert.equal(await page.locator('.personal-stats article').first().locator('strong').textContent(),'1');
  const defaultGradient=await page.locator('#auth .account-avatar-surface').first().getAttribute('style');
  await page.goto('http://127.0.0.1:5176/#/explore');await page.getByRole('heading',{name:'Featured Projects',exact:true}).waitFor();
+ const search=page.getByRole('textbox',{name:'Search projects',exact:true});
+ const exploreUrl=page.url();
+ await page.getByRole('button',{name:'Focus search',exact:true}).click();
+ assert.equal(await search.evaluate(el=>document.activeElement===el),true);
+ assert.equal(page.url(),exploreUrl);
+ await page.keyboard.press('/');
+ assert.equal(await search.inputValue(),'/');
+ await search.fill('');
+ await search.blur();
+ await page.keyboard.press('/');
+ assert.equal(await search.evaluate(el=>document.activeElement===el),true);
+ assert.equal(await search.inputValue(),'');
+
  if(width>=1024){const delta=await page.evaluate(()=>{const center=s=>{const r=document.querySelector(s).getBoundingClientRect();return r.y+r.height/2;};return center('#mast .catalog-store-title')-center('#mast .navrow a');});assert.ok(Math.abs(delta)<1,'Public header centers differ');}
  assert.deepEqual(await page.locator('.navrow a').allTextContents(),['Explore','Infrastructure','SNS','Community Apps','Websites','Submit Project']);
  assert.deepEqual((await page.locator('[data-catalog-section] h2').allTextContents()).slice(0,2),['Featured Projects','Newly Indexed']);assert.equal(await page.locator('.chips').getByRole('link',{name:'Websites',exact:true}).count(),0);
