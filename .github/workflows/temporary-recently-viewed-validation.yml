@@ -1,0 +1,37 @@
+name: Temporary recently viewed validation
+on:
+  push:
+    branches: [recently-viewed, main]
+    paths: ['web/**', 'config/**', 'icp/**', '.github/workflows/temporary-recently-viewed-validation.yml']
+permissions:
+  contents: read
+jobs:
+  validate:
+    if: github.ref_name == 'recently-viewed'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 22, cache: npm}
+      - run: npm ci
+      - run: npm test
+      - run: npm run build:icp
+      - run: npm install --no-save playwright@1.56.1
+      - run: npx playwright install chromium
+      - run: node config/personal-dashboard-browser.mjs
+  cleanup:
+    if: github.ref_name == 'main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const branch='recently-viewed';
+            const review=await github.rest.git.getRef({...context.repo,ref:'heads/'+branch});
+            const main=await github.rest.git.getRef({...context.repo,ref:'heads/main'});
+            const result=await github.rest.repos.compareCommitsWithBasehead({...context.repo,basehead:review.data.object.sha+'...'+main.data.object.sha});
+            if(!['ahead','identical'].includes(result.data.status))throw Error('Review branch not included in main');
+            await github.rest.git.deleteRef({...context.repo,ref:'heads/'+branch});
