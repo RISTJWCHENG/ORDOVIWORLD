@@ -189,3 +189,9 @@ GitHub workflow 42837287848 passed Chromium checks at desktop and mobile widths 
 - Raised the opaque public footer above the fixed desktop divider. The line stays visible beside the content and disappears at the footer boundary.
 - `npm test` passed 30 tests and `npm run build:icp` succeeded.
 - GitHub workflow 42848488004 passed browser regression checks. Production asset certification passed. The live footer has an opaque background and is stacked above the divider. The temporary review branch was removed.
+
+## 2026-11-10 — Homepage divider
+
+- Hid the vertical divider on the public homepage and unfiltered Explore view. The sidebar and content keep their existing positions; other routes keep the divider.
+- `npm test` passed 30 tests. `npm run build:icp` succeeded.
+- GitHub workflow 42850705707 passed browser regression checks. Production asset certification passed. Live browser inspection confirmed the divider is hidden on Explore and remains visible on app details. The temporary review branch was removed.

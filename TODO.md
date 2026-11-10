@@ -47,3 +47,5 @@
 - [x] Remove the decorative app detail cover and compact the space above the app identity.
 
 - [x] Stop the desktop sidebar divider from crossing the public footer.
+
+- [x] Hide the vertical sidebar divider on the public homepage and default Explore view.

@@ -129,3 +129,4 @@ Validation: workflow 42833259343 passed desktop and mobile checks for selected l
 - 2026-11-10: App detail content starts directly below desktop navigation, aligned to the Explore text. The mobile layout retains its existing spacing.
 - 2026-11-10: Removed the decorative cover from app detail pages. The app identity and actions now start directly below the navigation.
 - 2026-11-10: The public desktop sidebar divider no longer appears over the full-width footer.
+- 2026-11-10: The public homepage and unfiltered Explore view omit the desktop sidebar divider. Other views retain their existing separation.
