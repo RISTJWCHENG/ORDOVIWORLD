@@ -31,7 +31,12 @@ try{
  assert.equal(await gameCard.getByText('#arcade',{exact:true}).count(),1);
  const up=gameCard.locator('button[data-vote=up]'),down=gameCard.locator('button[data-vote=down]');
  await gameCard.getByText('No votes yet',{exact:true}).waitFor();
+ const normalUp=await up.evaluate(el=>getComputedStyle(el).color),normalDown=await down.evaluate(el=>getComputedStyle(el).color);
+ assert.notEqual(normalUp,normalDown);
  await up.click();await gameCard.locator('button[data-vote=up][aria-pressed=true]').waitFor();
+ const selected=await up.evaluate(el=>{const s=getComputedStyle(el),icon=el.querySelector('svg');return {color:s.color,stroke:getComputedStyle(icon).stroke,background:s.backgroundColor,outline:s.outlineStyle};});
+ assert.notEqual(selected.color,normalUp);assert.equal(selected.stroke,selected.color);assert.equal(selected.background,'rgba(0, 0, 0, 0)');assert.equal(selected.outline,'none');
+
  assert.equal(await gameCard.getAttribute('data-vote-up-count'),'1');
  await down.click();await gameCard.locator('button[data-vote=down][aria-pressed=true]').waitFor();
  assert.equal(await gameCard.getAttribute('data-vote-up-count'),'0');assert.equal(await gameCard.getAttribute('data-vote-down-count'),'1');

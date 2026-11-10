@@ -35,3 +35,5 @@
 - [x] Show equal-width app launch and details links and hide the SNS card tag.
 
 - [x] Persist editable account votes by app in the ICP canister.
+
+- [x] Highlight selected votes by text and icon color without a selection frame.

@@ -9,6 +9,7 @@ export function initAppVotes(){
   let epoch=0,scheduled=false;
   const cards=()=>[...root.querySelectorAll(selector)].filter(card=>card.querySelector('.catalog-vote-panel'));
   function render(){
+    root.dataset.voteAuthenticated=String(Boolean(currentPrincipal()));
     for(const card of cards()){
       const id=card.dataset.projectId,record=records.get(id);
       for(const [key,value] of [['voteUpCount',record?.up],['voteDownCount',record?.down]]){
