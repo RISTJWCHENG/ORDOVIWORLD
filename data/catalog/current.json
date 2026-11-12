@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-11T11:06:56.798Z",
+  "generatedAt": "2026-11-12T11:25:32.568Z",
   "records": [
     {
       "id": "app-sonic-ooo",
@@ -32,7 +32,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -66,7 +66,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -100,7 +100,41 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
+        }
+      ]
+    },
+    {
+      "id": "chai-yddti",
+      "name": "CHAI",
+      "description": "CHAI is a collective of creatives building AIware in stealth on the Internet Computer.",
+      "category": "DAO",
+      "websiteUrl": "https://yddti-oiaaa-aaaag-ay5sa-cai.icp0.io/",
+      "logoUrl": "https://dfinity-dashboard-assets.dashboard.internetcomputer.org/snses/xjngq-yaaaa-aaaaq-aabha-cai/logo_1789446148",
+      "githubUrl": "",
+      "source": "sns",
+      "status": "published",
+      "relationship": "unverified",
+      "evidenceUrl": "",
+      "updatedAt": "",
+      "tags": [
+        "sns"
+      ],
+      "canisters": [
+        {
+          "canisterId": "xjngq-yaaaa-aaaaq-aabha-cai",
+          "role": "sns-root"
+        },
+        {
+          "canisterId": "vtrom-gqaaa-aaaaq-aabia-cai",
+          "role": "ledger"
+        }
+      ],
+      "sources": [
+        {
+          "sourceType": "sns",
+          "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -134,7 +168,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -168,7 +202,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -202,7 +236,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -236,7 +270,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -270,7 +304,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -304,7 +338,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -338,7 +372,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -372,7 +406,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -406,7 +440,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -440,7 +474,41 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
+        }
+      ]
+    },
+    {
+      "id": "icpswap-com",
+      "name": "ICPSwap",
+      "description": "ICPSwap stands as the native, pioneering, and premier Decentralized Exchange (DEX) within the Internet Computer Protocol (ICP) ecosystem, providing an extensive array of financial and market services. Our users and fans may immerse themselves in the ultimate Decentralized Finance (DeFi) experience, featuring a broad spectrum of token standards trading, dedicated staking pools, robust yield farming",
+      "category": "DeFi",
+      "websiteUrl": "https://www.icpswap.com/",
+      "logoUrl": "https://dfinity-dashboard-assets.dashboard.internetcomputer.org/snses/csyra-haaaa-aaaaq-aacva-cai/logo_1750088298",
+      "githubUrl": "",
+      "source": "sns",
+      "status": "published",
+      "relationship": "unverified",
+      "evidenceUrl": "",
+      "updatedAt": "",
+      "tags": [
+        "sns"
+      ],
+      "canisters": [
+        {
+          "canisterId": "csyra-haaaa-aaaaq-aacva-cai",
+          "role": "sns-root"
+        },
+        {
+          "canisterId": "ca6gz-lqaaa-aaaaq-aacwa-cai",
+          "role": "ledger"
+        }
+      ],
+      "sources": [
+        {
+          "sourceType": "sns",
+          "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -474,7 +542,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -508,7 +576,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -542,7 +610,41 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
+        }
+      ]
+    },
+    {
+      "id": "nfid-one",
+      "name": "NFID Wallet",
+      "description": "Web3's easiest to use, hardest to lose, and only wallet governed by a DAO.",
+      "category": "DeFi",
+      "websiteUrl": "https://nfid.one/",
+      "logoUrl": "https://dfinity-dashboard-assets.dashboard.internetcomputer.org/snses/m2blf-zqaaa-aaaaq-aaejq-cai/logo_1750088335",
+      "githubUrl": "",
+      "source": "sns",
+      "status": "published",
+      "relationship": "unverified",
+      "evidenceUrl": "",
+      "updatedAt": "",
+      "tags": [
+        "sns"
+      ],
+      "canisters": [
+        {
+          "canisterId": "m2blf-zqaaa-aaaaq-aaejq-cai",
+          "role": "sns-root"
+        },
+        {
+          "canisterId": "mih44-vaaaa-aaaaq-aaekq-cai",
+          "role": "ledger"
+        }
+      ],
+      "sources": [
+        {
+          "sourceType": "sns",
+          "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -576,7 +678,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -610,7 +712,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -644,7 +746,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -678,7 +780,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -712,7 +814,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -746,7 +848,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -780,7 +882,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -814,7 +916,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -848,7 +950,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     },
@@ -882,7 +984,7 @@
         {
           "sourceType": "sns",
           "sourceUrl": "https://sns-api.internetcomputer.org/api/v2/snses",
-          "collectedAt": "2026-11-11T11:06:52.078Z"
+          "collectedAt": "2026-11-12T11:25:28.696Z"
         }
       ]
     }
